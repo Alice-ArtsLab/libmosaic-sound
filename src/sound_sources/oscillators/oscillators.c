@@ -98,7 +98,7 @@ int main(void)
     printf("PortAudio Test: output sine wave. SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
 
     sine_data data;
-    data.sine_table = create_sine_table(data.sine_table);
+    data.table = create_triangle_table(data.table);
     data.index = 0;
 
     err = Pa_Initialize();

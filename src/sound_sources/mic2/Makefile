@@ -1,6 +1,6 @@
 CC = gcc
 
-CFLAGS = ../../lib/libportaudio.a -lrt -lm -lasound -ljack -pthread
+CFLAGS = ../../../lib/libportaudio.a -lrt -lm -lasound -ljack -pthread
 OBJS =
 
 TARGET = mic2
