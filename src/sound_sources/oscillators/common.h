@@ -20,6 +20,19 @@ float *  create_sine_table(float * table){
 	return table;
 }
 
+float *  create_square_table(float * table){
+    table = malloc(TABLE_SIZE * sizeof(float));
+    int i;
+    for(i=0; i<TABLE_SIZE; i++){
+        table[i] = sin(2.0*M_PI*i/TABLE_SIZE);
+		if(table[i] >= 0){
+				table[i] = 1;
+		}else{
+				table[i] = -1;
+		}
+    }
+	return table;
+}
 
 float *  create_triangle_table(float * table){
     table = malloc(TABLE_SIZE * sizeof(float));
