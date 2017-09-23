@@ -53,7 +53,6 @@ float *  create_sawtooth_table(float * table){
 }
 
 
-
 /*
 Standar function to get interpolated values in a sine table
 */

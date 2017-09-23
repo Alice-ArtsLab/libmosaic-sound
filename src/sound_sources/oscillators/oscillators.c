@@ -45,11 +45,12 @@
 #include <math.h>
 #include "portaudio.h"
 #include "common.h"
+#include <getopt.h>
 
 #define NUM_SECONDS   (5)
 #define SAMPLE_RATE   (48000)
 #define FRAMES_PER_BUFFER  (64)
-
+float FREQ;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
@@ -69,10 +70,15 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     (void) statusFlags;
     (void) inputBuffer;
 
-    for( i=0; i<framesPerBuffer; i++ ){
-        out[i] = get_interpolated_freq(data, 440, SAMPLE_RATE);
+    if (FREQ != -1) {
+        for( i=0; i<framesPerBuffer; i++ ){
+            out[i] = get_interpolated_freq(data, FREQ, SAMPLE_RATE);
+        }
+    }else {
+        for( i=0; i<framesPerBuffer; i++ ){
+            out[i] =  sin(rand() % 20001);
+        }
     }
-
     return paContinue;
 }
 
@@ -85,9 +91,22 @@ static void StreamFinished( void* userData )
    printf( "Stream Completed!\n");
 }
 
+void help(){
+	printf("\n\n=============== HELP ===============\n");
+    printf("Use:\n");
+    printf("	./oscillators [waveform] [frequency]\nor\n");
+    printf("	./oscillators [-h | --help]\n\n");
+    printf("	-h, --help: Show help options.\n\n");
+    printf("Waveforms:\n");
+	printf("	-w, --whitenoise: White Noise (Don't need the frequency).\n");
+	printf("	-s, --sine: Sine.\n");
+	printf("	-a, sawtooh: Sawtooth.\n");
+	printf("	-q, square: Square.\n");
+	printf("	-t, triangle: Triangle.\n\n");
+}
+
 /*******************************************************************/
-int main(void);
-int main(void)
+int main(int argc, char *argv[])
 {
     PaStreamParameters outputParameters;
     PaStream *stream;
@@ -97,9 +116,58 @@ int main(void)
 
     printf("PortAudio Test: output sine wave. SR = %d, BufSize = %d\n", SAMPLE_RATE, FRAMES_PER_BUFFER);
 
+
     sine_data data;
-    data.table = create_sawtooth_table(data.table);
     data.index = 0;
+
+    char optc = 0;
+
+	struct option op[] = {
+        {"whitenoise", no_argument, NULL, 'w'},
+        {"sine", required_argument, NULL, 's'},
+        {"sawtooth", required_argument, NULL, 'a'},
+        {"square", required_argument, NULL, 'q'},
+        {"triangle", required_argument, NULL, 't'},
+        {"help", no_argument, NULL, 'h'},
+        {0, 0, 0, 0}
+	};
+
+	if(argc == 1) {
+        FREQ = 440.0;
+		data.table = create_sine_table(data.table);
+	}
+
+    while((optc = getopt_long(argc, argv, "hwsaqt", op, NULL)) != -1) {
+		switch(optc) {
+            case 'h' :
+                help();
+                exit(0);
+	        case 'w' :
+                FREQ = -1;
+                break;
+			case 's' :
+                FREQ = atof(argv[2]);
+                data.table = create_sine_table(data.table);
+                break;
+            case 'a' :
+                FREQ = atof(argv[2]);
+                data.table = create_sawtooth_table(data.table);
+                break;
+            case 'q' :
+                FREQ = atof(argv[2]);
+                data.table = create_square_table(data.table);
+                break;
+            case 't' :
+                FREQ = atof(argv[2]);
+                data.table = create_triangle_table(data.table);
+                break;
+
+			default :
+				printf("\nError: invalid parameter.");
+                help();
+			    exit(0);
+		}
+    }
 
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
