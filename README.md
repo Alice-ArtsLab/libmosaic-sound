@@ -8,32 +8,26 @@
 
 There are the following implementations:
 
+* ### Audio Manipulation
+    * Gain
+    * Line
+
+* ### Audio Math
+    * Plus
+    * Minus
+    * Times
+    * Divided by
+
+* ### General
+    * List audio devices
+
+* ### Output
+    * Buffer
+    * File
+    * Speaker
+
 * ### Sound Sources
     * Oscillators
     * White Noise
     * Microphones
     * File / Buffer
-
-* ### Synthesis
-    * Additive Synthesis
-    * Subtractive Synthesis
-    * Modulation Synthesis
-    * FM Synthesis
-    * Granular Synthesis
-
-* ### Envelope
-    * ADSR
-
-* ### Fx
-    * Chorus
-    * Delay
-    * Distortion
-    * Echo
-    * Flanger
-    * HRTF
-    * Reverb
-    * Tremolo
-    * Vibrato
-
-* ### General
-    * List audio devices
