@@ -9,19 +9,27 @@
 #endif /* LIST */
 
 typedef struct {
+    char *name;
+    int maxInputChannels;
+    int maxOutputChannels;
+    double defaultSampleRate;
+}device_info_t;
+
+typedef struct {
     int id;
     int defaultDisplayed; /* 0: Input; 1: Output*/
-	const PaDeviceInfo *deviceInfo;
+	device_info_t *deviceInfo;
 }device_t;
 
 typedef struct {
-    t_list * output;
-    void (*process)(void * self);
-    void (*show)(void * devices);
-}devices_t;
+    t_list *output;
+    void (*process)(void *self);
+    void (*show)(void *devices);
+}device_list_t;
+
 
 void devices_process();
 void show_devices();
 
-device_t * create_device();
-devices_t * create_devices();
+device_t* create_device(int deviceID);
+device_list_t* create_devices();

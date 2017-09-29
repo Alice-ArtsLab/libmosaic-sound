@@ -4,7 +4,7 @@
 // #include "soundsources/include/whitenoise.h"
 
 int main(int argc, char *argv[]){
-    devices_t * devices = create_devices();
+    device_list_t * devices = create_devices();
     devices->process(devices);
     devices->show(devices);
 
