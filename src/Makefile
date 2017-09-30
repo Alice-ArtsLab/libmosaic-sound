@@ -1,7 +1,7 @@
 CC := gcc
 CFLAGS := -g -Wall
-LIBS := -lportaudio
-OBJS := main.o list.o devices.o
+LIBS := -lportaudio -lm
+OBJS := main.o list.o devices.o whitenoise.o add.o
 TARGET := main
 all: $(TARGET)
 
@@ -11,8 +11,14 @@ main: $(OBJS)
 list.o: util/list.c util/include/list.h
 	$(CC) $(CFLAGS) -c util/list.c
 
-devices.o: general/devices.c general/include/devices.h util/include/list.h
-	$(CC) $(CFLAGS) -c general/devices.c $(LIBS)
+devices.o: modules/devices.c modules/include/devices.h util/include/list.h
+	$(CC) $(CFLAGS) -c modules/devices.c
+
+whitenoise.o: modules/whitenoise.c modules/include/whitenoise.h
+	$(CC) $(CFLAGS) -c modules/whitenoise.c
+
+add.o: modules/add.c modules/include/add.h
+	$(CC) $(CFLAGS) -c modules/add.c
 
 clean:
 	rm -rf $(OBJS) main

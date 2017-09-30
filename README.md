@@ -8,6 +8,12 @@
 
 There are the following implementations:
 
+* ###  Audio Filter
+    * All-pass
+    * Bandpass
+    * High-pass
+    * Low-pass
+
 * ### Audio Manipulation
     * Gain
     * Line
