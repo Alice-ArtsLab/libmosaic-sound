@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "modules/include/add.h"
+#include "modules/include/audiomath.h"
 #include "modules/include/devices.h"
 #include "modules/include/mic.h"
 #include "modules/include/oscillators.h"
@@ -12,7 +12,9 @@
 #define FRAMES_PER_BUFFER 64
 #define CHANNELCOUNT 1 /* stereo output */
 
-mic_t *mic;
+osc_t *osc;
+osc_t *osc2;
+math_t *math;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
@@ -25,11 +27,14 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
   (void)userData;
+  (void)in;
 
-  mic->process(mic, in);
+  osc->process(osc);
+  osc2->process(osc2);
+  math->process(math);
 
   for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = mic->output[i];
+    out[i] = math->output[i];
   }
 
   return paContinue;
@@ -63,7 +68,19 @@ int main(int argc, char *argv[]) {
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
   /*-------------------------------------------------------------------------*/
-  mic = create_mic(FRAMES_PER_BUFFER);
+  osc = create_osc(0, FRAMES_PER_BUFFER, 2048);
+  osc->sampleRate = SAMPLE_RATE;
+  osc->freq = NULL;
+  osc->freqValue = 440;
+
+  osc2 = create_osc(1, FRAMES_PER_BUFFER, 2048);
+  osc2->sampleRate = SAMPLE_RATE;
+  osc2->freq = NULL;
+  osc2->freqValue = 880;
+
+  math = create_math(FRAMES_PER_BUFFER, add_2freq);
+  math->input1 = osc->output;
+  math->input2 = osc2->output;
 
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/

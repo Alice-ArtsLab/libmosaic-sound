@@ -1,7 +1,7 @@
 CC := gcc
 CFLAGS := -g -Wall
 LIBS := -lportaudio -lm
-OBJS := main.o list.o devices.o whitenoise.o add.o oscillators.o mic.o
+OBJS := main.o list.o devices.o whitenoise.o audiomath.o oscillators.o mic.o
 TARGET := main
 all: $(TARGET)
 
@@ -17,8 +17,8 @@ devices.o: modules/devices.c modules/include/devices.h util/include/list.h
 whitenoise.o: modules/whitenoise.c modules/include/whitenoise.h
 	$(CC) $(CFLAGS) -c modules/whitenoise.c
 
-add.o: modules/add.c modules/include/add.h
-	$(CC) $(CFLAGS) -c modules/add.c
+audiomath.o: modules/audiomath.c modules/include/audiomath.h
+	$(CC) $(CFLAGS) -c modules/audiomath.c
 
 oscillators.o: modules/oscillators.c modules/include/oscillators.h
 	$(CC) $(CFLAGS) -c modules/oscillators.c
