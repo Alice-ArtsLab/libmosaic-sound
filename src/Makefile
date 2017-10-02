@@ -1,7 +1,7 @@
 CC := gcc
 CFLAGS := -g -Wall
 LIBS := -lportaudio -lm
-OBJS := main.o list.o devices.o whitenoise.o add.o oscillators.o
+OBJS := main.o list.o devices.o whitenoise.o add.o oscillators.o mic.o
 TARGET := main
 all: $(TARGET)
 
@@ -23,5 +23,7 @@ add.o: modules/add.c modules/include/add.h
 oscillators.o: modules/oscillators.c modules/include/oscillators.h
 	$(CC) $(CFLAGS) -c modules/oscillators.c
 
+mic.o: modules/mic.c modules/include/mic.h
+	$(CC) $(CFLAGS) -c modules/mic.c
 clean:
 	rm -rf $(OBJS) main

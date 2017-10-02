@@ -1,7 +1,9 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "modules/include/add.h"
 #include "modules/include/devices.h"
+#include "modules/include/mic.h"
 #include "modules/include/oscillators.h"
 #include "modules/include/whitenoise.h"
 
@@ -10,31 +12,24 @@
 #define FRAMES_PER_BUFFER 64
 #define CHANNELCOUNT 1 /* stereo output */
 
-noise_t *noise;
-osc_t *osc;
-osc_t *osc2;
-add_t *add;
-add_t *add2;
+mic_t *mic;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
                            const PaStreamCallbackTimeInfo *timeInfo,
                            PaStreamCallbackFlags statusFlags, void *userData) {
+  float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
   unsigned long i;
 
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
-  (void)inputBuffer;
+  (void)userData;
 
-  noise->process(noise);
-  osc->process(osc);
-  osc2->process(osc2);
-  add->process(add);
-  add2->process(add2);
+  mic->process(mic, in);
 
   for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = add2->output[i];
+    out[i] = mic->output[i];
   }
 
   return paContinue;
@@ -47,35 +42,31 @@ static void StreamFinished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  //  device_list_t *devices = create_devices();
-
-  noise = create_noise(FRAMES_PER_BUFFER);
-
-  osc = create_osc(0, FRAMES_PER_BUFFER, 2048);
-  osc->freqValue = 440.0;
-  osc->freq = NULL;
-  osc->sampleRate = SAMPLE_RATE;
-
-  osc2 = create_osc(0, FRAMES_PER_BUFFER, 2048);
-  osc2->freqValue = 880.0;
-  osc2->freq = NULL;
-  osc2->sampleRate = SAMPLE_RATE;
-
-  add = create_add(FRAMES_PER_BUFFER);
-  add->input1 = osc->output;
-  add->input2 = osc2->output;
-
-  add2 = create_add(FRAMES_PER_BUFFER);
-  add2->input1 = noise->output;
-  add2->input2 = add->output;
-
-  PaStreamParameters outputParameters;
+  PaStreamParameters inputParameters, outputParameters;
   PaStream *stream;
   PaError err;
 
   err = Pa_Initialize();
   if (err != paNoError) goto error;
 
+  /*inputParameters*/
+  inputParameters.device =
+      Pa_GetDefaultInputDevice(); /* default input device */
+  if (inputParameters.device == paNoDevice) {
+    fprintf(stderr, "Error: No default input device.\n");
+    goto error;
+  }
+  inputParameters.channelCount = CHANNELCOUNT; /* stereo input */
+  inputParameters.sampleFormat = paFloat32;
+  inputParameters.suggestedLatency =
+      Pa_GetDeviceInfo(inputParameters.device)->defaultLowInputLatency;
+  inputParameters.hostApiSpecificStreamInfo = NULL;
+
+  /*-------------------------------------------------------------------------*/
+  mic = create_mic(FRAMES_PER_BUFFER);
+
+  /*-------------------------------------------------------------------------*/
+  /*outputParameters*/
   outputParameters.device =
       Pa_GetDefaultOutputDevice(); /* default output device */
   if (outputParameters.device == paNoDevice) {
@@ -87,8 +78,8 @@ int main(int argc, char *argv[]) {
   outputParameters.suggestedLatency =
       Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
   outputParameters.hostApiSpecificStreamInfo = NULL;
-  err = Pa_OpenStream(&stream, NULL, /* no input */
-                      &outputParameters, SAMPLE_RATE, FRAMES_PER_BUFFER,
+  err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, SAMPLE_RATE,
+                      FRAMES_PER_BUFFER,
                       paClipOff, /* we won't output out of range samples so
                                     don't bother clipping them */
                       speakerCallback, NULL);
