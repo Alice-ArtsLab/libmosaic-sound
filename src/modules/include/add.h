@@ -8,4 +8,3 @@ typedef struct {
 
 add_t* create_add(int framesPerBuffer);
 void add_process();
-void add_connect();

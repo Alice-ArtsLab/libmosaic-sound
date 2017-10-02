@@ -12,7 +12,7 @@ typedef struct {
         char *name;
         int maxInputChannels;
         int maxOutputChannels;
-        double defaultSampleRate;
+        float defaultSampleRate;
 }device_info_t;
 
 typedef struct {

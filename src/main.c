@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include "modules/include/add.h"
 #include "modules/include/devices.h"
+#include "modules/include/oscillators.h"
 #include "modules/include/whitenoise.h"
-// #include "soundsources/include/mic.h"
-// #include "soundsources/include/oscillators.h"
 
 #define NUM_SECONDS 5
 #define SAMPLE_RATE 48000
@@ -12,7 +11,10 @@
 #define CHANNELCOUNT 1 /* stereo output */
 
 noise_t *noise;
+osc_t *osc;
+osc_t *osc2;
 add_t *add;
+add_t *add2;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
@@ -26,10 +28,13 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   (void)inputBuffer;
 
   noise->process(noise);
+  osc->process(osc);
+  osc2->process(osc2);
   add->process(add);
+  add2->process(add2);
 
   for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = add->output[i];
+    out[i] = add2->output[i];
   }
 
   return paContinue;
@@ -45,9 +50,24 @@ int main(int argc, char *argv[]) {
   //  device_list_t *devices = create_devices();
 
   noise = create_noise(FRAMES_PER_BUFFER);
+
+  osc = create_osc(0, FRAMES_PER_BUFFER, 2048);
+  osc->freqValue = 440.0;
+  osc->freq = NULL;
+  osc->sampleRate = SAMPLE_RATE;
+
+  osc2 = create_osc(0, FRAMES_PER_BUFFER, 2048);
+  osc2->freqValue = 880.0;
+  osc2->freq = NULL;
+  osc2->sampleRate = SAMPLE_RATE;
+
   add = create_add(FRAMES_PER_BUFFER);
-  add->input1 = noise->output;
-  add->input2 = noise->output;
+  add->input1 = osc->output;
+  add->input2 = osc2->output;
+
+  add2 = create_add(FRAMES_PER_BUFFER);
+  add2->input1 = noise->output;
+  add2->input2 = add->output;
 
   PaStreamParameters outputParameters;
   PaStream *stream;
