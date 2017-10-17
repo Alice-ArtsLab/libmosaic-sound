@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "modules/include/audiomath.h"
 #include "modules/include/devices.h"
+#include "modules/include/iirfilters.h"
 #include "modules/include/mic.h"
 #include "modules/include/oscillators.h"
 #include "modules/include/whitenoise.h"
@@ -12,9 +13,8 @@
 #define FRAMES_PER_BUFFER 64
 #define CHANNELCOUNT 1 /* stereo output */
 
-osc_t *osc;
-osc_t *osc2;
-math_t *math;
+mic_t *mic;
+iir_t *filter;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
@@ -29,12 +29,11 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  osc->process(osc);
-  osc2->process(osc2);
-  math->process(math);
+  mic->process(mic, in);
+  filter->process(filter);
 
   for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = math->output[i];
+    out[i] = filter->output[i];
   }
 
   return paContinue;
@@ -68,19 +67,13 @@ int main(int argc, char *argv[]) {
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
   /*-------------------------------------------------------------------------*/
-  osc = create_osc(0, FRAMES_PER_BUFFER, 2048);
-  osc->sampleRate = SAMPLE_RATE;
-  osc->freq = NULL;
-  osc->freqValue = 440;
+  mic = create_mic(FRAMES_PER_BUFFER);
 
-  osc2 = create_osc(1, FRAMES_PER_BUFFER, 2048);
-  osc2->sampleRate = SAMPLE_RATE;
-  osc2->freq = NULL;
-  osc2->freqValue = 880;
-
-  math = create_math(FRAMES_PER_BUFFER, add_2freq);
-  math->input1 = osc->output;
-  math->input2 = osc2->output;
+  filter = create_iir(0, 2, FRAMES_PER_BUFFER);
+  filter->input = mic->output;
+  filter->sampleRate = SAMPLE_RATE;
+  filter->cutOff = 0.1 * SAMPLE_RATE;
+  filter->slope = 0.2 * SAMPLE_RATE;
 
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/
