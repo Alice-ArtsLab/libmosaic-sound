@@ -7,10 +7,14 @@ typedef struct {
     float sampleRate;
     float slope;
     float cutOff;
+    float xn1; /* x(n-1) */
+    float xn2; /* x(n-2) */
+    float yn1; /* y(n-1) */
+    float yn2; /* y(n-2) */
     void (*process)(void *self);
-}iir_t;
+}biquad_t;
 
-iir_t *create_iir(int type, int order, int framesPerBuffer);
+biquad_t *create_biquad(int type, int order, int framesPerBuffer);
 
 void allpass_process();
 void lowpass_process();

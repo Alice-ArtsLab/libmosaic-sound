@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "modules/include/audiomath.h"
+#include "modules/include/biquad.h"
 #include "modules/include/devices.h"
-#include "modules/include/iirfilters.h"
 #include "modules/include/mic.h"
 #include "modules/include/oscillators.h"
 #include "modules/include/whitenoise.h"
@@ -14,7 +14,7 @@
 #define CHANNELCOUNT 1 /* stereo output */
 
 mic_t *mic;
-iir_t *filter;
+biquad_t *filter;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
   /*-------------------------------------------------------------------------*/
   mic = create_mic(FRAMES_PER_BUFFER);
 
-  filter = create_iir(0, 2, FRAMES_PER_BUFFER);
+  filter = create_biquad(0, 2, FRAMES_PER_BUFFER);
   filter->input = mic->output;
   filter->sampleRate = SAMPLE_RATE;
   filter->cutOff = 0.1 * SAMPLE_RATE;
@@ -101,8 +101,9 @@ int main(int argc, char *argv[]) {
   err = Pa_StartStream(stream);
   if (err != paNoError) goto error;
 
-  printf("Play for %d seconds.\n", NUM_SECONDS);
-  Pa_Sleep(NUM_SECONDS * 1000);
+  // printf("Play for %d seconds.\n", NUM_SECONDS);
+  // Pa_Sleep(NUM_SECONDS * 1000);
+  getchar();
 
   err = Pa_StopStream(stream);
   if (err != paNoError) goto error;
