@@ -71,10 +71,119 @@ void allpass_process(biquad_t *filter) {
   }
 }
 
-void lowpass_process(biquad_t *filter) {}
+void lowpass_process(biquad_t *filter) {
+  if (filter->order == 1) { /* First-order lowpass */
 
-void highpass_process(biquad_t *filter) {}
+    float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
+    float b0 = 1 / (K + 1);
+    float b1 = -1 / (K + 1);
+    float a1 = (K - 1) / (K + 1);
 
-void bandpass_process(biquad_t *filter) {}
+    int i = 0;
+    for (i = 0; i < filter->framesPerBuffer; i++) {
+      filter->output[i] =
+          b0 * filter->input[i] + b1 * filter->xn1 - a1 * filter->yn1;
+      filter->xn1 = filter->input[i];
+      filter->yn1 = filter->output[i];
+    }
+  } else { /* Second-order lowpass */
 
-void bandreject_process(biquad_t *filter) {}
+    float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
+    float Q = filter->slope;
+    float b0 = Q / (K * K * Q + K + Q);
+    float b1 = (-2 * Q) / (K * K * Q + K + Q);
+    float b2 = Q;
+    float a1 = (2 * Q * (K * K - 1)) / (K * K * Q + K + Q);
+    float a2 = (K * K * Q - K + Q) / (K * K * Q + K + Q);
+
+    int i = 0;
+    for (i = 0; i < filter->framesPerBuffer; i++) {
+      filter->output[i] = b0 * filter->input[i] + b1 * filter->xn1 +
+                          b2 * filter->xn2 - a1 * filter->yn1 -
+                          a2 * filter->yn2;
+      filter->xn2 = filter->xn1;
+      filter->yn2 = filter->yn1;
+      filter->xn1 = filter->input[i];
+      filter->yn1 = filter->output[i];
+    }
+  }
+}
+
+void highpass_process(biquad_t *filter) {
+  if (filter->order == 1) { /* First-order highpass */
+    float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
+    float b0 = 1 / (K + 1);
+    float b1 = -1 / (K + 1);
+    float a1 = (K - 1) / (K + 1);
+
+    int i = 0;
+    for (i = 0; i < filter->framesPerBuffer; i++) {
+      filter->output[i] =
+          b0 * filter->input[i] + b1 * filter->xn1 - a1 * filter->yn1;
+      filter->xn1 = filter->input[i];
+      filter->yn1 = filter->output[i];
+    }
+  } else { /* Second-order highpass */
+    float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
+    float Q = filter->slope;
+    float b0 = Q / (K * K * Q + K + Q);
+    float b1 = (-2 * Q) / (K * K * Q + K + Q);
+    float b2 = Q;
+    float a1 = (2 * Q * (K * K - 1)) / (K * K * Q + K + Q);
+    float a2 = (K * K * Q - K + Q) / (K * K * Q + K + Q);
+
+    int i = 0;
+    for (i = 0; i < filter->framesPerBuffer; i++) {
+      filter->output[i] = b0 * filter->input[i] + b1 * filter->xn1 +
+                          b2 * filter->xn2 - a1 * filter->yn1 -
+                          a2 * filter->yn2;
+      filter->xn2 = filter->xn1;
+      filter->yn2 = filter->yn1;
+      filter->xn1 = filter->input[i];
+      filter->yn1 = filter->output[i];
+    }
+  }
+}
+
+void bandpass_process(biquad_t *filter) {
+  /* Second-order bandpass */
+  float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
+  float Q = filter->slope;
+  float b0 = (K) / (K * K * Q + K + Q);
+  float b1 = 0;
+  float b2 = (K) / (K * K * Q + K + Q);
+  float a1 = (2 * Q * (K * K - 1)) / (K * K * Q + K + Q);
+  float a2 = (K * K * Q - K + Q) / (K * K * Q + K + Q);
+
+  int i = 0;
+  for (i = 0; i < filter->framesPerBuffer; i++) {
+    filter->output[i] = b0 * filter->input[i] + b1 * filter->xn1 +
+                        b2 * filter->xn2 - a1 * filter->yn1 - a2 * filter->yn2;
+    filter->xn2 = filter->xn1;
+    filter->yn2 = filter->yn1;
+    filter->xn1 = filter->input[i];
+    filter->yn1 = filter->output[i];
+  }
+}
+
+void bandreject_process(biquad_t *filter) {
+  /* Second-order bandreject */
+
+  float K = (float)tan(M_PI * filter->sampleRate / filter->sampleRate);
+  float Q = filter->slope;
+  float b0 = (Q * (1 + K * K)) / (K * K * Q + K + Q);
+  float b1 = (2 * Q * (K * K - 1)) / (K * K * Q + K + Q);
+  float b2 = (Q * (1 + K * K)) / (K * K * Q + K + Q);
+  float a1 = (2 * Q * (K * K - 1)) / (K * K * Q + K + Q);
+  float a2 = (K * K * Q - K + Q) / (K * K * Q + K + Q);
+
+  int i = 0;
+  for (i = 0; i < filter->framesPerBuffer; i++) {
+    filter->output[i] = b0 * filter->input[i] + b1 * filter->xn1 +
+                        b2 * filter->xn2 - a1 * filter->yn1 - a2 * filter->yn2;
+    filter->xn2 = filter->xn1;
+    filter->yn2 = filter->yn1;
+    filter->xn1 = filter->input[i];
+    filter->yn1 = filter->output[i];
+  }
+}

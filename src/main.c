@@ -69,11 +69,11 @@ int main(int argc, char *argv[]) {
   /*-------------------------------------------------------------------------*/
   mic = create_mic(FRAMES_PER_BUFFER);
 
-  filter = create_biquad(0, 2, FRAMES_PER_BUFFER);
+  filter = create_biquad(4, 1, FRAMES_PER_BUFFER);
   filter->input = mic->output;
   filter->sampleRate = SAMPLE_RATE;
   filter->cutOff = 0.1 * SAMPLE_RATE;
-  filter->slope = 0.2 * SAMPLE_RATE;
+  filter->slope = 0.2;
 
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/
