@@ -13,10 +13,9 @@ There are the following implementations:
     * Bandpass
     * High-pass
     * Low-pass
-
-* ### Audio Manipulation
-    * Gain
-    * Line
+    * High Shelving
+    * Low Shelving
+    * Parametric Equalizer
 
 * ### Audio Math
     * Plus
