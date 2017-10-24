@@ -1,7 +1,9 @@
 CC := gcc
 CFLAGS := -g -Wall
 LIBS := -lportaudio -lm
-OBJS := main.o list.o devices.o whitenoise.o audiomath.o oscillators.o mic.o biquad.o
+OBJS := main.o list.o devices.o whitenoise.o audiomath.o oscillators.o mic.o \
+biquad.o parametricequalizer.o lowshelving.o highshelving.o
+
 TARGET := main
 all: $(TARGET)
 
@@ -28,5 +30,14 @@ mic.o: modules/mic.c modules/include/mic.h
 
 biquad.o: modules/biquad.c modules/include/biquad.h
 		$(CC) $(CFLAGS) -c modules/biquad.c
+
+parametricequalizer.o: modules/parametricequalizer.c modules/include/parametricequalizer.h
+		$(CC) $(CFLAGS) -c modules/parametricequalizer.c
+
+lowshelving.o: modules/lowshelving.c modules/include/lowshelving.h
+		$(CC) $(CFLAGS) -c modules/lowshelving.c
+
+highshelving.o: modules/highshelving.c modules/include/highshelving.h
+		$(CC) $(CFLAGS) -c modules/highshelving.c
 clean:
 	rm -rf $(OBJS) main

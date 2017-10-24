@@ -4,8 +4,11 @@
 #include "modules/include/audiomath.h"
 #include "modules/include/biquad.h"
 #include "modules/include/devices.h"
+#include "modules/include/highshelving.h"
+#include "modules/include/lowshelving.h"
 #include "modules/include/mic.h"
 #include "modules/include/oscillators.h"
+#include "modules/include/parametricequalizer.h"
 #include "modules/include/whitenoise.h"
 
 #define NUM_SECONDS 5
@@ -14,7 +17,7 @@
 #define CHANNELCOUNT 1 /* stereo output */
 
 mic_t *mic;
-biquad_t *filter;
+highshelving_t *filter;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
@@ -69,11 +72,11 @@ int main(int argc, char *argv[]) {
   /*-------------------------------------------------------------------------*/
   mic = create_mic(FRAMES_PER_BUFFER);
 
-  filter = create_biquad(4, 1, FRAMES_PER_BUFFER);
+  filter = create_highshelving(FRAMES_PER_BUFFER);
   filter->input = mic->output;
   filter->sampleRate = SAMPLE_RATE;
   filter->cutOff = 0.1 * SAMPLE_RATE;
-  filter->slope = 0.2;
+  filter->gain = 1;
 
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/
@@ -101,9 +104,8 @@ int main(int argc, char *argv[]) {
   err = Pa_StartStream(stream);
   if (err != paNoError) goto error;
 
-  // printf("Play for %d seconds.\n", NUM_SECONDS);
-  // Pa_Sleep(NUM_SECONDS * 1000);
-  getchar();
+  printf("Play for %d seconds.\n", NUM_SECONDS);
+  Pa_Sleep(NUM_SECONDS * 1000);
 
   err = Pa_StopStream(stream);
   if (err != paNoError) goto error;
