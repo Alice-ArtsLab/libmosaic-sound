@@ -9,6 +9,7 @@
 #include "modules/include/mic.h"
 #include "modules/include/oscillators.h"
 #include "modules/include/parametricequalizer.h"
+#include "modules/include/sndfile.h"
 #include "modules/include/whitenoise.h"
 
 #define NUM_SECONDS 5
@@ -16,8 +17,7 @@
 #define FRAMES_PER_BUFFER 64
 #define CHANNELCOUNT 1 /* stereo output */
 
-mic_t *mic;
-highshelving_t *filter;
+sndfile_t *sndfile;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
@@ -32,12 +32,11 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  mic->process(mic, in);
-  filter->process(filter);
+  // sndfile->process(sndfile);
 
-  for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = filter->output[i];
-  }
+  // for (i = 0; i < framesPerBuffer; i++) {
+  // out[i] = sndfile->output[i];
+  // }
 
   return paContinue;
 }
@@ -70,13 +69,8 @@ int main(int argc, char *argv[]) {
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
   /*-------------------------------------------------------------------------*/
-  mic = create_mic(FRAMES_PER_BUFFER);
-
-  filter = create_highshelving(FRAMES_PER_BUFFER);
-  filter->input = mic->output;
-  filter->sampleRate = SAMPLE_RATE;
-  filter->cutOff = 0.1 * SAMPLE_RATE;
-  filter->gain = 1;
+  sndfile =
+      create_sndfile('r', "/home/luan/despertador.mp3", FRAMES_PER_BUFFER);
 
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/

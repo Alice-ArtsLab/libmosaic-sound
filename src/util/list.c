@@ -77,11 +77,11 @@ void *list_remove_element(t_list **list, const void *data,
        previous = current, current = current->next) {
     // check value
     if (compare_function(current->data, data)) {
-      if (previous == NULL) {  // remove first
+      if (previous == NULL)  // remove first
         *list = current->next;
-      } else {
+      else
         previous->next = current->next;
-      }
+
       return current->data;
     }
   }

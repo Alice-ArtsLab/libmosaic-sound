@@ -50,11 +50,10 @@ float *create_square_table(int tableSize) {
   int i;
   for (i = 0; i < tableSize; i++) {
     table[i] = sin(2.0 * M_PI * i / tableSize);
-    if (table[i] >= 0) {
+    if (table[i] >= 0)
       table[i] = 1;
-    } else {
+    else
       table[i] = -1;
-    }
   }
   return table;
 }

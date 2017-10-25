@@ -1,8 +1,8 @@
 CC := gcc
 CFLAGS := -g -Wall
-LIBS := -lportaudio -lm
+LIBS := -lportaudio -lm `pkg-config --libs sndfile`
 OBJS := main.o list.o devices.o whitenoise.o audiomath.o oscillators.o mic.o \
-biquad.o parametricequalizer.o lowshelving.o highshelving.o
+biquad.o parametricequalizer.o lowshelving.o highshelving.o sndfile.o
 
 TARGET := main
 all: $(TARGET)
@@ -39,5 +39,9 @@ lowshelving.o: modules/lowshelving.c modules/include/lowshelving.h
 
 highshelving.o: modules/highshelving.c modules/include/highshelving.h
 		$(CC) $(CFLAGS) -c modules/highshelving.c
+
+sndfile.o: modules/sndfile.c modules/include/sndfile.h
+		$(CC)  $(CFLAGS) -c modules/sndfile.c
+
 clean:
 	rm -rf $(OBJS) main

@@ -63,11 +63,10 @@ void show_devices(device_list_t *devices) {
   while (devices->output) {
     printf("--------------------------------------- device #%d ", deviceID);
     device_t *dev = (device_t *)devices->output->data;
-    if (dev->defaultDisplayed == 0) {
+    if (dev->defaultDisplayed == 0)
       printf("(Input)\n");
-    } else {
+    else
       printf("(Output)\n");
-    }
 
     printf("name: %s\n", dev->deviceInfo->name);
     printf("maxInputChannels: %d\n", dev->deviceInfo->maxInputChannels);
