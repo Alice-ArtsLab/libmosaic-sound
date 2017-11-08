@@ -1,27 +1,28 @@
 #include <sndfile.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "include/sndfile.h"
 
 sndfile_t *create_sndfile(char type, char *filename, int framesPerBuffer) {
+
   sndfile_t *sndfile = malloc(sizeof(sndfile_t));
   sndfile->readCount = 0;
   sndfile->finished = 0;
-  sndfile->filename = filename;
-  sndfile->output = malloc(framesPerBuffer * sizeof(float));
+
+  sndfile->filename = malloc(strlen(filename) + 1);
+  strcpy(sndfile->filename, filename);
+
+    printf("----------------- %s \n", sndfile->filename);
 
   if (type == 'w') {
     sndfile->process = sndfile_write_process;
   } else {
+    sndfile->output = malloc(framesPerBuffer * sizeof(float));
     sndfile->process = sndfile_read_process;
-
-    sndfile->infile = (SNDFILE *)sndfile->infile;
-    sndfile->sfinfo = (SF_INFO *)sndfile->sfinfo;
-
-    sndfile->infile = sf_open(sndfile->filename, SFM_READ, sndfile->sfinfo);
-    if (!sndfile->infile) {
+    sndfile->sf = sf_open(sndfile->filename, SFM_READ, &sndfile->info);
+    if (!sndfile->sf) {
       printf("Not able to open input file %s.\n", sndfile->filename);
-      /* Print the error message from libsndfile. */
       puts(sf_strerror(NULL));
       return NULL;
     }
@@ -37,11 +38,15 @@ void sndfile_read_process(sndfile_t *sndfile) {
     for (i = 0; i < sndfile->framesPerBuffer; i++) {
       sndfile->output[i] = 0;
     }
+    return;
   }
-  if ((sndfile->readCount = sf_read_float(sndfile->infile, sndfile->output,
-                                          sndfile->framesPerBuffer))) {
+
+    sndfile->readCount = sf_read_float(sndfile->sf, sndfile->output,
+                                          sndfile->framesPerBuffer)
+
+  if (()) {
   } else {
-    sf_close(sndfile->infile);
+    sf_close(sndfile->sf);
     sndfile->finished = 1;
   }
 }

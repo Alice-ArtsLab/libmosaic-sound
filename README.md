@@ -36,3 +36,7 @@ There are the following implementations:
     * White Noise
     * Microphones
     * File / Buffer
+    
+# Solving Dependecies
+    * sudo apt-get install libsndfile1-dev
+    * sudo apt-get install portaudio19-dev

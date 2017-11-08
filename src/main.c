@@ -32,11 +32,11 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  // sndfile->process(sndfile);
+   sndfile->process(sndfile);
 
-  // for (i = 0; i < framesPerBuffer; i++) {
-  // out[i] = sndfile->output[i];
-  // }
+   for (i = 0; i < framesPerBuffer; i++) {
+    out[i] = sndfile->output[i];
+   }
 
   return paContinue;
 }
@@ -68,9 +68,8 @@ int main(int argc, char *argv[]) {
       Pa_GetDeviceInfo(inputParameters.device)->defaultLowInputLatency;
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
-  /*-------------------------------------------------------------------------*/
-  sndfile =
-      create_sndfile('r', "/home/luan/despertador.mp3", FRAMES_PER_BUFFER);
+  /*--READ THE SOUND FILE ---------------------------------------------------*/
+  sndfile = create_sndfile('r', "/tmp/coltrane.wav", FRAMES_PER_BUFFER);
 
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/
