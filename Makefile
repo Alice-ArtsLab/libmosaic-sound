@@ -15,7 +15,8 @@ OBJS := $(BUILD)main.o \
         $(BUILD)parametricequalizer.o \
         $(BUILD)lowshelving.o \
         $(BUILD)highshelving.o \
-        $(BUILD)sndfile.o
+        $(BUILD)playback.o \
+		$(BUILD)playback.o
 
 TARGET := $(BIN)main
 all: $(TARGET)
@@ -68,7 +69,11 @@ $(BUILD)highshelving.o: $(SRC)/modules/highshelving.c $(SRC)/modules/include/hig
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD)sndfile.o: $(SRC)/modules/sndfile.c $(SRC)/modules/include/sndfile.h
+$(BUILD)playback.o: $(SRC)/modules/playback.c $(SRC)/modules/include/playback.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD)record.o: $(SRC)/modules/record.c $(SRC)/modules/include/record.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@
 

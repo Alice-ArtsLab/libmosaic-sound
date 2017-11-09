@@ -9,15 +9,16 @@
 #include "modules/include/mic.h"
 #include "modules/include/oscillators.h"
 #include "modules/include/parametricequalizer.h"
-#include "modules/include/sndfile.h"
+#include "modules/include/playback.h"
+#include "modules/include/record.h"
 #include "modules/include/whitenoise.h"
 
 #define NUM_SECONDS 5
-#define SAMPLE_RATE 48000
-#define FRAMES_PER_BUFFER 64
+#define SAMPLE_RATE 44100
+#define FRAMES_PER_BUFFER 256
 #define CHANNELCOUNT 1 /* stereo output */
 
-sndfile_t *sndfile;
+playback_t *playback;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
@@ -32,11 +33,11 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-   sndfile->process(sndfile);
+  playback->process(playback);
 
-   for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = sndfile->output[i];
-   }
+  for (i = 0; i < framesPerBuffer; i++) {
+    out[i] = playback->output[i];
+  }
 
   return paContinue;
 }
@@ -69,8 +70,9 @@ int main(int argc, char *argv[]) {
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
   /*--READ THE SOUND FILE ---------------------------------------------------*/
-  sndfile = create_sndfile('r', "/tmp/coltrane.wav", FRAMES_PER_BUFFER);
-
+  playback = create_playback("/home/luan/Downloads/victor_wooten_solo.wav",
+                             FRAMES_PER_BUFFER);
+  playback->loop = 1;
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/
   outputParameters.device =
@@ -97,8 +99,10 @@ int main(int argc, char *argv[]) {
   err = Pa_StartStream(stream);
   if (err != paNoError) goto error;
 
-  printf("Play for %d seconds.\n", NUM_SECONDS);
-  Pa_Sleep(NUM_SECONDS * 1000);
+  // printf("Play for %d seconds.\n", NUM_SECONDS);
+  // Pa_Sleep(NUM_SECONDS * 1000);
+
+  getchar();
 
   err = Pa_StopStream(stream);
   if (err != paNoError) goto error;
