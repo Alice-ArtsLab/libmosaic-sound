@@ -16,7 +16,7 @@
 #define NUM_SECONDS 5
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
-#define CHANNELCOUNT 1 /* stereo output */
+#define CHANNELCOUNT 1 /* mono output */
 
 playback_t *playback;
 
@@ -36,7 +36,7 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   playback->process(playback);
 
   for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = playback->outputL[i];
+    out[i] = playback->outputL[i] + playback->outputR[i];
   }
 
   return paContinue;
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
   /*--READ THE SOUND FILE ---------------------------------------------------*/
-  playback = create_playback("/home/luan/Downloads/victor_wooten_solo.wav",
+  playback = create_playback("/home/luan/Downloads/miles_davis-solar.wav",
                              FRAMES_PER_BUFFER);
   playback->loop = 1;
   /*-------------------------------------------------------------------------*/

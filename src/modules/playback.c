@@ -34,7 +34,8 @@ playback_t *create_playback(char *filename, int framesPerBuffer) {
   } else if (info.channels == 2) {
     playback->process = playback_process_stereo;
     playback->outputL = calloc(framesPerBuffer, sizeof(float));
-    playback->outputR = NULL;
+    playback->outputR = calloc(framesPerBuffer, sizeof(float));
+    ;
   } else {
     printf("Support just Mono and Stereo Sound File\n");
     return NULL;
@@ -74,4 +75,30 @@ void playback_process_mono(playback_t *playback) {
   }
 }
 
-void playback_process_stereo(playback_t *playback) {}
+void playback_process_stereo(playback_t *playback) {
+  int i = 0;
+
+  if (!playback->paused) {
+    for (i = 0; i < playback->framesPerBuffer &&
+                playback->readCount < playback->fileFrames;
+         i++) {
+      playback->outputL[i] = playback->input[playback->readCount];
+      playback->outputR[i] = playback->input[playback->readCount + 1];
+      playback->readCount += 2;
+      if (playback->loop && playback->readCount >= playback->fileFrames)
+        playback->readCount = 0;
+    }
+    for (; i < playback->framesPerBuffer &&
+           playback->readCount >= playback->fileFrames;
+         i++) {
+      playback->outputL[i] = 0;
+      playback->outputR[i] = 0;
+    }
+    return;
+  } else {
+    for (i = 0; i < playback->framesPerBuffer; i++) {
+      playback->outputL[i] = 0;
+      playback->outputR[i] = 0;
+    }
+  }
+}
