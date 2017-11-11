@@ -36,7 +36,7 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   playback->process(playback);
 
   for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = playback->output[i];
+    out[i] = playback->outputL[i];
   }
 
   return paContinue;

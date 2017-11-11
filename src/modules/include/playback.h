@@ -2,12 +2,14 @@
 
 typedef struct {
     int loop;
+    int channels;
     int framesPerBuffer;
     int fileSampleRate;
     int fileFrames;
     int readCount;
     int paused; /* 0: paused ; 1: playing*/
-    float *output;
+    float *outputL;
+    float *outputR;
     float *input;
     char *filename;
     void (*process)(void *self);
@@ -15,4 +17,5 @@ typedef struct {
 
 playback_t *create_playback(char *filename, int framesPerBuffer);
 
-void playback_process();
+void playback_process_mono();
+void playback_process_stereo();
