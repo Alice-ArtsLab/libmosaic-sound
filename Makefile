@@ -16,7 +16,7 @@ OBJS := $(BUILD)main.o \
         $(BUILD)lowshelving.o \
         $(BUILD)highshelving.o \
         $(BUILD)playback.o \
-		$(BUILD)playback.o
+		$(BUILD)record.o
 
 TARGET := $(BIN)main
 all: $(TARGET)

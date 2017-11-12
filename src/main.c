@@ -19,6 +19,7 @@
 #define CHANNELCOUNT 1 /* mono output */
 
 playback_t *playback;
+record_t *rec;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
@@ -34,9 +35,10 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   (void)in;
 
   playback->process(playback);
+  rec->process(rec);
 
   for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = playback->outputL[i] + playback->outputR[i];
+    out[i] = rec->input[i];
   }
 
   return paContinue;
@@ -70,9 +72,14 @@ int main(int argc, char *argv[]) {
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
   /*--READ THE SOUND FILE ---------------------------------------------------*/
-  playback = create_playback("/home/luan/Downloads/miles_davis-solar.wav",
+  playback = create_playback("/home/luan/Downloads/victor_wooten_solo.wav",
                              FRAMES_PER_BUFFER);
   playback->loop = 1;
+
+  rec = create_record("audio.wav", FRAMES_PER_BUFFER, 10, 44100);
+
+  rec->input = rec->outputL;
+
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/
   outputParameters.device =
