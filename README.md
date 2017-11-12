@@ -36,7 +36,26 @@ There are the following implementations:
     * White Noise
     * Microphones
     * File / Buffer
-    
-# Solving Dependecies
-    * sudo apt-get install libsndfile1-dev
-    * sudo apt-get install portaudio19-dev
+
+## Solving Dependecies
+`sudo apt-get install libsndfile1-dev`
+
+`sudo apt-get install portaudio19-dev`
+
+## Compiling
+
+Compiling library: `make`
+
+Compiling examples: `make examples`
+
+**Note:** We need to compile the library first.
+
+Cleaning library: `make clean`
+
+Cleaning examples: `make clean_examples`
+
+## Running
+
+Main: `./bin/main`
+
+Examples: `./examples/bin/<filename>`
