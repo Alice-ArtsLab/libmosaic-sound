@@ -18,7 +18,7 @@
 #define FRAMES_PER_BUFFER 256
 #define CHANNELCOUNT 1 /* mono output */
 
-playback_t *playback;
+mic_t *mic;
 record_t *rec;
 
 static int speakerCallback(const void *inputBuffer, void *outputBuffer,
@@ -34,7 +34,7 @@ static int speakerCallback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  playback->process(playback);
+  mic->process(mic, in);
   rec->process(rec);
 
   for (i = 0; i < framesPerBuffer; i++) {
@@ -71,14 +71,10 @@ int main(int argc, char *argv[]) {
       Pa_GetDeviceInfo(inputParameters.device)->defaultLowInputLatency;
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
-  /*--READ THE SOUND FILE ---------------------------------------------------*/
-  playback = create_playback("/home/luan/Downloads/victor_wooten_solo.wav",
-                             FRAMES_PER_BUFFER);
-  playback->loop = 1;
-
+  mic = create_mic(FRAMES_PER_BUFFER);
   rec = create_record("audio.wav", FRAMES_PER_BUFFER, 10, 44100);
 
-  rec->input = rec->outputL;
+  rec->input = mic->output;
 
   /*-------------------------------------------------------------------------*/
   /*outputParameters*/

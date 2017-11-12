@@ -1,3 +1,5 @@
+*.o
 bin/*
 build/*
-*.o
+examples/bin/*
+examples/build/*
