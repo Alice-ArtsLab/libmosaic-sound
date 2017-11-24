@@ -1,6 +1,6 @@
-# Portaudio codes: Sound Design
+# Sound Design with *libmosaic-sound*
 
-**This repository contains some code written in the 'C' programming language based on the PortAudio library. These codes are resources for working with Sound Design.**
+**This repository contains the library libmosaic-sound written in the 'C' programming language based on the PortAudio library. This library provides resources for working with Sound Design.**
 
 -------------
 
