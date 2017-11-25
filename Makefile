@@ -1,90 +1,105 @@
 CC := gcc
-CFLAGS := -g -Wall
+CFLAGS := -Wall -Werror -fPIC
 LIBS := -lportaudio -lm `pkg-config --libs sndfile`
-SRC := src/
-BUILD := build/
-BIN := bin/
-OBJS := $(BUILD)main.o \
-		$(BUILD)list.o \
-        $(BUILD)devices.o \
-        $(BUILD)whitenoise.o \
-        $(BUILD)audiomath.o \
-        $(BUILD)oscillators.o \
-        $(BUILD)mic.o \
-        $(BUILD)biquad.o \
-        $(BUILD)parametricequalizer.o \
-        $(BUILD)lowshelving.o \
-        $(BUILD)highshelving.o \
-        $(BUILD)playback.o \
-		$(BUILD)record.o
+LIBDIR := src
+LIB_NAME := mosaic-sound
+LIB_VERSION := 1
+BUILD := build
+DIST := dist
+OBJS :=	$(BUILD)/list.o \
+        $(BUILD)/devices.o \
+        $(BUILD)/whitenoise.o \
+        $(BUILD)/audiomath.o \
+        $(BUILD)/oscillators.o \
+        $(BUILD)/mic.o \
+        $(BUILD)/biquad.o \
+        $(BUILD)/parametricequalizer.o \
+        $(BUILD)/lowshelving.o \
+        $(BUILD)/highshelving.o \
+        $(BUILD)/playback.o \
+		$(BUILD)/record.o
 
-TARGET := $(BIN)main
+TARGET := $(OBJS) static
 all: $(TARGET)
 
-$(BIN)main:	$(OBJS)
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+static:
+	mkdir -p "$(DIST)"
+	ar -crs $(DIST)/lib$(LIB_NAME).a $(OBJS)
 
-$(BUILD)main.o: $(SRC)main.c
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
+# dynamic
+.PHONY:	install
+install:
+	rm -rf "$(DIST)"
+	mkdir -p "$(DIST)"
+	$(CC) $(CFLAGS) -shared -o $(DIST)/lib$(LIB_NAME).so.$(LIB_VERSION) $(OBJS)
+	ln -s lib$(LIB_NAME).so.$(LIB_VERSION) $(DIST)/lib$(LIB_NAME).so
 
-$(BUILD)list.o: $(SRC)util/list.c $(SRC)util/include/list.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
+	cp $(DIST)/lib$(LIB_NAME).so.$(LIB_VERSION) /usr/lib
+	cp $(DIST)/lib$(LIB_NAME).so /usr/lib
+	cp $(LIBDIR)/$(LIB_NAME).h /usr/include
 
-$(BUILD)devices.o: $(SRC)modules/devices.c $(SRC)modules/include/devices.h $(SRC)util/include/list.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)whitenoise.o: $(SRC)modules/whitenoise.c $(SRC)modules/include/whitenoise.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)audiomath.o: $(SRC)modules/audiomath.c $(SRC)modules/include/audiomath.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)oscillators.o: $(SRC)modules/oscillators.c $(SRC)modules/include/oscillators.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)mic.o: $(SRC)modules/mic.c $(SRC)modules/include/mic.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)biquad.o: $(SRC)modules/biquad.c $(SRC)modules/include/biquad.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)parametricequalizer.o: $(SRC)modules/parametricequalizer.c $(SRC)modules/include/parametricequalizer.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)lowshelving.o: $(SRC)modules/lowshelving.c $(SRC)modules/include/lowshelving.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)highshelving.o: $(SRC)modules/highshelving.c $(SRC)modules/include/highshelving.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)playback.o: $(SRC)modules/playback.c $(SRC)modules/include/playback.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(BUILD)record.o: $(SRC)modules/record.c $(SRC)modules/include/record.h
-	mkdir -p "$(@D)"
-	$(CC) $(CFLAGS) -c $< -o $@
+.PHONY:	uninstall
+unistall:
+	rm -rf /usr/lib/lib$(LIB_NAME).so.$(LIB_VERSION)
+	rm -rf /usr/lib/lib$(LIB_NAME).so
+	rm -rf /usr/include/$(LIB_NAME).h
 
 .PHONY: examples
-examples:
+examples:	install
 	cd examples/ && $(MAKE)
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD) $(BIN)
+	rm -rf $(BUILD) $(DIST)
 
 .PHONY: clean_examples
 clean_examples:
-	rm -rf examples/build examples/bin
+	rm -rf examples/build examples/dist
+
+$(BUILD)/list.o: $(LIBDIR)/util/list.c $(LIBDIR)/util/include/list.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/devices.o: $(LIBDIR)/modules/devices.c $(LIBDIR)/modules/include/devices.h $(LIBDIR)/util/include/list.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/whitenoise.o: $(LIBDIR)/modules/whitenoise.c $(LIBDIR)/modules/include/whitenoise.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/audiomath.o: $(LIBDIR)/modules/audiomath.c $(LIBDIR)/modules/include/audiomath.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/oscillators.o: $(LIBDIR)/modules/oscillators.c $(LIBDIR)/modules/include/oscillators.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/mic.o: $(LIBDIR)/modules/mic.c $(LIBDIR)/modules/include/mic.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/biquad.o: $(LIBDIR)/modules/biquad.c $(LIBDIR)/modules/include/biquad.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/parametricequalizer.o: $(LIBDIR)/modules/parametricequalizer.c $(LIBDIR)/modules/include/parametricequalizer.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/lowshelving.o: $(LIBDIR)/modules/lowshelving.c $(LIBDIR)/modules/include/lowshelving.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/highshelving.o: $(LIBDIR)/modules/highshelving.c $(LIBDIR)/modules/include/highshelving.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/playback.o: $(LIBDIR)/modules/playback.c $(LIBDIR)/modules/include/playback.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/record.o: $(LIBDIR)/modules/record.c $(LIBDIR)/modules/include/record.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
