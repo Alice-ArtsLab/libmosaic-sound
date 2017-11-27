@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../util/include/list.h"
 #include "include/devices.h"
 
 device_t *create_device(int deviceID) {
@@ -45,7 +46,7 @@ void devices_process(device_list_t *devices) {
 
   for (int i = 0; i < numDevices; i++) {
     device_t *newDevice = create_device(i);
-    list_add_element(&(devices->output), newDevice);
+    list_add_element((t_list **)&(devices->output), newDevice);
   }
 
   Pa_Terminate();
@@ -62,7 +63,7 @@ void show_devices(device_list_t *devices) {
   int deviceID = 0;
   while (devices->output) {
     printf("--------------------------------------- device #%d ", deviceID);
-    device_t *dev = (device_t *)devices->output->data;
+    device_t *dev = (device_t *)((t_list *)devices->output)->data;
     if (dev->defaultDisplayed == 0)
       printf("(Input)\n");
     else
@@ -73,7 +74,7 @@ void show_devices(device_list_t *devices) {
     printf("maxOutputChannels: %d\n", dev->deviceInfo->maxOutputChannels);
     printf("defaultSampleRate: %f\n", dev->deviceInfo->defaultSampleRate);
 
-    t_list *temp2 = devices->output->next;
+    t_list *temp2 = ((t_list *)devices->output)->next;
     devices->output = temp2;
     deviceID++;
   }
