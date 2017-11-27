@@ -1,17 +1,22 @@
-typedef struct {
-    int framesPerBuffer;
-    int sampleRate;
-    int paused; /* 0: paused ; 1: playing*/
-    int time;
-    int currentTime;
-    int writeCount;
-    float *input;
-    void *sf;
-    void (*process)(void *self);
-    char *filename;
-}record_t;
+#ifndef RECORD_H
+#define RECORD_H
 
-record_t *create_record(char *filename, int framesPerBuffer, int fTime, int sr);
+    typedef struct {
+        int framesPerBuffer;
+        int sampleRate;
+        int paused; /* 0: paused ; 1: playing*/
+        int time;
+        int currentTime;
+        int writeCount;
+        float *input;
+        void *sf;
+        void (*process)(void *self);
+        char *filename;
+    }record_t;
 
-void record_process();
-void finished();
+    record_t *create_record(char *filename, int framesPerBuffer, int fTime, int sr);
+
+    void record_process();
+    void finished();
+
+#endif /* record.h */
