@@ -1,23 +1,24 @@
-CC := gcc
-CFLAGS := -Wall -Werror -fPIC
-LIBS := -lportaudio -lm `pkg-config --libs sndfile`
-SRC := src
-LIBDIR := /usr/include/mosaic/mosaic-sound
-LIB_NAME := mosaic-sound
-LIB_VERSION := 1
-BUILD := build
-DIST := dist
+CC :=	gcc
+CFLAGS :=	-g -Wall -Werror -fPIC
+LIBS :=	-lportaudio -lm `pkg-config --libs sndfile`
+SRC :=	src
+LIBDIR :=	/usr/include/mosaic/mosaic-sound
+LIB_NAME :=	mosaic-sound
+LIB_FLAGS :=  -I/usr/include/mosaic/mosaic-sound -lmosaic-sound
+LIB_VERSION :=	1
+BUILD :=	build
+DIST :=	dist
 OBJS :=	$(BUILD)/list.o \
-        $(BUILD)/devices.o \
-        $(BUILD)/whitenoise.o \
-        $(BUILD)/audiomath.o \
-        $(BUILD)/oscillators.o \
-        $(BUILD)/mic.o \
-        $(BUILD)/biquad.o \
-        $(BUILD)/parametricequalizer.o \
-        $(BUILD)/lowshelving.o \
-        $(BUILD)/highshelving.o \
-        $(BUILD)/playback.o \
+    	$(BUILD)/devices.o \
+    	$(BUILD)/whitenoise.o \
+    	$(BUILD)/audiomath.o \
+    	$(BUILD)/oscillators.o \
+    	$(BUILD)/mic.o \
+    	$(BUILD)/biquad.o \
+    	$(BUILD)/parametricequalizer.o \
+    	$(BUILD)/lowshelving.o \
+    	$(BUILD)/highshelving.o \
+    	$(BUILD)/playback.o \
 		$(BUILD)/record.o
 
 TARGET := $(OBJS) static
@@ -50,7 +51,7 @@ unistall:
 	rm -rf $(LIBDIR)
 
 .PHONY: examples
-examples:	install
+examples:
 	cd examples/ && $(MAKE)
 
 .PHONY: clean
@@ -59,25 +60,29 @@ clean:
 
 .PHONY: clean_examples
 clean_examples:
-	rm -rf examples/build examples/dist
+	rm -rf examples/build examples/bin
 
 $(BUILD)/list.o: $(SRC)/util/list.c $(SRC)/util/include/list.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(BUILD)/devices.o: $(SRC)/modules/devices.c $(SRC)/modules/include/devices.h $(SRC)/util/include/list.h
+$(BUILD)/devices.o: $(SRC)/modules/devices.c $(SRC)/modules/include/devices.h \
+					$(SRC)/util/include/list.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(BUILD)/whitenoise.o: $(SRC)/modules/whitenoise.c $(SRC)/modules/include/whitenoise.h
+$(BUILD)/whitenoise.o: $(SRC)/modules/whitenoise.c \
+					   $(SRC)/modules/include/whitenoise.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(BUILD)/audiomath.o: $(SRC)/modules/audiomath.c $(SRC)/modules/include/audiomath.h
+$(BUILD)/audiomath.o: $(SRC)/modules/audiomath.c \
+					  $(SRC)/modules/include/audiomath.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(BUILD)/oscillators.o: $(SRC)/modules/oscillators.c $(SRC)/modules/include/oscillators.h
+$(BUILD)/oscillators.o: $(SRC)/modules/oscillators.c \
+						$(SRC)/modules/include/oscillators.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
@@ -89,15 +94,18 @@ $(BUILD)/biquad.o: $(SRC)/modules/biquad.c $(SRC)/modules/include/biquad.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(BUILD)/parametricequalizer.o: $(SRC)/modules/parametricequalizer.c $(SRC)/modules/include/parametricequalizer.h
+$(BUILD)/parametricequalizer.o: $(SRC)/modules/parametricequalizer.c \
+								$(SRC)/modules/include/parametricequalizer.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(BUILD)/lowshelving.o: $(SRC)/modules/lowshelving.c $(SRC)/modules/include/lowshelving.h
+$(BUILD)/lowshelving.o: $(SRC)/modules/lowshelving.c \
+						$(SRC)/modules/include/lowshelving.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
-$(BUILD)/highshelving.o: $(SRC)/modules/highshelving.c $(SRC)/modules/include/highshelving.h
+$(BUILD)/highshelving.o: $(SRC)/modules/highshelving.c \
+						 $(SRC)/modules/include/highshelving.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 

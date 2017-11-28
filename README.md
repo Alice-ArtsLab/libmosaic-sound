@@ -42,20 +42,22 @@ There are the following implementations:
 
 `sudo apt-get install portaudio19-dev`
 
-## Compiling
+## Compiling and Installing the library
 
 Compiling library: `make`
 
-Compiling examples: `make examples`
+Installing library: `sudo make install`
 
-**Note:** We need to compile the library first.
 
-Cleaning library: `make clean`
+## Compiling and Running the examples
+Compiling examples: `sudo make examples`
 
-Cleaning examples: `make clean_examples`
+Running: `./examples/bin/<filename>`
 
-## Running
+**Note:** We need to compile and install the library first.
 
-Main: `./bin/main`
+## Cleaning the library and examples
 
-Examples: `./examples/bin/<filename>`
+Cleaning library: `sudo make clean`
+
+Cleaning examples: `sudo make clean_examples`

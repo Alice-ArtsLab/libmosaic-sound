@@ -1,6 +1,5 @@
 #ifndef MOSAIC_SOUND_H
 #define MOSAIC_SOUND_H
-
     #include "/usr/include/mosaic/mosaic-sound/include/audiomath.h"
     #include "/usr/include/mosaic/mosaic-sound/include/biquad.h"
     #include "/usr/include/mosaic/mosaic-sound/include/devices.h"
@@ -31,34 +30,30 @@
       /*inputParameters*/
       inputParameters.device =
           Pa_GetDefaultInputDevice(); /* default input device */
-      if (inputParameters.device == paNoDevice) {
-        fprintf(stderr, "Error: No default input device.\n");
-        goto error;
-      }
+      if (inputParameters.device == paNoDevice) goto error;
+
       inputParameters.channelCount = 1; /* mono input */
       inputParameters.sampleFormat = paFloat32;
       inputParameters.suggestedLatency =
           Pa_GetDeviceInfo(inputParameters.device)->defaultLowInputLatency;
-      inputParameters.hostApiSpecificStreamInfo = NULL;
+      inputParameters.hostApiSpecificStreamInfo = 0;
 
       /*-------------------------------------------------------------------------*/
       /*outputParameters*/
       outputParameters.device =
           Pa_GetDefaultOutputDevice(); /* default output device */
-      if (outputParameters.device == paNoDevice) {
-        fprintf(stderr, "Error: No default output device.\n");
-        goto error;
-      }
+      if (outputParameters.device == paNoDevice) goto error;
+
       outputParameters.channelCount = 1; /* mono output */
       outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
       outputParameters.suggestedLatency =
           Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
-      outputParameters.hostApiSpecificStreamInfo = NULL;
+      outputParameters.hostApiSpecificStreamInfo = 0;
       err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, sampleRate,
                           framesPerBuffer,
                           paClipOff, /* we won't output out of range samples so
                                         don't bother clipping them */
-                          mosaicsound_callback, NULL);
+                          mosaicsound_callback, 0);
       if (err != paNoError) goto error;
 
       err = Pa_SetStreamFinishedCallback(stream, &StreamFinished);
@@ -71,11 +66,8 @@
 
     error:
       Pa_Terminate();
-      fprintf(stderr, "An error occured while using the portaudio stream\n");
-      fprintf(stderr, "Error number: %d\n", err);
-      fprintf(stderr, "Error message: %s\n", Pa_GetErrorText(err));
-      return NULL;
-    }
+      return 0;
+  }
 
     static void mosaicsound_terminate(void *stream) {
       PaError err;
@@ -91,10 +83,6 @@
       return;
     error:
       Pa_Terminate();
-      fprintf(stderr, "An error occured while using the portaudio stream\n");
-      fprintf(stderr, "Error number: %d\n", err);
-      fprintf(stderr, "Error message: %s\n", Pa_GetErrorText(err));
-
     }
 
 
