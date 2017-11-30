@@ -9,6 +9,7 @@
 #define FRAMES_PER_BUFFER 256
 
 noise_t *noise;
+speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -17,7 +18,6 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
-  unsigned long i;
 
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
@@ -25,10 +25,7 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)in;
 
   noise->process(noise);
-
-  for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = noise->output[i];
-  }
+  speaker->process(speaker, out);
 
   return paContinue;
 }
@@ -41,6 +38,9 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 /*******************************************************************/
 int main(int argc, char *argv[]) {
   noise = create_noise(FRAMES_PER_BUFFER);
+  speaker = create_speaker(FRAMES_PER_BUFFER);
+
+  speaker->input = noise->output;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

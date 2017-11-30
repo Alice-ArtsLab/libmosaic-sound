@@ -19,7 +19,8 @@ OBJS :=	$(BUILD)/list.o \
     	$(BUILD)/lowshelving.o \
     	$(BUILD)/highshelving.o \
     	$(BUILD)/playback.o \
-		$(BUILD)/record.o
+		$(BUILD)/record.o \
+		$(BUILD)/speaker.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -114,5 +115,9 @@ $(BUILD)/playback.o: $(SRC)/modules/playback.c $(SRC)/modules/include/playback.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 $(BUILD)/record.o: $(SRC)/modules/record.c $(SRC)/modules/include/record.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/speaker.o: $(SRC)/modules/speaker.c $(SRC)/modules/include/speaker.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)

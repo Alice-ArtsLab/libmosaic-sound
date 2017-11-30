@@ -10,6 +10,7 @@
 
 playback_t *pb;
 lowshelving_t *lowshelving;
+speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -18,7 +19,6 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
-  unsigned long i;
 
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
@@ -27,10 +27,7 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
 
   pb->process(pb);
   lowshelving->process(lowshelving);
-
-  for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = lowshelving->output[i];
-  }
+  speaker->process(speaker, out);
 
   return paContinue;
 }
@@ -47,11 +44,13 @@ int main(int argc, char *argv[]) {
   pb->loop = 1;
 
   lowshelving = create_lowshelving(FRAMES_PER_BUFFER);
+  speaker = create_speaker(FRAMES_PER_BUFFER);
 
   lowshelving->input = pb->outputL;
   lowshelving->sampleRate = SAMPLE_RATE;
   lowshelving->cutOff = 1000.0;
   lowshelving->gain = 1.0;
+  speaker->input = lowshelving->output;
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   printf("Playing until the Enter key is pressed.\n");
