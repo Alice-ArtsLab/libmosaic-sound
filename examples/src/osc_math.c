@@ -11,6 +11,7 @@
 osc_t *osc1;
 osc_t *osc2;
 math_t *add;
+speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -19,7 +20,6 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
-  unsigned long i;
 
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
@@ -29,10 +29,7 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
   osc1->process(osc1);
   osc2->process(osc2);
   add->process(add);
-
-  for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = add->output[i];
-  }
+  speaker->process(speaker, out);
 
   return paContinue;
 }
@@ -59,6 +56,9 @@ int main(int argc, char *argv[]) {
   add = create_math(FRAMES_PER_BUFFER, add_2freq);
   add->input1 = osc1->output;
   add->input2 = osc2->output;
+
+  speaker = create_speaker(FRAMES_PER_BUFFER);
+  speaker->input = add->output;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

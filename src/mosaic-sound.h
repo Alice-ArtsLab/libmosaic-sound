@@ -11,6 +11,7 @@
     #include "/usr/include/mosaic/mosaic-sound/include/playback.h"
     #include "/usr/include/mosaic/mosaic-sound/include/record.h"
     #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
+    #include "/usr/include/mosaic/mosaic-sound/include/speaker.h"
 
     static int mosaicsound_callback();
     static void mosaicsound_finished(void *data);

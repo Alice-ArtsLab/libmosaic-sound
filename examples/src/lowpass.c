@@ -10,6 +10,7 @@
 
 playback_t *pb;
 biquad_t *lowpass;
+speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -18,7 +19,6 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
-  unsigned long i;
 
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
@@ -27,10 +27,7 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
 
   pb->process(pb);
   lowpass->process(lowpass);
-
-  for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = lowpass->output[i];
-  }
+  speaker->process(speaker, out);
 
   return paContinue;
 }
@@ -48,11 +45,13 @@ int main(int argc, char *argv[]) {
 
   /* Second-order lowpass*/
   lowpass = create_biquad(1, 2, FRAMES_PER_BUFFER);
+  speaker = create_speaker(FRAMES_PER_BUFFER);
 
   lowpass->input = pb->outputL;
   lowpass->sampleRate = SAMPLE_RATE;
   lowpass->cutOff = 3000.0;
   lowpass->slope = 0.1;
+  speaker->input = lowpass->output;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

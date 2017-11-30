@@ -10,6 +10,7 @@
 
 playback_t *pb;
 parametric_eq_t *eq;
+speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -18,7 +19,6 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
-  unsigned long i;
 
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
@@ -27,10 +27,7 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
 
   pb->process(pb);
   eq->process(eq);
-
-  for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = eq->output[i];
-  }
+  speaker->process(speaker, out);
 
   return paContinue;
 }
@@ -47,12 +44,14 @@ int main(int argc, char *argv[]) {
   pb->loop = 1;
 
   eq = create_parametric_eq(FRAMES_PER_BUFFER);
+  speaker = create_speaker(FRAMES_PER_BUFFER);
 
   eq->input = pb->outputL;
   eq->sampleRate = SAMPLE_RATE;
   eq->cutOff = 1000.0;
   eq->slope = 0.2;
   eq->gain = 1.0;
+  speaker->input = eq->output;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

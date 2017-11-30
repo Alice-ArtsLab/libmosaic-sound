@@ -10,6 +10,7 @@
 
 mic_t *mic;
 record_t *rec;
+speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -18,7 +19,6 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
-  unsigned long i;
 
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
@@ -26,10 +26,7 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
 
   mic->process(mic, in);
   rec->process(rec);
-
-  for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = mic->output[i];
-  }
+  speaker->process(speaker, out);
 
   return paContinue;
 }
@@ -43,8 +40,10 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 int main(int argc, char *argv[]) {
   mic = create_mic(FRAMES_PER_BUFFER);
   rec = create_record("examples/record_mic.wav", FRAMES_PER_BUFFER, 10, 44100);
+  speaker = create_speaker(FRAMES_PER_BUFFER);
 
   rec->input = mic->output;
+  speaker->input = mic->output;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

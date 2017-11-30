@@ -9,6 +9,8 @@
 #define FRAMES_PER_BUFFER 256
 
 playback_t *pb;
+math_t *add;
+speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -17,7 +19,6 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
-  unsigned long i;
 
   (void)timeInfo; /* Prevent unused variable warnings. */
   (void)statusFlags;
@@ -25,10 +26,8 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)in;
 
   pb->process(pb);
-
-  for (i = 0; i < framesPerBuffer; i++) {
-    out[i] = pb->outputL[i] + pb->outputR[i];
-  }
+  add->process(add);
+  speaker->process(speaker, out);
 
   return paContinue;
 }
@@ -43,6 +42,14 @@ int main(int argc, char *argv[]) {
   pb = create_playback("examples/samples/miles_davis-solar.wav",
                        FRAMES_PER_BUFFER);
   pb->loop = 1;
+
+  add = create_math(FRAMES_PER_BUFFER, add_2freq);
+  add->input1 = pb->outputL;
+  add->input2 = pb->outputR;
+
+  speaker = create_speaker(FRAMES_PER_BUFFER);
+
+  speaker->input = add->output;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
