@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include "include/highshelving.h"
 
-highshelving_t *create_highshelving(int framesPerBuffer) {
-  highshelving_t *filter = malloc(sizeof(highshelving_t));
+mosaicsound_highshelving_t *mosaicsound_create_highshelving(
+    int framesPerBuffer) {
+  mosaicsound_highshelving_t *filter =
+      malloc(sizeof(mosaicsound_highshelving_t));
 
   filter->framesPerBuffer = framesPerBuffer;
   filter->output = malloc(framesPerBuffer * sizeof(float));
@@ -11,11 +13,11 @@ highshelving_t *create_highshelving(int framesPerBuffer) {
   filter->xn2 = 0;
   filter->yn1 = 0;
   filter->yn2 = 0;
-  filter->process = highshelving_process;
+  filter->process = mosaicsound_highshelving_process;
   return filter;
 }
 
-void highshelving_process(highshelving_t *filter) {
+void mosaicsound_highshelving_process(mosaicsound_highshelving_t *filter) {
   float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
   float V0 = pow(10, (filter->gain / 20));
   float b0 = 1, b1 = 0, b2 = 0, a1 = 0, a2 = 0;

@@ -1,49 +1,48 @@
-#ifndef list_H
-#define list_H
-
-    typedef struct LIST t_list;
+#ifndef MOSAICSOUND_LIST_H
+#define MOSAICSOUND_LIST_H
+    typedef struct LIST mosaicsound_list_t;
 
     // Generic list
     struct LIST {
             void *data;
-            t_list *next;
+            mosaicsound_list_t *next;
     };
 
 
 
-    typedef int (*list_compare)(
+    typedef int (*mosaicsound_list_compare)(
             const void * data1,
             const void * data2
             );
 
-    t_list * list_create(void);
+    mosaicsound_list_t * mosaicsound_list_create(void);
 
-    void list_add_element(
-            t_list **list,
+    void mosaicsound_list_add_element(
+            mosaicsound_list_t **list,
             void * data
             );
 
-    int list_contains(
-            t_list **list,
+    int mosaicsound_list_contains(
+            mosaicsound_list_t **list,
             void * data,
-            list_compare compare_function
+            mosaicsound_list_compare compare_function
             );
 
-    void list_add_unique_element(
-            t_list **list,
+    void mosaicsound_list_add_unique_element(
+            mosaicsound_list_t **list,
             void * data,
-            list_compare compare_function
+            mosaicsound_list_compare compare_function
             );
 
-    void * list_remove_element(t_list **list,
+    void * mosaicsound_list_remove_element(mosaicsound_list_t **list,
                                const void * data,
-                               list_compare compare_function
+                               mosaicsound_list_compare compare_function
                                );
 
-    void list_free(
-            t_list * list
+    void mosaicsound_list_free(
+            mosaicsound_list_t * list
             );
 
-    int list_lenght(t_list *list);
-    
+    int mosaicsound_list_lenght(mosaicsound_list_t *list);
+
 #endif /* list.h */

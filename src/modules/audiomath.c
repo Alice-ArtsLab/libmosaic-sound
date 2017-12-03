@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include "include/audiomath.h"
 
-math_t *create_math(int framesPerBuffer, void(*function)) {
-  math_t *math = malloc(sizeof(math_t));
+mosaicsound_math_t *mosaicsound_create_math(int framesPerBuffer,
+                                            void(*function)) {
+  mosaicsound_math_t *math = malloc(sizeof(mosaicsound_math_t));
   math->process = function;
   math->framesPerBuffer = framesPerBuffer;
   math->output = malloc(framesPerBuffer * sizeof(float));
@@ -11,43 +12,43 @@ math_t *create_math(int framesPerBuffer, void(*function)) {
   return math;
 }
 
-void add_2freq(math_t *self) {
+void mosaicsound_add_2freq(mosaicsound_math_t *self) {
   for (int i = 0; i < self->framesPerBuffer; i++) {
     self->output[i] = self->input1[i] + self->input2[i];
   }
 }
-void sub_2freq(math_t *self) {
+void mosaicsound_sub_2freq(mosaicsound_math_t *self) {
   for (int i = 0; i < self->framesPerBuffer; i++) {
     self->output[i] = self->input1[i] - self->input2[i];
   }
 }
-void mul_2freq(math_t *self) {
+void mosaicsound_mul_2freq(mosaicsound_math_t *self) {
   for (int i = 0; i < self->framesPerBuffer; i++) {
     self->output[i] = self->input1[i] * self->input2[i];
   }
 }
-void div_2freq(math_t *self) {
+void mosaicsound_div_2freq(mosaicsound_math_t *self) {
   for (int i = 0; i < self->framesPerBuffer; i++) {
     self->output[i] = self->input1[i] / self->input2[i];
   }
 }
 
-void add_freq_float(math_t *self) {
+void mosaicsound_add_freq_float(mosaicsound_math_t *self) {
   for (int i = 0; i < self->framesPerBuffer; i++) {
     self->output[i] = self->input1[i] + *(self->input2);
   }
 }
-void sub_freq_float(math_t *self) {
+void mosaicsound_sub_freq_float(mosaicsound_math_t *self) {
   for (int i = 0; i < self->framesPerBuffer; i++) {
     self->output[i] = self->input1[i] - *(self->input2);
   }
 }
-void mul_freq_float(math_t *self) {
+void mosaicsound_mul_freq_float(mosaicsound_math_t *self) {
   for (int i = 0; i < self->framesPerBuffer; i++) {
     self->output[i] = self->input1[i] * *(self->input2);
   }
 }
-void div_freq_float(math_t *self) {
+void mosaicsound_div_freq_float(mosaicsound_math_t *self) {
   for (int i = 0; i < self->framesPerBuffer; i++) {
     self->output[i] = self->input1[i] / *(self->input2);
   }

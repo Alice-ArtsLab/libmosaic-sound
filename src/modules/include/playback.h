@@ -1,5 +1,5 @@
-#ifndef PLAYBACK_H
-#define PLAYBACK_H
+#ifndef MOSAICSOUND_PLAYBACK_H
+#define MOSAICSOUND_PLAYBACK_H
 
     typedef struct {
         int loop;
@@ -14,11 +14,11 @@
         float *input;
         char *filename;
         void (*process)(void *self);
-    }playback_t;
+    }mosaicsound_playback_t;
 
-    playback_t *create_playback(char *filename, int framesPerBuffer);
+    mosaicsound_playback_t *mosaicsound_create_playback(char *filename, int framesPerBuffer);
 
-    void playback_process_mono();
-    void playback_process_stereo();
+    void mosaicsound_playback_process_mono();
+    void mosaicsound_playback_process_stereo();
 
 #endif /* playback.h */

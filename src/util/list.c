@@ -6,15 +6,15 @@
 /* -----------------------------------------------------------------------------
    LIST CREATE
    ---------------------------------------------------------------------------*/
-t_list *list_create(void) { return NULL; }
+mosaicsound_list_t *mosaicsound_list_create(void) { return NULL; }
 
 /* -----------------------------------------------------------------------------
    LIST FREE
    ---------------------------------------------------------------------------*/
-void list_free(t_list *list) {
-  t_list *temp = list;
+void mosaicsound_list_free(mosaicsound_list_t *list) {
+  mosaicsound_list_t *temp = list;
   while (temp) {
-    t_list *temp2 = temp->next;
+    mosaicsound_list_t *temp2 = temp->next;
     free(temp);
     temp = temp2;
   }
@@ -23,19 +23,19 @@ void list_free(t_list *list) {
 /* -----------------------------------------------------------------------------
    LIST ADD ELEMENT
    ---------------------------------------------------------------------------*/
-void list_add_element(t_list **list, void *data) {
+void mosaicsound_list_add_element(mosaicsound_list_t **list, void *data) {
   if (*list == NULL) {
-    *list = malloc(sizeof(t_list));
+    *list = malloc(sizeof(mosaicsound_list_t));
     (*list)->data = data;
     (*list)->next = NULL;
     return;
   }
 
-  t_list *last = *list;
+  mosaicsound_list_t *last = *list;
   while (last && last->next) {  // Find last element
     last = last->next;
   }
-  t_list *current = malloc(sizeof(t_list));
+  mosaicsound_list_t *current = malloc(sizeof(mosaicsound_list_t));
   current->data = data;
   current->next = NULL;
   last->next = current;
@@ -44,19 +44,21 @@ void list_add_element(t_list **list, void *data) {
 /* -----------------------------------------------------------------------------
    LIST ADD UNIQUE ELEMENT
    ---------------------------------------------------------------------------*/
-void list_add_unique_element(t_list **list, void *data,
-                             list_compare compare_function) {
-  if (list_contains(list, data, compare_function) == 0)
-    list_add_element(list, data);
+void mosaicsound_list_add_unique_element(
+    mosaicsound_list_t **list, void *data,
+    mosaicsound_list_compare compare_function) {
+  if (mosaicsound_list_contains(list, data, compare_function) == 0)
+    mosaicsound_list_add_element(list, data);
 }
 
 /* -----------------------------------------------------------------------------
    LIST CONTAINS ELEMENT
    ---------------------------------------------------------------------------*/
-int list_contains(t_list **list, void *data, list_compare compare_function) {
+int mosaicsound_list_contains(mosaicsound_list_t **list, void *data,
+                              mosaicsound_list_compare compare_function) {
   if (data == NULL || *list == NULL) return 0;
 
-  t_list *last = *list;
+  mosaicsound_list_t *last = *list;
   while (last) {  // Find last element
     if (compare_function(data, last->data) == 1) return 1;
     last = last->next;
@@ -67,9 +69,10 @@ int list_contains(t_list **list, void *data, list_compare compare_function) {
 /* -----------------------------------------------------------------------------
    LIST REMOVE ELEMENT
    ---------------------------------------------------------------------------*/
-void *list_remove_element(t_list **list, const void *data,
-                          list_compare compare_function) {
-  t_list *current = NULL, *previous = NULL;
+void *mosaicsound_list_remove_element(
+    mosaicsound_list_t **list, const void *data,
+    mosaicsound_list_compare compare_function) {
+  mosaicsound_list_t *current = NULL, *previous = NULL;
 
   if (list == NULL) return NULL;
 
@@ -92,13 +95,13 @@ void *list_remove_element(t_list **list, const void *data,
 /* -----------------------------------------------------------------------------
    LIST LENGHT
    ---------------------------------------------------------------------------*/
-int list_lenght(t_list *list) {
+int mosaicsound_list_lenght(mosaicsound_list_t *list) {
   int lenght = 0;
 
-  t_list *temp = list;
+  mosaicsound_list_t *temp = list;
   while (temp) {
     lenght++;
-    t_list *temp2 = temp->next;
+    mosaicsound_list_t *temp2 = temp->next;
     temp = temp2;
   }
 

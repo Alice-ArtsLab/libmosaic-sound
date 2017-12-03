@@ -1,13 +1,13 @@
-#ifndef WHITENOISE_H
-#define WHITENOISE_H
+#ifndef MOSAICSOUND_WHITENOISE_H
+#define MOSAICSOUND_WHITENOISE_H
 
     typedef struct {
         void (*process)(void *self);
         float *output;
         int framesPerBuffer;
-    }noise_t;
+    }mosaicsound_noise_t;
 
-    noise_t* create_noise(int framesPerBuffer);
-    void noise_process();
+    mosaicsound_noise_t* mosaicsound_create_noise(int framesPerBuffer);
+    void mosaicsound_noise_process();
 
 #endif /* whitenoise.h */

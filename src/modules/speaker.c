@@ -4,15 +4,16 @@
 #include <stdlib.h>
 #include "include/speaker.h"
 
-speaker_t *create_speaker(int framesPerBuffer) {
-  speaker_t *speaker = malloc(sizeof(speaker_t));
+mosaicsound_speaker_t *mosaicsound_create_speaker(int framesPerBuffer) {
+  mosaicsound_speaker_t *speaker = malloc(sizeof(mosaicsound_speaker_t));
   speaker->framesPerBuffer = framesPerBuffer;
 
-  speaker->process = speaker_process;
+  speaker->process = mosaicsound_speaker_process;
   return speaker;
 }
 
-void speaker_process(speaker_t *speaker, float *output) {
+void mosaicsound_speaker_process(mosaicsound_speaker_t *speaker,
+                                 float *output) {
   for (int i = 0; i < speaker->framesPerBuffer; i++) {
     output[i] = speaker->input[i];
   }

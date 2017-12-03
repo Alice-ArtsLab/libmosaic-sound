@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include "include/parametricequalizer.h"
 
-parametric_eq_t *create_parametric_eq(int framesPerBuffer) {
-  parametric_eq_t *filter = malloc(sizeof(parametric_eq_t));
+mosaicsound_parametric_eq_t *mosaicsound_create_parametric_eq(
+    int framesPerBuffer) {
+  mosaicsound_parametric_eq_t *filter =
+      malloc(sizeof(mosaicsound_parametric_eq_t));
 
   filter->framesPerBuffer = framesPerBuffer;
   filter->output = malloc(framesPerBuffer * sizeof(float));
@@ -11,12 +13,12 @@ parametric_eq_t *create_parametric_eq(int framesPerBuffer) {
   filter->xn2 = 0;
   filter->yn1 = 0;
   filter->yn2 = 0;
-  filter->process = parametric_eq_process;
+  filter->process = mosaicsound_parametric_eq_process;
 
   return filter;
 }
 
-void parametric_eq_process(parametric_eq_t *filter) {
+void mosaicsound_parametric_eq_process(mosaicsound_parametric_eq_t *filter) {
   float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
   float V0 = pow(10, (filter->gain / 20));
   float b0 = 1, b1 = 0, b2 = 0, a1 = 0, a2 = 0;

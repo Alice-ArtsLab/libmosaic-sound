@@ -2,41 +2,42 @@
 #include <stdlib.h>
 #include "include/oscillators.h"
 
-osc_t *create_osc(int type, int framesPerBuffer, float tableSize) {
-  osc_t *osc = malloc(sizeof(osc_t));
+mosaicsound_osc_t *mosaicsound_create_osc(int type, int framesPerBuffer,
+                                          float tableSize) {
+  mosaicsound_osc_t *osc = malloc(sizeof(mosaicsound_osc_t));
   osc->type = type;
   osc->framesPerBuffer = framesPerBuffer;
   osc->tableSize = tableSize;
   osc->index = 0;
   osc->output = malloc(framesPerBuffer * sizeof(float));
-  osc->process = osc_process;
+  osc->process = mosaicsound_osc_process;
 
   switch (type) {
     case 0:
-      osc->table = create_sine_table(tableSize);
+      osc->table = mosaicsound_create_sine_table(tableSize);
       break;
 
     case 1:
-      osc->table = create_square_table(tableSize);
+      osc->table = mosaicsound_create_square_table(tableSize);
       break;
     case 2:
-      osc->table = create_triangle_table(tableSize);
+      osc->table = mosaicsound_create_triangle_table(tableSize);
 
       break;
     case 3:
-      osc->table = create_sawtooth_table(tableSize);
+      osc->table = mosaicsound_create_sawtooth_table(tableSize);
       break;
   }
 
   return osc;
 }
-void osc_process(osc_t *osc) {
+void mosaicsound_osc_process(mosaicsound_osc_t *osc) {
   for (int i = 0; i < osc->framesPerBuffer; i++) {
-    osc->output[i] = get_interpolated_freq(osc);
+    osc->output[i] = mosaicsound_get_interpolated_freq(osc);
   }
 }
 
-float *create_sine_table(int tableSize) {
+float *mosaicsound_create_sine_table(int tableSize) {
   float *table = malloc(tableSize * sizeof(float));
   int i;
   for (i = 0; i < tableSize; i++) {
@@ -45,7 +46,7 @@ float *create_sine_table(int tableSize) {
   return table;
 }
 
-float *create_square_table(int tableSize) {
+float *mosaicsound_create_square_table(int tableSize) {
   float *table = malloc(tableSize * sizeof(float));
   int i;
   for (i = 0; i < tableSize; i++) {
@@ -58,7 +59,7 @@ float *create_square_table(int tableSize) {
   return table;
 }
 
-float *create_triangle_table(int tableSize) {
+float *mosaicsound_create_triangle_table(int tableSize) {
   float *table = malloc(tableSize * sizeof(float));
   int i;
   for (i = 0; i < tableSize; i++) {
@@ -67,7 +68,7 @@ float *create_triangle_table(int tableSize) {
   return table;
 }
 
-float *create_sawtooth_table(int tableSize) {
+float *mosaicsound_create_sawtooth_table(int tableSize) {
   float *table = malloc(tableSize * sizeof(float));
   int i;
   for (i = 0; i < tableSize; i++) {
@@ -79,7 +80,7 @@ float *create_sawtooth_table(int tableSize) {
 /*
 Standar function to get interpolated values in table
 */
-float get_interpolated_freq(osc_t *osc) {
+float mosaicsound_get_interpolated_freq(mosaicsound_osc_t *osc) {
   int my_floor = floor(osc->index);
   float y = osc->index - my_floor;
   float freqValue;

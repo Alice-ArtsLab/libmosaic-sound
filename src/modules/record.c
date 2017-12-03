@@ -5,9 +5,10 @@
 #include <string.h>
 #include "include/record.h"
 
-record_t *create_record(char *filename, int framesPerBuffer, int fTime,
-                        int sr) {
-  record_t *record = malloc(sizeof(record_t));
+mosaicsound_record_t *mosaicsound_create_record(char *filename,
+                                                int framesPerBuffer, int fTime,
+                                                int sr) {
+  mosaicsound_record_t *record = malloc(sizeof(mosaicsound_record_t));
 
   record->writeCount = 0;
   record->currentTime = 0;
@@ -31,15 +32,15 @@ record_t *create_record(char *filename, int framesPerBuffer, int fTime,
     return NULL;
   };
 
-  record->process = record_process;
+  record->process = mosaicsound_record_process;
   record->input = malloc(framesPerBuffer * sizeof(float));
 
   return record;
 }
 
-void record_process(record_t *record) {
+void mosaicsound_record_process(mosaicsound_record_t *record) {
   if (record->currentTime >= record->time) {
-    record->process = finished;
+    record->process = mosaicsound_record_finished;
     sf_close(record->sf);
     printf(">> Rec finished:\n\tFile: %s\n\tTime: %ds\n", record->filename,
            record->time);
@@ -55,4 +56,4 @@ void record_process(record_t *record) {
   }
 }
 
-void finished() { return; }
+void mosaicsound_record_finished() { return; }
