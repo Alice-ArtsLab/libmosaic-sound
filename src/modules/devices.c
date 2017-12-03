@@ -4,9 +4,9 @@
 #include "../util/include/list.h"
 #include "include/devices.h"
 
-device_t *create_device(int deviceID) {
-  device_t *newDevice = malloc(sizeof(device_t));
-  newDevice->deviceInfo = malloc(sizeof(device_info_t));
+mosaicsound_device_t *mosaicsound_create_device(int deviceID) {
+  mosaicsound_device_t *newDevice = malloc(sizeof(mosaicsound_device_t));
+  newDevice->deviceInfo = malloc(sizeof(mosaicsound_device_info_t));
 
   PaDeviceInfo *deviceInfo = (PaDeviceInfo *)Pa_GetDeviceInfo(deviceID);
   newDevice->deviceInfo->name =
@@ -24,14 +24,15 @@ device_t *create_device(int deviceID) {
   return newDevice;
 }
 
-device_list_t *create_devices() {
-  device_list_t *newDevices = malloc(sizeof(device_list_t));
-  newDevices->process = devices_process;
-  newDevices->show = show_devices;
+mosaicsound_device_list_t *mosaicsound_create_devices() {
+  mosaicsound_device_list_t *newDevices =
+      malloc(sizeof(mosaicsound_device_list_t));
+  newDevices->process = mosaicsound_devices_process;
+  newDevices->show = mosaicsound_show_devices;
   return newDevices;
 }
 
-void devices_process(device_list_t *devices) {
+void mosaicsound_devices_process(mosaicsound_device_list_t *devices) {
   PaError err;
 
   err = Pa_Initialize();
@@ -45,8 +46,9 @@ void devices_process(device_list_t *devices) {
   }
 
   for (int i = 0; i < numDevices; i++) {
-    device_t *newDevice = create_device(i);
-    list_add_element((t_list **)&(devices->output), newDevice);
+    mosaicsound_device_t *newDevice = mosaicsound_create_device(i);
+    mosaicsound_list_add_element((mosaicsound_list_t **)&(devices->output),
+                                 newDevice);
   }
 
   Pa_Terminate();
@@ -59,11 +61,12 @@ error:
   devices->output = NULL;
 }
 
-void show_devices(device_list_t *devices) {
+void mosaicsound_show_devices(mosaicsound_device_list_t *devices) {
   int deviceID = 0;
   while (devices->output) {
     printf("--------------------------------------- device #%d ", deviceID);
-    device_t *dev = (device_t *)((t_list *)devices->output)->data;
+    mosaicsound_device_t *dev =
+        (mosaicsound_device_t *)((mosaicsound_list_t *)devices->output)->data;
     if (dev->defaultDisplayed == 0)
       printf("(Input)\n");
     else
@@ -74,7 +77,7 @@ void show_devices(device_list_t *devices) {
     printf("maxOutputChannels: %d\n", dev->deviceInfo->maxOutputChannels);
     printf("defaultSampleRate: %f\n", dev->deviceInfo->defaultSampleRate);
 
-    t_list *temp2 = ((t_list *)devices->output)->next;
+    mosaicsound_list_t *temp2 = ((mosaicsound_list_t *)devices->output)->next;
     devices->output = temp2;
     deviceID++;
   }

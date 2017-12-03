@@ -1,8 +1,8 @@
-#ifndef DEVICES_H
-#define DEVICES_H
+#ifndef MOSAICSOUND_DEVICES_H
+#define MOSAICSOUND_MOSAICSOUND_DEVICES_H
 
-    #ifndef PORTAUDIO
-    #define PORTAUDIO
+    #ifndef MOSAICSOUND_PORTAUDIO
+    #define MOSAICSOUND_PORTAUDIO
         #include <portaudio.h>
     #endif /* PortAudio */
 
@@ -11,25 +11,25 @@
             int maxInputChannels;
             int maxOutputChannels;
             float defaultSampleRate;
-    }device_info_t;
+    }mosaicsound_device_info_t;
 
     typedef struct {
             int id;
             int defaultDisplayed; /* 0: Input; 1: Output*/
-            device_info_t *deviceInfo;
-    }device_t;
+            mosaicsound_device_info_t *deviceInfo;
+    }mosaicsound_device_t;
 
     typedef struct {
             void *output;
             void (*process)(void *self);
             void (*show)(void *devices);
-    }device_list_t;
+    }mosaicsound_device_list_t;
 
 
-    void devices_process();
-    void show_devices();
+    void mosaicsound_devices_process();
+    void mosaicsound_show_devices();
 
-    device_t* create_device(int deviceID);
-    device_list_t* create_devices();
+    mosaicsound_device_t* mosaicsound_create_device(int deviceID);
+    mosaicsound_device_list_t* mosaicsound_create_devices();
 
 #endif /* devices.h */

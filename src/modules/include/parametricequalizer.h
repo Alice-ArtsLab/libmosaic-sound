@@ -1,5 +1,5 @@
-#ifndef PARAMETRIC_EQUALIZER_H
-#define PARAMETRIC_EQUALIZER_H
+#ifndef MOSAICSOUND_PARAMETRIC_EQUALIZER_H
+#define MOSAICSOUND_PARAMETRIC_EQUALIZER_H
 
     typedef struct {
         float *input;
@@ -14,9 +14,9 @@
         float yn1; /* y(n-1) */
         float yn2; /* y(n-2) */
         void (*process)(void *self);
-    }parametric_eq_t;
+    }mosaicsound_parametric_eq_t;
 
-    parametric_eq_t *create_parametric_eq(int framesPerBuffer);
-    void parametric_eq_process();
+    mosaicsound_parametric_eq_t *mosaicsound_create_parametric_eq(int framesPerBuffer);
+    void mosaicsound_parametric_eq_process();
 
 #endif /* parametric_equalizer.h */

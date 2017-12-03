@@ -8,9 +8,9 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-mic_t *mic;
-record_t *rec;
-speaker_t *speaker;
+mosaicsound_mic_t *mic;
+mosaicsound_record_t *rec;
+mosaicsound_speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -38,9 +38,10 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  mic = create_mic(FRAMES_PER_BUFFER);
-  rec = create_record("examples/record_mic.wav", FRAMES_PER_BUFFER, 10, 44100);
-  speaker = create_speaker(FRAMES_PER_BUFFER);
+  mic = mosaicsound_create_mic(FRAMES_PER_BUFFER);
+  rec = mosaicsound_create_record("examples/record_mic.wav", FRAMES_PER_BUFFER,
+                                  10, 44100);
+  speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
   rec->input = mic->output;
   speaker->input = mic->output;

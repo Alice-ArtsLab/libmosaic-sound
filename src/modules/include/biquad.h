@@ -1,5 +1,5 @@
-#ifndef BIQUAD_H
-#define BIQUAD_H
+#ifndef MOSAICSOUND_BIQUAD_H
+#define MOSAICSOUND_MOSAICSOUND_BIQUAD_H
 
     typedef struct {
         int type; /*0: Allpass; 1: Lowpass; 2: Highpass; 3: Bandpass; 4: Bandreject*/
@@ -15,14 +15,14 @@
         float yn1; /* y(n-1) */
         float yn2; /* y(n-2) */
         void (*process)(void *self);
-    }biquad_t;
+    }mosaicsound_biquad_t;
 
-    biquad_t *create_biquad(int type, int order, int framesPerBuffer);
+    mosaicsound_biquad_t *mosaicsound_create_biquad(int type, int order, int framesPerBuffer);
 
-    void allpass_process();
-    void lowpass_process();
-    void highpass_process();
-    void bandpass_process();
-    void bandreject_process();
+    void mosaicsound_allpass_process();
+    void mosaicsound_lowpass_process();
+    void mosaicsound_highpass_process();
+    void mosaicsound_bandpass_process();
+    void mosaicsound_bandreject_process();
 
 #endif /* biquad.h */

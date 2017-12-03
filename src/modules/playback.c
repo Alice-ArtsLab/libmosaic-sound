@@ -4,8 +4,9 @@
 #include <string.h>
 #include "include/playback.h"
 
-playback_t *create_playback(char *filename, int framesPerBuffer) {
-  playback_t *playback = malloc(sizeof(playback_t));
+mosaicsound_playback_t *mosaicsound_create_playback(char *filename,
+                                                    int framesPerBuffer) {
+  mosaicsound_playback_t *playback = malloc(sizeof(mosaicsound_playback_t));
   playback->readCount = 0;
   playback->paused = 0;
   playback->loop = 0;
@@ -28,11 +29,11 @@ playback_t *create_playback(char *filename, int framesPerBuffer) {
   playback->channels = info.channels;
 
   if (info.channels == 1) {
-    playback->process = playback_process_mono;
+    playback->process = mosaicsound_playback_process_mono;
     playback->outputL = calloc(framesPerBuffer, sizeof(float));
     playback->outputR = NULL;
   } else if (info.channels == 2) {
-    playback->process = playback_process_stereo;
+    playback->process = mosaicsound_playback_process_stereo;
     playback->outputL = calloc(framesPerBuffer, sizeof(float));
     playback->outputR = calloc(framesPerBuffer, sizeof(float));
     ;
@@ -50,7 +51,7 @@ playback_t *create_playback(char *filename, int framesPerBuffer) {
   return playback;
 }
 
-void playback_process_mono(playback_t *playback) {
+void mosaicsound_playback_process_mono(mosaicsound_playback_t *playback) {
   int i = 0;
 
   if (!playback->paused) {
@@ -75,7 +76,7 @@ void playback_process_mono(playback_t *playback) {
   }
 }
 
-void playback_process_stereo(playback_t *playback) {
+void mosaicsound_playback_process_stereo(mosaicsound_playback_t *playback) {
   int i = 0;
 
   if (!playback->paused) {

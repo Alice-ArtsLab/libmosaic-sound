@@ -1,5 +1,5 @@
-#ifndef AUDIOMATH_H
-#define AUDIOMATH_H
+#ifndef MOSAICSOUND_AUDIOMATH_H
+#define MOSAICSOUND_MOSAICSOUND_AUDIOMATH_H
 
     typedef struct {
         float * output;
@@ -7,18 +7,18 @@
         float * input2;
         int framesPerBuffer;
         void (*process)(void *self);
-    }math_t;
+    }mosaicsound_math_t;
 
-    math_t* create_math(int framesPerBuffer, void (*function));
+    mosaicsound_math_t* mosaicsound_create_math(int framesPerBuffer, void (*function));
 
-    void add_2freq(math_t *self);
-    void sub_2freq(math_t *self);
-    void mul_2freq(math_t *self);
-    void div_2freq(math_t *self);
+    void mosaicsound_add_2freq(mosaicsound_math_t *self);
+    void mosaicsound_sub_2freq(mosaicsound_math_t *self);
+    void mosaicsound_mul_2freq(mosaicsound_math_t *self);
+    void mosaicsound_div_2freq(mosaicsound_math_t *self);
 
-    void add_freq_float(math_t *self);
-    void sub_freq_float(math_t *self);
-    void mul_freq_float(math_t *self);
-    void div_freq_float(math_t *self);
+    void mosaicsound_add_freq_float(mosaicsound_math_t *self);
+    void mosaicsound_sub_freq_float(mosaicsound_math_t *self);
+    void mosaicsound_mul_freq_float(mosaicsound_math_t *self);
+    void mosaicsound_div_freq_float(mosaicsound_math_t *self);
 
 #endif /* audiomath.h */

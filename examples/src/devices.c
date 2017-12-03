@@ -32,7 +32,7 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  device_list_t *devices = create_devices();
+  mosaicsound_device_list_t *devices = mosaicsound_create_devices();
   devices->process(devices);
   devices->show(devices);
 

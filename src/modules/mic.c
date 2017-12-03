@@ -4,16 +4,16 @@
 #include <stdlib.h>
 #include "include/mic.h"
 
-mic_t *create_mic(int framesPerBuffer) {
-  mic_t *mic = malloc(sizeof(mic_t));
+mosaicsound_mic_t *mosaicsound_create_mic(int framesPerBuffer) {
+  mosaicsound_mic_t *mic = malloc(sizeof(mosaicsound_mic_t));
   mic->framesPerBuffer = framesPerBuffer;
   mic->output = malloc(framesPerBuffer * sizeof(float));
-  mic->process = mic_process;
+  mic->process = mosaicsound_mic_process;
 
   return mic;
 }
 
-void mic_process(mic_t *mic, float *input) {
+void mosaicsound_mic_process(mosaicsound_mic_t *mic, float *input) {
   for (int i = 0; i < mic->framesPerBuffer; i++) {
     mic->output[i] = input[i];
   }

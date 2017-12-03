@@ -8,9 +8,9 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-playback_t *pb;
-math_t *add;
-speaker_t *speaker;
+mosaicsound_playback_t *pb;
+mosaicsound_math_t *add;
+mosaicsound_speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -39,15 +39,15 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  pb = create_playback("examples/samples/miles_davis-solar.wav",
-                       FRAMES_PER_BUFFER);
+  pb = mosaicsound_create_playback("examples/samples/miles_davis-solar.wav",
+                                   FRAMES_PER_BUFFER);
   pb->loop = 1;
 
-  add = create_math(FRAMES_PER_BUFFER, add_2freq);
+  add = mosaicsound_create_math(FRAMES_PER_BUFFER, mosaicsound_add_2freq);
   add->input1 = pb->outputL;
   add->input2 = pb->outputR;
 
-  speaker = create_speaker(FRAMES_PER_BUFFER);
+  speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
   speaker->input = add->output;
 

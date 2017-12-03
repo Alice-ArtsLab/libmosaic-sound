@@ -1,11 +1,11 @@
-#ifndef MIC_H
-#define MIC_H
+#ifndef MOSAICSOUND_MIC_H
+#define MOSAICSOUND_MIC_H
     typedef struct {
         float *output;
         int framesPerBuffer;
         void (*process)(void *self, float *);
-    }mic_t;
+    }mosaicsound_mic_t;
 
-    mic_t* create_mic(int framesPerBuffer);
-    void mic_process();
+    mosaicsound_mic_t* mosaicsound_create_mic(int framesPerBuffer);
+    void mosaicsound_mic_process();
 #endif /* mic.h */

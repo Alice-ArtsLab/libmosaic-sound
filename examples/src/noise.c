@@ -8,8 +8,8 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-noise_t *noise;
-speaker_t *speaker;
+mosaicsound_noise_t *noise;
+mosaicsound_speaker_t *speaker;
 
 static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
@@ -37,8 +37,8 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  noise = create_noise(FRAMES_PER_BUFFER);
-  speaker = create_speaker(FRAMES_PER_BUFFER);
+  noise = mosaicsound_create_noise(FRAMES_PER_BUFFER);
+  speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
   speaker->input = noise->output;
 
