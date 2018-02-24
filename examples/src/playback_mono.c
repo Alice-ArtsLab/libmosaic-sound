@@ -37,7 +37,7 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  pb = mosaicsound_create_playback("examples/samples/victor_wooten_solo.wav",
+  pb = mosaicsound_create_playback("../samples/victor_wooten_solo.wav",
                                    FRAMES_PER_BUFFER);
   pb->loop = 1;
 

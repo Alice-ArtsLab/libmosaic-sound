@@ -39,7 +39,7 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  pb = mosaicsound_create_playback("examples/samples/miles_davis-solar.wav",
+  pb = mosaicsound_create_playback("../samples/miles_davis-solar.wav",
                                    FRAMES_PER_BUFFER);
   pb->loop = 1;
 
