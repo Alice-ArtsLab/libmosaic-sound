@@ -47,7 +47,7 @@ void mosaicsound_devices_process(mosaicsound_device_list_t *devices) {
 
   for (int i = 0; i < numDevices; i++) {
     mosaicsound_device_t *newDevice = mosaicsound_create_device(i);
-    mosaicsound_list_add_element((mosaicsound_list_t **)&(devices->output),
+    mosaicsound_list_add_element((mosaicsound_list_t **)&(devices->output0),
                                  newDevice);
   }
 
@@ -58,15 +58,15 @@ error:
   fprintf(stderr, "An error occured while using the portaudio stream\n");
   fprintf(stderr, "Error number: %d\n", err);
   fprintf(stderr, "Error message: %s\n", Pa_GetErrorText(err));
-  devices->output = NULL;
+  devices->output0 = NULL;
 }
 
 void mosaicsound_show_devices(mosaicsound_device_list_t *devices) {
   int deviceID = 0;
-  while (devices->output) {
+  while (devices->output0) {
     printf("--------------------------------------- device #%d ", deviceID);
     mosaicsound_device_t *dev =
-        (mosaicsound_device_t *)((mosaicsound_list_t *)devices->output)->data;
+        (mosaicsound_device_t *)((mosaicsound_list_t *)devices->output0)->data;
     if (dev->defaultDisplayed == 0)
       printf("(Input)\n");
     else
@@ -77,8 +77,8 @@ void mosaicsound_show_devices(mosaicsound_device_list_t *devices) {
     printf("maxOutputChannels: %d\n", dev->deviceInfo->maxOutputChannels);
     printf("defaultSampleRate: %f\n", dev->deviceInfo->defaultSampleRate);
 
-    mosaicsound_list_t *temp2 = ((mosaicsound_list_t *)devices->output)->next;
-    devices->output = temp2;
+    mosaicsound_list_t *temp2 = ((mosaicsound_list_t *)devices->output0)->next;
+    devices->output0 = temp2;
     deviceID++;
   }
 }

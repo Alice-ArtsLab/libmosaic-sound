@@ -44,12 +44,12 @@ int main(int argc, char *argv[]) {
   pb->loop = 1;
 
   add = mosaicsound_create_math(FRAMES_PER_BUFFER, mosaicsound_add_2freq);
-  add->input1 = pb->outputL;
-  add->input2 = pb->outputR;
+  add->input0 = pb->output0;
+  add->input1 = pb->output1;
 
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
-  speaker->input = add->output;
+  speaker->input0 = add->output0;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

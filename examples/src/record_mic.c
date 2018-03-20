@@ -39,12 +39,12 @@ static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
 /*******************************************************************/
 int main(int argc, char *argv[]) {
   mic = mosaicsound_create_mic(FRAMES_PER_BUFFER);
-  rec = mosaicsound_create_record("examples/record_mic.wav", FRAMES_PER_BUFFER,
-                                  10, 44100);
+  rec = mosaicsound_create_record("./record_mic.wav", FRAMES_PER_BUFFER, 10,
+                                  44100);
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
-  rec->input = mic->output;
-  speaker->input = mic->output;
+  rec->input0 = mic->output0;
+  speaker->input0 = mic->output0;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

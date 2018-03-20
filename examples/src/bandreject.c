@@ -47,11 +47,11 @@ int main(int argc, char *argv[]) {
   bandreject = mosaicsound_create_biquad(4, 2, FRAMES_PER_BUFFER);
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
-  bandreject->input = pb->outputL;
+  bandreject->input0 = pb->output0;
   bandreject->sampleRate = SAMPLE_RATE;
   bandreject->cutOff = 100.0;
   bandreject->slope = 0.1;
-  speaker->input = bandreject->output;
+  speaker->input0 = bandreject->output0;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

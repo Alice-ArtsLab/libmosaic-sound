@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
   pb->loop = 1;
 
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
-  speaker->input = pb->outputL;
+  speaker->input0 = pb->output0;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

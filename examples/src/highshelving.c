@@ -46,11 +46,11 @@ int main(int argc, char *argv[]) {
   highshelving = mosaicsound_create_highshelving(FRAMES_PER_BUFFER);
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
-  highshelving->input = pb->outputL;
+  highshelving->input0 = pb->output0;
   highshelving->sampleRate = SAMPLE_RATE;
   highshelving->cutOff = 1000.0;
   highshelving->gain = 1.0;
-  speaker->input = highshelving->output;
+  speaker->input0 = highshelving->output0;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

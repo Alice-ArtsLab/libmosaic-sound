@@ -8,7 +8,7 @@
         int time;
         int currentTime;
         int writeCount;
-        float *input;
+        float *input0;
         void *sf;
         void (*process)(void *self);
         char *filename;

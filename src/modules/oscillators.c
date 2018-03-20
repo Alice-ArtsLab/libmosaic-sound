@@ -9,7 +9,7 @@ mosaicsound_osc_t *mosaicsound_create_osc(int type, int framesPerBuffer,
   osc->framesPerBuffer = framesPerBuffer;
   osc->tableSize = tableSize;
   osc->index = 0;
-  osc->output = malloc(framesPerBuffer * sizeof(float));
+  osc->output0 = malloc(framesPerBuffer * sizeof(float));
   osc->process = mosaicsound_osc_process;
 
   switch (type) {
@@ -33,7 +33,7 @@ mosaicsound_osc_t *mosaicsound_create_osc(int type, int framesPerBuffer,
 }
 void mosaicsound_osc_process(mosaicsound_osc_t *osc) {
   for (int i = 0; i < osc->framesPerBuffer; i++) {
-    osc->output[i] = mosaicsound_get_interpolated_freq(osc);
+    osc->output0[i] = mosaicsound_get_interpolated_freq(osc);
   }
 }
 
@@ -85,10 +85,10 @@ float mosaicsound_get_interpolated_freq(mosaicsound_osc_t *osc) {
   float y = osc->index - my_floor;
   float freqValue;
 
-  if (osc->freq == NULL) {
-    freqValue = osc->freqValue;
+  if (osc->input0 == NULL) {
+    freqValue = osc->input1;
   } else
-    freqValue = osc->freq[osc->index];
+    freqValue = osc->input0[osc->index];
 
   /* Definition of circular indexes*/
   int index1 =
