@@ -4,8 +4,8 @@
     typedef struct {
         int type; /*0: Allpass; 1: Lowpass; 2: Highpass; 3: Bandpass; 4: Bandreject*/
         int order; /*1: First-order; 2: Second-order*/
-        float *input;
-        float *output;
+        float *input0;
+        float *output0;
         int framesPerBuffer;
         float sampleRate;
         float slope;

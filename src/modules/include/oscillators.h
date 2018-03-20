@@ -6,9 +6,9 @@
         int tableSize;
         int index;
         int type; /*0: Sine; 1: Square; 2: Triangle; 3: Sawtooth.*/
-        float freqValue;
-        float *freq;
-        float *output;
+        float *input0; /* freq*/
+        float input1; /* freqValue */
+        float *output0;
         int framesPerBuffer;
         float sampleRate;
         void (*process)(void *self);

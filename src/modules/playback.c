@@ -30,12 +30,12 @@ mosaicsound_playback_t *mosaicsound_create_playback(char *filename,
 
   if (info.channels == 1) {
     playback->process = mosaicsound_playback_process_mono;
-    playback->outputL = calloc(framesPerBuffer, sizeof(float));
-    playback->outputR = NULL;
+    playback->output0 = calloc(framesPerBuffer, sizeof(float));
+    playback->output1 = NULL;
   } else if (info.channels == 2) {
     playback->process = mosaicsound_playback_process_stereo;
-    playback->outputL = calloc(framesPerBuffer, sizeof(float));
-    playback->outputR = calloc(framesPerBuffer, sizeof(float));
+    playback->output0 = calloc(framesPerBuffer, sizeof(float));
+    playback->output1 = calloc(framesPerBuffer, sizeof(float));
     ;
   } else {
     printf("Support just Mono and Stereo Sound File\n");
@@ -58,7 +58,7 @@ void mosaicsound_playback_process_mono(mosaicsound_playback_t *playback) {
     for (i = 0; i < playback->framesPerBuffer &&
                 playback->readCount < playback->fileFrames;
          i++) {
-      playback->outputL[i] = playback->input[playback->readCount];
+      playback->output0[i] = playback->input[playback->readCount];
       playback->readCount++;
       if (playback->loop && playback->readCount >= playback->fileFrames)
         playback->readCount = 0;
@@ -66,12 +66,12 @@ void mosaicsound_playback_process_mono(mosaicsound_playback_t *playback) {
     for (; i < playback->framesPerBuffer &&
            playback->readCount >= playback->fileFrames;
          i++) {
-      playback->outputL[i] = 0;
+      playback->output0[i] = 0;
     }
     return;
   } else {
     for (i = 0; i < playback->framesPerBuffer; i++) {
-      playback->outputL[i] = 0;
+      playback->output0[i] = 0;
     }
   }
 }
@@ -83,8 +83,8 @@ void mosaicsound_playback_process_stereo(mosaicsound_playback_t *playback) {
     for (i = 0; i < playback->framesPerBuffer &&
                 playback->readCount < playback->fileFrames;
          i++) {
-      playback->outputL[i] = playback->input[playback->readCount];
-      playback->outputR[i] = playback->input[playback->readCount + 1];
+      playback->output0[i] = playback->input[playback->readCount];
+      playback->output1[i] = playback->input[playback->readCount + 1];
       playback->readCount += 2;
       if (playback->loop && playback->readCount >= playback->fileFrames)
         playback->readCount = 0;
@@ -92,14 +92,14 @@ void mosaicsound_playback_process_stereo(mosaicsound_playback_t *playback) {
     for (; i < playback->framesPerBuffer &&
            playback->readCount >= playback->fileFrames;
          i++) {
-      playback->outputL[i] = 0;
-      playback->outputR[i] = 0;
+      playback->output0[i] = 0;
+      playback->output1[i] = 0;
     }
     return;
   } else {
     for (i = 0; i < playback->framesPerBuffer; i++) {
-      playback->outputL[i] = 0;
-      playback->outputR[i] = 0;
+      playback->output0[i] = 0;
+      playback->output1[i] = 0;
     }
   }
 }

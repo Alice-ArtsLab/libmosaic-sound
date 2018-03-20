@@ -9,7 +9,7 @@ mosaicsound_biquad_t *mosaicsound_create_biquad(int type, int order,
   filter->type = type;
   filter->order = order;
   filter->framesPerBuffer = framesPerBuffer;
-  filter->output = malloc(framesPerBuffer * sizeof(float));
+  filter->output0 = malloc(framesPerBuffer * sizeof(float));
   filter->xn1 = 0;
   filter->xn2 = 0;
   filter->yn1 = 0;
@@ -45,10 +45,10 @@ void mosaicsound_allpass_process(mosaicsound_biquad_t *filter) {
 
     int i = 0;
     for (i = 0; i < filter->framesPerBuffer; i++) {
-      filter->output[i] =
-          b0 * filter->input[i] + b1 * filter->xn1 - a1 * filter->yn1;
-      filter->xn1 = filter->input[i];
-      filter->yn1 = filter->output[i];
+      filter->output0[i] =
+          b0 * filter->input0[i] + b1 * filter->xn1 - a1 * filter->yn1;
+      filter->xn1 = filter->input0[i];
+      filter->yn1 = filter->output0[i];
     }
   } else { /* Second-order allpass */
     float K = (float)tan(M_PI * (filter->cutOff) / (filter->sampleRate));
@@ -61,13 +61,13 @@ void mosaicsound_allpass_process(mosaicsound_biquad_t *filter) {
 
     int i = 0;
     for (i = 0; i < filter->framesPerBuffer; i++) {
-      filter->output[i] = b0 * filter->input[i] + b1 * (filter->xn1) +
-                          b2 * (filter->xn2) - a1 * (filter->yn1) -
-                          a2 * (filter->yn2);
+      filter->output0[i] = b0 * filter->input0[i] + b1 * (filter->xn1) +
+                           b2 * (filter->xn2) - a1 * (filter->yn1) -
+                           a2 * (filter->yn2);
       filter->xn2 = filter->xn1;
       filter->yn2 = filter->yn1;
-      filter->xn1 = filter->input[i];
-      filter->yn1 = filter->output[i];
+      filter->xn1 = filter->input0[i];
+      filter->yn1 = filter->output0[i];
     }
   }
 }
@@ -82,10 +82,10 @@ void mosaicsound_lowpass_process(mosaicsound_biquad_t *filter) {
 
     int i = 0;
     for (i = 0; i < filter->framesPerBuffer; i++) {
-      filter->output[i] =
-          b0 * filter->input[i] + b1 * filter->xn1 - a1 * filter->yn1;
-      filter->xn1 = filter->input[i];
-      filter->yn1 = filter->output[i];
+      filter->output0[i] =
+          b0 * filter->input0[i] + b1 * filter->xn1 - a1 * filter->yn1;
+      filter->xn1 = filter->input0[i];
+      filter->yn1 = filter->output0[i];
     }
   } else { /* Second-order lowpass */
 
@@ -99,13 +99,13 @@ void mosaicsound_lowpass_process(mosaicsound_biquad_t *filter) {
 
     int i = 0;
     for (i = 0; i < filter->framesPerBuffer; i++) {
-      filter->output[i] = b0 * filter->input[i] + b1 * filter->xn1 +
-                          b2 * filter->xn2 - a1 * filter->yn1 -
-                          a2 * filter->yn2;
+      filter->output0[i] = b0 * filter->input0[i] + b1 * filter->xn1 +
+                           b2 * filter->xn2 - a1 * filter->yn1 -
+                           a2 * filter->yn2;
       filter->xn2 = filter->xn1;
       filter->yn2 = filter->yn1;
-      filter->xn1 = filter->input[i];
-      filter->yn1 = filter->output[i];
+      filter->xn1 = filter->input0[i];
+      filter->yn1 = filter->output0[i];
     }
   }
 }
@@ -119,10 +119,10 @@ void mosaicsound_highpass_process(mosaicsound_biquad_t *filter) {
 
     int i = 0;
     for (i = 0; i < filter->framesPerBuffer; i++) {
-      filter->output[i] =
-          b0 * filter->input[i] + b1 * filter->xn1 - a1 * filter->yn1;
-      filter->xn1 = filter->input[i];
-      filter->yn1 = filter->output[i];
+      filter->output0[i] =
+          b0 * filter->input0[i] + b1 * filter->xn1 - a1 * filter->yn1;
+      filter->xn1 = filter->input0[i];
+      filter->yn1 = filter->output0[i];
     }
   } else { /* Second-order highpass */
     float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
@@ -135,13 +135,13 @@ void mosaicsound_highpass_process(mosaicsound_biquad_t *filter) {
 
     int i = 0;
     for (i = 0; i < filter->framesPerBuffer; i++) {
-      filter->output[i] = b0 * filter->input[i] + b1 * filter->xn1 +
-                          b2 * filter->xn2 - a1 * filter->yn1 -
-                          a2 * filter->yn2;
+      filter->output0[i] = b0 * filter->input0[i] + b1 * filter->xn1 +
+                           b2 * filter->xn2 - a1 * filter->yn1 -
+                           a2 * filter->yn2;
       filter->xn2 = filter->xn1;
       filter->yn2 = filter->yn1;
-      filter->xn1 = filter->input[i];
-      filter->yn1 = filter->output[i];
+      filter->xn1 = filter->input0[i];
+      filter->yn1 = filter->output0[i];
     }
   }
 }
@@ -158,12 +158,12 @@ void mosaicsound_bandpass_process(mosaicsound_biquad_t *filter) {
 
   int i = 0;
   for (i = 0; i < filter->framesPerBuffer; i++) {
-    filter->output[i] = b0 * filter->input[i] + b1 * filter->xn1 +
-                        b2 * filter->xn2 - a1 * filter->yn1 - a2 * filter->yn2;
+    filter->output0[i] = b0 * filter->input0[i] + b1 * filter->xn1 +
+                         b2 * filter->xn2 - a1 * filter->yn1 - a2 * filter->yn2;
     filter->xn2 = filter->xn1;
     filter->yn2 = filter->yn1;
-    filter->xn1 = filter->input[i];
-    filter->yn1 = filter->output[i];
+    filter->xn1 = filter->input0[i];
+    filter->yn1 = filter->output0[i];
   }
 }
 
@@ -180,11 +180,11 @@ void mosaicsound_bandreject_process(mosaicsound_biquad_t *filter) {
 
   int i = 0;
   for (i = 0; i < filter->framesPerBuffer; i++) {
-    filter->output[i] = b0 * filter->input[i] + b1 * filter->xn1 +
-                        b2 * filter->xn2 - a1 * filter->yn1 - a2 * filter->yn2;
+    filter->output0[i] = b0 * filter->input0[i] + b1 * filter->xn1 +
+                         b2 * filter->xn2 - a1 * filter->yn1 - a2 * filter->yn2;
     filter->xn2 = filter->xn1;
     filter->yn2 = filter->yn1;
-    filter->xn1 = filter->input[i];
-    filter->yn1 = filter->output[i];
+    filter->xn1 = filter->input0[i];
+    filter->yn1 = filter->output0[i];
   }
 }

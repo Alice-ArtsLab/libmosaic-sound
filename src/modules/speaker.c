@@ -15,6 +15,6 @@ mosaicsound_speaker_t *mosaicsound_create_speaker(int framesPerBuffer) {
 void mosaicsound_speaker_process(mosaicsound_speaker_t *speaker,
                                  float *output) {
   for (int i = 0; i < speaker->framesPerBuffer; i++) {
-    output[i] = speaker->input[i];
+    output[i] = speaker->input0[i];
   }
 }

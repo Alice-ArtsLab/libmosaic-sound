@@ -47,11 +47,11 @@ int main(int argc, char *argv[]) {
   lowpass = mosaicsound_create_biquad(1, 2, FRAMES_PER_BUFFER);
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
-  lowpass->input = pb->outputL;
+  lowpass->input0 = pb->output0;
   lowpass->sampleRate = SAMPLE_RATE;
   lowpass->cutOff = 3000.0;
   lowpass->slope = 0.1;
-  speaker->input = lowpass->output;
+  speaker->input0 = lowpass->output0;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

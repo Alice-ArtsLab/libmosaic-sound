@@ -33,7 +33,7 @@ mosaicsound_record_t *mosaicsound_create_record(char *filename,
   };
 
   record->process = mosaicsound_record_process;
-  record->input = malloc(framesPerBuffer * sizeof(float));
+  record->input0 = malloc(framesPerBuffer * sizeof(float));
 
   return record;
 }
@@ -52,7 +52,7 @@ void mosaicsound_record_process(mosaicsound_record_t *record) {
       record->currentTime++;
     }
     record->writeCount += record->framesPerBuffer;
-    sf_write_float(record->sf, record->input, record->framesPerBuffer);
+    sf_write_float(record->sf, record->input0, record->framesPerBuffer);
   }
 }
 

@@ -9,8 +9,8 @@
         int fileFrames;
         int readCount;
         int paused; /* 0: paused ; 1: playing*/
-        float *outputL;
-        float *outputR;
+        float *output0; /* Left*/
+        float *output1; /*  Right */
         float *input;
         char *filename;
         void (*process)(void *self);

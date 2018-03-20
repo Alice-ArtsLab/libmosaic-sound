@@ -2,8 +2,8 @@
 #define MOSAICSOUND_PARAMETRIC_EQUALIZER_H
 
     typedef struct {
-        float *input;
-        float *output;
+        float *input0;
+        float *output0;
         int framesPerBuffer;
         float sampleRate;
         float slope;

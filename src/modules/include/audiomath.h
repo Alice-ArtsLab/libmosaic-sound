@@ -2,9 +2,9 @@
 #define MOSAICSOUND_MOSAICSOUND_AUDIOMATH_H
 
     typedef struct {
-        float * output;
+        float * output0;
+        float * input0;
         float * input1;
-        float * input2;
         int framesPerBuffer;
         void (*process)(void *self);
     }mosaicsound_math_t;

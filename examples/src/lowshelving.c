@@ -46,11 +46,11 @@ int main(int argc, char *argv[]) {
   lowshelving = mosaicsound_create_lowshelving(FRAMES_PER_BUFFER);
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
-  lowshelving->input = pb->outputL;
+  lowshelving->input0 = pb->output0;
   lowshelving->sampleRate = SAMPLE_RATE;
   lowshelving->cutOff = 1000.0;
   lowshelving->gain = 1.0;
-  speaker->input = lowshelving->output;
+  speaker->input0 = lowshelving->output0;
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   printf("Playing until the Enter key is pressed.\n");

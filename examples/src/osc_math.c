@@ -44,21 +44,21 @@ int main(int argc, char *argv[]) {
   /* Sine 440.0 Hz */
   osc1 = mosaicsound_create_osc(0, FRAMES_PER_BUFFER, 2048);
   osc1->sampleRate = SAMPLE_RATE;
-  osc1->freqValue = 440.0;
-  osc1->freq = NULL;
+  osc1->input0 = NULL;
+  osc1->input1 = 440.0;
 
   /* Sawtooth 880.0 Hz*/
   osc2 = mosaicsound_create_osc(3, FRAMES_PER_BUFFER, 2048);
   osc2->sampleRate = SAMPLE_RATE;
-  osc2->freqValue = 880.0;
-  osc2->freq = NULL;
+  osc2->input0 = NULL;
+  osc2->input1 = 880.0;
 
   add = mosaicsound_create_math(FRAMES_PER_BUFFER, mosaicsound_add_2freq);
-  add->input1 = osc1->output;
-  add->input2 = osc2->output;
+  add->input0 = osc1->output0;
+  add->input1 = osc2->output0;
 
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
-  speaker->input = add->output;
+  speaker->input0 = add->output0;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

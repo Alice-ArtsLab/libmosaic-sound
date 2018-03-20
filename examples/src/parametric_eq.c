@@ -46,12 +46,12 @@ int main(int argc, char *argv[]) {
   eq = mosaicsound_create_parametric_eq(FRAMES_PER_BUFFER);
   speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
 
-  eq->input = pb->outputL;
+  eq->input0 = pb->output0;
   eq->sampleRate = SAMPLE_RATE;
   eq->cutOff = 1000.0;
   eq->slope = 0.2;
   eq->gain = 1.0;
-  speaker->input = eq->output;
+  speaker->input0 = eq->output0;
 
   void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

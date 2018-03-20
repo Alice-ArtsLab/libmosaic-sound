@@ -1,7 +1,7 @@
 #ifndef MOSAICSOUND_MIC_H
 #define MOSAICSOUND_MIC_H
     typedef struct {
-        float *output;
+        float *output0;
         int framesPerBuffer;
         void (*process)(void *self, float *);
     }mosaicsound_mic_t;

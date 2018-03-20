@@ -20,7 +20,7 @@
     }mosaicsound_device_t;
 
     typedef struct {
-            void *output;
+            void *output0;
             void (*process)(void *self);
             void (*show)(void *devices);
     }mosaicsound_device_list_t;

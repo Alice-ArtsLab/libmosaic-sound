@@ -2,8 +2,8 @@
 #define MOSAICSOUND_HIGHSHELVING_H
 
     typedef struct {
-        float *input;
-        float *output;
+        float *input0;
+        float *output0;
         float gain;
         int framesPerBuffer;
         float sampleRate;
