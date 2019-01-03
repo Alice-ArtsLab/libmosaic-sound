@@ -1,13 +1,13 @@
+#include "include/audiomath.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/audiomath.h"
 
 mosaicsound_math_t *mosaicsound_create_math(int framesPerBuffer,
                                             void(*function)) {
   mosaicsound_math_t *math = malloc(sizeof(mosaicsound_math_t));
   math->process = function;
   math->framesPerBuffer = framesPerBuffer;
-  math->output0 = malloc(framesPerBuffer * sizeof(float));
+  math->output0 = math->input0;
 
   return math;
 }

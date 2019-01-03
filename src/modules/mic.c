@@ -1,8 +1,8 @@
+#include "include/mic.h"
 #include <math.h>
 #include <portaudio.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/mic.h"
 
 mosaicsound_mic_t *mosaicsound_create_mic(int framesPerBuffer) {
   mosaicsound_mic_t *mic = malloc(sizeof(mosaicsound_mic_t));
