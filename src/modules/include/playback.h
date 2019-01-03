@@ -11,7 +11,7 @@ typedef struct {
   int paused;     /* 0: paused ; 1: playing*/
   float *output0; /* Left*/
   float *output1; /*  Right */
-  float *input;
+  float *file;
   char *filename;
   void (*process)(void *self);
 } mosaicsound_playback_t;

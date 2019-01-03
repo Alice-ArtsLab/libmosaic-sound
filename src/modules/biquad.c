@@ -9,7 +9,7 @@ mosaicsound_biquad_t *mosaicsound_create_biquad(int type, int order,
   filter->type = type;
   filter->order = order;
   filter->framesPerBuffer = framesPerBuffer;
-  filter->output0 = malloc(framesPerBuffer * sizeof(float));
+  filter->output0 = filter->input0;
   filter->xn1 = 0;
   filter->xn2 = 0;
   filter->yn1 = 0;
