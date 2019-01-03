@@ -1,6 +1,6 @@
+#include "include/oscillators.h"
 #include <math.h>
 #include <stdlib.h>
-#include "include/oscillators.h"
 
 mosaicsound_osc_t *mosaicsound_create_osc(int type, int framesPerBuffer,
                                           float tableSize) {
@@ -13,20 +13,20 @@ mosaicsound_osc_t *mosaicsound_create_osc(int type, int framesPerBuffer,
   osc->process = mosaicsound_osc_process;
 
   switch (type) {
-    case 0:
-      osc->table = mosaicsound_create_sine_table(tableSize);
-      break;
+  case 0:
+    osc->table = mosaicsound_create_sine_table(tableSize);
+    break;
 
-    case 1:
-      osc->table = mosaicsound_create_square_table(tableSize);
-      break;
-    case 2:
-      osc->table = mosaicsound_create_triangle_table(tableSize);
+  case 1:
+    osc->table = mosaicsound_create_square_table(tableSize);
+    break;
+  case 2:
+    osc->table = mosaicsound_create_triangle_table(tableSize);
 
-      break;
-    case 3:
-      osc->table = mosaicsound_create_sawtooth_table(tableSize);
-      break;
+    break;
+  case 3:
+    osc->table = mosaicsound_create_sawtooth_table(tableSize);
+    break;
   }
 
   return osc;

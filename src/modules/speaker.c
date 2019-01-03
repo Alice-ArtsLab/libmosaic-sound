@@ -1,8 +1,8 @@
+#include "include/speaker.h"
 #include <math.h>
 #include <portaudio.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/speaker.h"
 
 mosaicsound_speaker_t *mosaicsound_create_speaker(int framesPerBuffer) {
   mosaicsound_speaker_t *speaker = malloc(sizeof(mosaicsound_speaker_t));

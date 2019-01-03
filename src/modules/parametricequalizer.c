@@ -1,9 +1,9 @@
+#include "include/parametricequalizer.h"
 #include <math.h>
 #include <stdlib.h>
-#include "include/parametricequalizer.h"
 
-mosaicsound_parametric_eq_t *mosaicsound_create_parametric_eq(
-    int framesPerBuffer) {
+mosaicsound_parametric_eq_t *
+mosaicsound_create_parametric_eq(int framesPerBuffer) {
   mosaicsound_parametric_eq_t *filter =
       malloc(sizeof(mosaicsound_parametric_eq_t));
 
@@ -23,14 +23,14 @@ void mosaicsound_parametric_eq_process(mosaicsound_parametric_eq_t *filter) {
   float V0 = pow(10, (filter->gain / 20));
   float b0 = 1, b1 = 0, b2 = 0, a1 = 0, a2 = 0;
 
-  if (filter->gain >= 1) {  // boost
+  if (filter->gain >= 1) { // boost
     b0 = (V0 * (sqrt(2 * V0) * K + K * K)) / (1 + sqrt(2) * K + K * K);
     b1 = (2 * (K * K - V0)) / (1 + sqrt(2) * K + K * K);
     b2 = (V0 - sqrt(2 * V0) * K + K * K) / (1 + sqrt(2) * K + K * K);
     a1 = (2 * (K * K - 1)) / (1 + sqrt(2) * K + K * K);
     a2 = (1 - sqrt(2) * K + K * K) / (1 + sqrt(2) * K + K * K);
   }
-  if (filter->gain < 0) {  // cut
+  if (filter->gain < 0) { // cut
     b0 = (V0 * (1 + sqrt(2) * K + K * K)) / (1 + sqrt(2 * V0) * K + V0 * K * K);
     b1 = (2 * V0 * (K * K - 1)) / (1 + sqrt(2 * V0) * K + V0 * K * K);
     b2 = (V0 * (1 - sqrt(2) * K + K * K)) / (1 + sqrt(2 * V0) * K + V0 * K * K);

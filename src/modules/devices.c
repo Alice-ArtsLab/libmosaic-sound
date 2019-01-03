@@ -1,8 +1,8 @@
+#include "../util/include/list.h"
+#include "include/devices.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../util/include/list.h"
-#include "include/devices.h"
 
 mosaicsound_device_t *mosaicsound_create_device(int deviceID) {
   mosaicsound_device_t *newDevice = malloc(sizeof(mosaicsound_device_t));
@@ -17,9 +17,11 @@ mosaicsound_device_t *mosaicsound_create_device(int deviceID) {
   newDevice->deviceInfo->defaultSampleRate = deviceInfo->defaultSampleRate;
   newDevice->id = deviceID;
 
-  if (deviceID == Pa_GetDefaultInputDevice()) newDevice->defaultDisplayed = 0;
+  if (deviceID == Pa_GetDefaultInputDevice())
+    newDevice->defaultDisplayed = 0;
 
-  if (deviceID == Pa_GetDefaultOutputDevice()) newDevice->defaultDisplayed = 1;
+  if (deviceID == Pa_GetDefaultOutputDevice())
+    newDevice->defaultDisplayed = 1;
 
   return newDevice;
 }
@@ -36,7 +38,8 @@ void mosaicsound_devices_process(mosaicsound_device_list_t *devices) {
   PaError err;
 
   err = Pa_Initialize();
-  if (err != paNoError) goto error;
+  if (err != paNoError)
+    goto error;
 
   int numDevices = Pa_GetDeviceCount();
   if (numDevices < 0) {

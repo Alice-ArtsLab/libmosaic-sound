@@ -1,6 +1,6 @@
+#include "include/audiomath.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/audiomath.h"
 
 mosaicsound_math_t *mosaicsound_create_math(int framesPerBuffer,
                                             void(*function)) {

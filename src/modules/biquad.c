@@ -1,6 +1,6 @@
+#include "include/biquad.h"
 #include <math.h>
 #include <stdlib.h>
-#include "include/biquad.h"
 
 mosaicsound_biquad_t *mosaicsound_create_biquad(int type, int order,
                                                 int framesPerBuffer) {
@@ -16,21 +16,21 @@ mosaicsound_biquad_t *mosaicsound_create_biquad(int type, int order,
   filter->yn2 = 0;
 
   switch (type) {
-    case 0:
-      filter->process = mosaicsound_allpass_process;
-      break;
-    case 1:
-      filter->process = mosaicsound_lowpass_process;
-      break;
-    case 2:
-      filter->process = mosaicsound_highpass_process;
-      break;
-    case 3:
-      filter->process = mosaicsound_bandpass_process;
-      break;
-    case 4:
-      filter->process = mosaicsound_bandreject_process;
-      break;
+  case 0:
+    filter->process = mosaicsound_allpass_process;
+    break;
+  case 1:
+    filter->process = mosaicsound_lowpass_process;
+    break;
+  case 2:
+    filter->process = mosaicsound_highpass_process;
+    break;
+  case 3:
+    filter->process = mosaicsound_bandpass_process;
+    break;
+  case 4:
+    filter->process = mosaicsound_bandreject_process;
+    break;
   }
 
   return filter;

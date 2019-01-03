@@ -1,8 +1,8 @@
+#include "include/playback.h"
 #include <sndfile.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "include/playback.h"
 
 mosaicsound_playback_t *mosaicsound_create_playback(char *filename,
                                                     int framesPerBuffer) {

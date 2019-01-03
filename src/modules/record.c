@@ -1,9 +1,8 @@
-#include <sndfile.h>
+#include "include/record.h"
 #include <sndfile.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "include/record.h"
 
 mosaicsound_record_t *mosaicsound_create_record(char *filename,
                                                 int framesPerBuffer, int fTime,
