@@ -1,5 +1,5 @@
-#ifndef MOSAICSOUND_HIGHSHELVING_H
-#define MOSAICSOUND_HIGHSHELVING_H
+#ifndef mscsound_HIGHSHELVING_H
+#define mscsound_HIGHSHELVING_H
 
 typedef struct {
   float *input0;
@@ -13,10 +13,10 @@ typedef struct {
   float yn1; /* y(n-1) */
   float yn2; /* y(n-2) */
   void (*process)(void *self);
-} mosaicsound_highshelving_t;
+} mscsound_highshelving_t;
 
-mosaicsound_highshelving_t *
-mosaicsound_create_highshelving(int framesPerBuffer);
-void mosaicsound_highshelving_process();
+mscsound_highshelving_t *
+mscsound_create_highshelving(int framesPerBuffer);
+void mscsound_highshelving_process();
 
 #endif /* highshelving.h */

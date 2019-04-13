@@ -2,8 +2,8 @@
 #include <math.h>
 #include <stdlib.h>
 
-mosaicsound_lowshelving_t *mosaicsound_create_lowshelving(int framesPerBuffer) {
-  mosaicsound_lowshelving_t *filter = malloc(sizeof(mosaicsound_lowshelving_t));
+mscsound_lowshelving_t *mscsound_create_lowshelving(int framesPerBuffer) {
+  mscsound_lowshelving_t *filter = malloc(sizeof(mscsound_lowshelving_t));
 
   filter->framesPerBuffer = framesPerBuffer;
   filter->output0 = filter->input0;
@@ -11,12 +11,12 @@ mosaicsound_lowshelving_t *mosaicsound_create_lowshelving(int framesPerBuffer) {
   filter->xn2 = 0;
   filter->yn1 = 0;
   filter->yn2 = 0;
-  filter->process = mosaicsound_lowshelving_process;
+  filter->process = mscsound_lowshelving_process;
 
   return filter;
 }
 
-void mosaicsound_lowshelving_process(mosaicsound_lowshelving_t *filter) {
+void mscsound_lowshelving_process(mscsound_lowshelving_t *filter) {
   float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
   float V0 = pow(10, (filter->gain / 20));
   float b0 = 1, b1 = 0, b2 = 0, a1 = 0, a2 = 0;

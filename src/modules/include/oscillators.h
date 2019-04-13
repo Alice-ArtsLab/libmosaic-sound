@@ -1,5 +1,5 @@
-#ifndef MOSAICSOUND_OSCILLATORS_H
-#define MOSAICSOUND_OSCILLATORS_H
+#ifndef mscsound_OSCILLATORS_H
+#define mscsound_OSCILLATORS_H
 
 typedef struct {
   float *table;
@@ -12,16 +12,16 @@ typedef struct {
   int framesPerBuffer;
   float sampleRate;
   void (*process)(void *self);
-} mosaicsound_osc_t;
+} mscsound_osc_t;
 
-mosaicsound_osc_t *mosaicsound_create_osc(int type, int framesPerBuffer,
+mscsound_osc_t *mscsound_create_osc(int type, int framesPerBuffer,
                                           float tableSize);
-void mosaicsound_osc_process();
+void mscsound_osc_process();
 
-float *mosaicsound_create_sine_table(int size);
-float *mosaicsound_create_square_table(int size);
-float *mosaicsound_create_triangle_table(int size);
-float *mosaicsound_create_sawtooth_table(int size);
-float mosaicsound_get_interpolated_freq(mosaicsound_osc_t *osc);
+float *mscsound_create_sine_table(int size);
+float *mscsound_create_square_table(int size);
+float *mscsound_create_triangle_table(int size);
+float *mscsound_create_sawtooth_table(int size);
+float mscsound_get_interpolated_freq(mscsound_osc_t *osc);
 
 #endif /* oscillators.h */

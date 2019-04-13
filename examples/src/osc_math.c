@@ -8,12 +8,12 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-mosaicsound_osc_t *osc1;
-mosaicsound_osc_t *osc2;
-mosaicsound_math_t *add;
-mosaicsound_speaker_t *speaker;
+mscsound_osc_t *osc1;
+mscsound_osc_t *osc2;
+mscsound_math_t *add;
+mscsound_speaker_t *speaker;
 
-static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
+static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
                                 const PaStreamCallbackTimeInfo *timeInfo,
                                 PaStreamCallbackFlags statusFlags,
@@ -35,37 +35,37 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
 }
 
 /*
- * This routine is called by mosaic-sound when mosaicsound_callback is done.
+ * This routine is called by mscsound when mscsound_callback is done.
  */
-static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
+static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
   /* Sine 440.0 Hz */
-  osc1 = mosaicsound_create_osc(0, FRAMES_PER_BUFFER, 2048);
+  osc1 = mscsound_create_osc(0, FRAMES_PER_BUFFER, 2048);
   osc1->sampleRate = SAMPLE_RATE;
   osc1->input0 = NULL;
   osc1->input1 = 440.0;
 
   /* Sawtooth 880.0 Hz*/
-  osc2 = mosaicsound_create_osc(3, FRAMES_PER_BUFFER, 2048);
+  osc2 = mscsound_create_osc(3, FRAMES_PER_BUFFER, 2048);
   osc2->sampleRate = SAMPLE_RATE;
   osc2->input0 = NULL;
   osc2->input1 = 880.0;
 
-  add = mosaicsound_create_math(FRAMES_PER_BUFFER, mosaicsound_add_2freq);
+  add = mscsound_create_math(FRAMES_PER_BUFFER, mscsound_add_2freq);
   add->input0 = osc1->output0;
   add->input1 = osc2->output0;
 
-  speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
+  speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
   speaker->input0 = add->output0;
 
-  void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   printf("Playing until the Enter key is pressed.\n");
   getchar();
 
-  mosaicsound_terminate(stream);
+  mscsound_terminate(stream);
 
   return 0;
 }
