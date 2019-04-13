@@ -8,11 +8,11 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-mosaicsound_mic_t *mic;
-mosaicsound_record_t *rec;
-mosaicsound_speaker_t *speaker;
+mscsound_mic_t *mic;
+mscsound_record_t *rec;
+mscsound_speaker_t *speaker;
 
-static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
+static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
                                 const PaStreamCallbackTimeInfo *timeInfo,
                                 PaStreamCallbackFlags statusFlags,
@@ -32,26 +32,26 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
 }
 
 /*
- * This routine is called by mosaic-sound when mosaicsound_callback is done.
+ * This routine is called by mscsound when mscsound_callback is done.
  */
-static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
+static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  mic = mosaicsound_create_mic(FRAMES_PER_BUFFER);
-  rec = mosaicsound_create_record("./record_mic.wav", FRAMES_PER_BUFFER, 10,
+  mic = mscsound_create_mic(FRAMES_PER_BUFFER);
+  rec = mscsound_create_record("./record_mic.wav", FRAMES_PER_BUFFER, 10,
                                   44100);
-  speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
+  speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
   rec->input0 = mic->output0;
   speaker->input0 = mic->output0;
 
-  void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   printf("Recording until the Enter key is pressed.\n");
   getchar();
 
-  mosaicsound_terminate(stream);
+  mscsound_terminate(stream);
 
   return 0;
 }

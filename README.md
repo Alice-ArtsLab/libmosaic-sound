@@ -1,6 +1,8 @@
 # Sound Design with *libmosaic-sound*
 
-**This repository contains the library libmosaic-sound written in the 'C' programming language based on the PortAudio API. This library provides resources for working with Sound Design.**
+**This repository contains the library libmosaic-sound written in the 'C'
+programming language based on the PortAudio API. This library provides resources
+for working with Sound Design.**
 
 -------------
 

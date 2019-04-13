@@ -8,11 +8,11 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-mosaicsound_playback_t *pb;
-mosaicsound_biquad_t *allpass;
-mosaicsound_speaker_t *speaker;
+mscsound_playback_t *pb;
+mscsound_biquad_t *allpass;
+mscsound_speaker_t *speaker;
 
-static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
+static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
                                 const PaStreamCallbackTimeInfo *timeInfo,
                                 PaStreamCallbackFlags statusFlags,
@@ -34,19 +34,19 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
 }
 
 /*
- * This routine is called by mosaic-sound when mosaicsound_callback is done.
+ * This routine is called by mscsound when mscsound_callback is done.
  */
-static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
+static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  pb = mosaicsound_create_playback("../samples/victor_wooten_solo.wav",
+  pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
                                    FRAMES_PER_BUFFER);
   pb->loop = 1;
 
   /* Second-order allpass*/
-  allpass = mosaicsound_create_biquad(0, 2, FRAMES_PER_BUFFER);
-  speaker = mosaicsound_create_speaker(FRAMES_PER_BUFFER);
+  allpass = mscsound_create_biquad(0, 2, FRAMES_PER_BUFFER);
+  speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
   allpass->input0 = pb->output0;
   allpass->sampleRate = SAMPLE_RATE;
@@ -54,12 +54,12 @@ int main(int argc, char *argv[]) {
   allpass->slope = 0.2 * SAMPLE_RATE;
   speaker->input0 = allpass->output0;
 
-  void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   printf("Playing until the Enter key is pressed.\n");
   getchar();
 
-  mosaicsound_terminate(stream);
+  mscsound_terminate(stream);
 
   return 0;
 }

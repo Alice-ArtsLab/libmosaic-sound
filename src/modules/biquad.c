@@ -2,9 +2,9 @@
 #include <math.h>
 #include <stdlib.h>
 
-mosaicsound_biquad_t *mosaicsound_create_biquad(int type, int order,
+mscsound_biquad_t *mscsound_create_biquad(int type, int order,
                                                 int framesPerBuffer) {
-  mosaicsound_biquad_t *filter = malloc(sizeof(mosaicsound_biquad_t));
+  mscsound_biquad_t *filter = malloc(sizeof(mscsound_biquad_t));
 
   filter->type = type;
   filter->order = order;
@@ -17,26 +17,26 @@ mosaicsound_biquad_t *mosaicsound_create_biquad(int type, int order,
 
   switch (type) {
   case 0:
-    filter->process = mosaicsound_allpass_process;
+    filter->process = mscsound_allpass_process;
     break;
   case 1:
-    filter->process = mosaicsound_lowpass_process;
+    filter->process = mscsound_lowpass_process;
     break;
   case 2:
-    filter->process = mosaicsound_highpass_process;
+    filter->process = mscsound_highpass_process;
     break;
   case 3:
-    filter->process = mosaicsound_bandpass_process;
+    filter->process = mscsound_bandpass_process;
     break;
   case 4:
-    filter->process = mosaicsound_bandreject_process;
+    filter->process = mscsound_bandreject_process;
     break;
   }
 
   return filter;
 }
 
-void mosaicsound_allpass_process(mosaicsound_biquad_t *filter) {
+void mscsound_allpass_process(mscsound_biquad_t *filter) {
   if (filter->order == 1) { /* First-order allpass */
     float K = (float)tan(M_PI * (filter->cutOff) / (filter->sampleRate));
     float b0 = (K - 1) / (K + 1);
@@ -72,7 +72,7 @@ void mosaicsound_allpass_process(mosaicsound_biquad_t *filter) {
   }
 }
 
-void mosaicsound_lowpass_process(mosaicsound_biquad_t *filter) {
+void mscsound_lowpass_process(mscsound_biquad_t *filter) {
   if (filter->order == 1) { /* First-order lowpass */
 
     float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
@@ -110,7 +110,7 @@ void mosaicsound_lowpass_process(mosaicsound_biquad_t *filter) {
   }
 }
 
-void mosaicsound_highpass_process(mosaicsound_biquad_t *filter) {
+void mscsound_highpass_process(mscsound_biquad_t *filter) {
   if (filter->order == 1) { /* First-order highpass */
     float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
     float b0 = 1 / (K + 1);
@@ -146,7 +146,7 @@ void mosaicsound_highpass_process(mosaicsound_biquad_t *filter) {
   }
 }
 
-void mosaicsound_bandpass_process(mosaicsound_biquad_t *filter) {
+void mscsound_bandpass_process(mscsound_biquad_t *filter) {
   /* Second-order bandpass */
   float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
   float Q = filter->slope;
@@ -167,7 +167,7 @@ void mosaicsound_bandpass_process(mosaicsound_biquad_t *filter) {
   }
 }
 
-void mosaicsound_bandreject_process(mosaicsound_biquad_t *filter) {
+void mscsound_bandreject_process(mscsound_biquad_t *filter) {
   /* Second-order bandreject */
 
   float K = (float)tan(M_PI * filter->sampleRate / filter->sampleRate);
