@@ -13,10 +13,10 @@ mscsound_biquad_t *bandreject;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
-                                unsigned long framesPerBuffer,
-                                const PaStreamCallbackTimeInfo *timeInfo,
-                                PaStreamCallbackFlags statusFlags,
-                                void *userData) {
+                             unsigned long framesPerBuffer,
+                             const PaStreamCallbackTimeInfo *timeInfo,
+                             PaStreamCallbackFlags statusFlags,
+                             void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
 
@@ -27,6 +27,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
 
   pb->process(pb);
   bandreject->process(bandreject);
+  speaker->input0 = bandreject->output0;
   speaker->process(speaker, out);
 
   return paContinue;
@@ -40,7 +41,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 /*******************************************************************/
 int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
-                                   FRAMES_PER_BUFFER);
+                                FRAMES_PER_BUFFER);
   pb->loop = 1;
 
   /* Second-order bandreject*/
@@ -49,9 +50,8 @@ int main(int argc, char *argv[]) {
 
   bandreject->input0 = pb->output0;
   bandreject->sampleRate = SAMPLE_RATE;
-  bandreject->cutOff = 100.0;
-  bandreject->slope = 0.1;
-  speaker->input0 = bandreject->output0;
+  bandreject->cutOff = 1000.0;
+  bandreject->slope = 0.3;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

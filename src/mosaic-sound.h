@@ -2,6 +2,7 @@
 #define MSCSOUND_H
 #include "/usr/include/mosaic/mosaic-sound/include/audiomath.h"
 #include "/usr/include/mosaic/mosaic-sound/include/biquad.h"
+#include "/usr/include/mosaic/mosaic-sound/include/channelshootersplitter.h"
 #include "/usr/include/mosaic/mosaic-sound/include/devices.h"
 #include "/usr/include/mosaic/mosaic-sound/include/highshelving.h"
 #include "/usr/include/mosaic/mosaic-sound/include/lowshelving.h"

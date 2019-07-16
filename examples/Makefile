@@ -17,12 +17,13 @@ OBJS := $(OBJSRC)list.o \
         $(OBJSRC)lowshelving.o \
         $(OBJSRC)highshelving.o \
         $(OBJSRC)playback.o \
-		$(OBJSRC)record.o
+				$(OBJSRC)record.o \
+				$(OBJSRC)channelshootersplitter.o
 
 TARGET := $(BIN)record_mic $(BIN)playback_mono $(BIN)playback_stereo \
 		  $(BIN)osc_math $(BIN)noise $(BIN)devices $(BIN)allpass $(BIN)lowpass \
 		  $(BIN)highpass $(BIN)bandpass $(BIN)bandreject $(BIN)parametric_eq \
-		  $(BIN)lowshelving $(BIN)highshelving
+		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter
 
 
 all: $(TARGET)
@@ -150,5 +151,14 @@ $(BIN)highshelving:	$(BUILD)highshelving.o
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
 $(BUILD)highshelving.o: $(SRC)highshelving.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: channelshootersplitter
+$(BIN)channelshootersplitter:	$(BUILD)channelshootersplitter.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)channelshootersplitter.o: $(SRC)channelshootersplitter.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)

@@ -3,13 +3,12 @@
 #include <stdlib.h>
 
 mscsound_biquad_t *mscsound_create_biquad(int type, int order,
-                                                int framesPerBuffer) {
+                                          int framesPerBuffer) {
   mscsound_biquad_t *filter = malloc(sizeof(mscsound_biquad_t));
 
   filter->type = type;
   filter->order = order;
   filter->framesPerBuffer = framesPerBuffer;
-  filter->output0 = filter->input0;
   filter->xn1 = 0;
   filter->xn2 = 0;
   filter->yn1 = 0;
@@ -37,8 +36,9 @@ mscsound_biquad_t *mscsound_create_biquad(int type, int order,
 }
 
 void mscsound_allpass_process(mscsound_biquad_t *filter) {
+  filter->output0 = filter->input0;
   if (filter->order == 1) { /* First-order allpass */
-    float K = (float)tan(M_PI * (filter->cutOff) / (filter->sampleRate));
+    float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
     float b0 = (K - 1) / (K + 1);
     float b1 = 1;
     float a1 = (K - 1) / (K + 1);
@@ -51,7 +51,7 @@ void mscsound_allpass_process(mscsound_biquad_t *filter) {
       filter->yn1 = filter->output0[i];
     }
   } else { /* Second-order allpass */
-    float K = (float)tan(M_PI * (filter->cutOff) / (filter->sampleRate));
+    float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
     float Q = filter->slope;
     float b0 = (K * K * Q - K + Q) / (K * K * Q + K + Q);
     float b1 = (2 * Q * (K * K - 1)) / (K * K * Q + K + Q);
@@ -73,6 +73,7 @@ void mscsound_allpass_process(mscsound_biquad_t *filter) {
 }
 
 void mscsound_lowpass_process(mscsound_biquad_t *filter) {
+  filter->output0 = filter->input0;
   if (filter->order == 1) { /* First-order lowpass */
 
     float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
@@ -111,6 +112,7 @@ void mscsound_lowpass_process(mscsound_biquad_t *filter) {
 }
 
 void mscsound_highpass_process(mscsound_biquad_t *filter) {
+  filter->output0 = filter->input0;
   if (filter->order == 1) { /* First-order highpass */
     float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
     float b0 = 1 / (K + 1);
@@ -147,6 +149,7 @@ void mscsound_highpass_process(mscsound_biquad_t *filter) {
 }
 
 void mscsound_bandpass_process(mscsound_biquad_t *filter) {
+  filter->output0 = filter->input0;
   /* Second-order bandpass */
   float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
   float Q = filter->slope;
@@ -168,6 +171,7 @@ void mscsound_bandpass_process(mscsound_biquad_t *filter) {
 }
 
 void mscsound_bandreject_process(mscsound_biquad_t *filter) {
+  filter->output0 = filter->input0;
   /* Second-order bandreject */
 
   float K = (float)tan(M_PI * filter->sampleRate / filter->sampleRate);

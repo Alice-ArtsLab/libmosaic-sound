@@ -2,13 +2,10 @@
 #include <math.h>
 #include <stdlib.h>
 
-mscsound_parametric_eq_t *
-mscsound_create_parametric_eq(int framesPerBuffer) {
-  mscsound_parametric_eq_t *filter =
-      malloc(sizeof(mscsound_parametric_eq_t));
+mscsound_parametric_eq_t *mscsound_create_parametric_eq(int framesPerBuffer) {
+  mscsound_parametric_eq_t *filter = malloc(sizeof(mscsound_parametric_eq_t));
 
   filter->framesPerBuffer = framesPerBuffer;
-  filter->output0 = filter->input0;
   filter->xn1 = 0;
   filter->xn2 = 0;
   filter->yn1 = 0;
@@ -19,6 +16,7 @@ mscsound_create_parametric_eq(int framesPerBuffer) {
 }
 
 void mscsound_parametric_eq_process(mscsound_parametric_eq_t *filter) {
+  filter->output0 = filter->input0;
   float K = (float)tan(M_PI * filter->cutOff / filter->sampleRate);
   float V0 = pow(10, (filter->gain / 20));
   float b0 = 1, b1 = 0, b2 = 0, a1 = 0, a2 = 0;

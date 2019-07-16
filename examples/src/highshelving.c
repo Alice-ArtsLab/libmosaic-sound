@@ -13,10 +13,10 @@ mscsound_highshelving_t *highshelving;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
-                                unsigned long framesPerBuffer,
-                                const PaStreamCallbackTimeInfo *timeInfo,
-                                PaStreamCallbackFlags statusFlags,
-                                void *userData) {
+                             unsigned long framesPerBuffer,
+                             const PaStreamCallbackTimeInfo *timeInfo,
+                             PaStreamCallbackFlags statusFlags,
+                             void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
 
@@ -27,6 +27,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
 
   pb->process(pb);
   highshelving->process(highshelving);
+  speaker->input0 = highshelving->output0;
   speaker->process(speaker, out);
 
   return paContinue;
@@ -40,7 +41,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 /*******************************************************************/
 int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
-                                   FRAMES_PER_BUFFER);
+                                FRAMES_PER_BUFFER);
   pb->loop = 1;
 
   highshelving = mscsound_create_highshelving(FRAMES_PER_BUFFER);
@@ -48,9 +49,8 @@ int main(int argc, char *argv[]) {
 
   highshelving->input0 = pb->output0;
   highshelving->sampleRate = SAMPLE_RATE;
-  highshelving->cutOff = 1000.0;
-  highshelving->gain = 1.0;
-  speaker->input0 = highshelving->output0;
+  highshelving->cutOff = 1200.0;
+  highshelving->gain = 0.1;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

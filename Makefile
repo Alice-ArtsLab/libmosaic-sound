@@ -19,8 +19,9 @@ OBJS :=	$(BUILD)/list.o \
     	$(BUILD)/lowshelving.o \
     	$(BUILD)/highshelving.o \
     	$(BUILD)/playback.o \
-		$(BUILD)/record.o \
-		$(BUILD)/speaker.o
+			$(BUILD)/record.o \
+			$(BUILD)/speaker.o \
+			$(BUILD)/channelshootersplitter.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -46,7 +47,7 @@ install:
 
 
 .PHONY:	uninstall
-unistall:
+uninstall:
 	rm -rf /usr/lib/lib$(LIB_NAME).so.$(LIB_VERSION)
 	rm -rf /usr/lib/lib$(LIB_NAME).so
 	rm -rf $(LIBDIR)
@@ -119,5 +120,10 @@ $(BUILD)/record.o: $(SRC)/modules/record.c $(SRC)/modules/include/record.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 $(BUILD)/speaker.o: $(SRC)/modules/speaker.c $(SRC)/modules/include/speaker.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/channelshootersplitter.o: $(SRC)/modules/channelshootersplitter.c \
+													 $(SRC)/modules/include/channelshootersplitter.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
