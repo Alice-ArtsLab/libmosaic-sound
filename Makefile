@@ -12,6 +12,7 @@ OBJS :=	$(BUILD)/list.o \
     	$(BUILD)/devices.o \
     	$(BUILD)/whitenoise.o \
     	$(BUILD)/audiomath.o \
+			$(BUILD)/audiofloatmath.o \
     	$(BUILD)/oscillators.o \
     	$(BUILD)/mic.o \
     	$(BUILD)/biquad.o \
@@ -19,8 +20,9 @@ OBJS :=	$(BUILD)/list.o \
     	$(BUILD)/lowshelving.o \
     	$(BUILD)/highshelving.o \
     	$(BUILD)/playback.o \
-		$(BUILD)/record.o \
-		$(BUILD)/speaker.o
+			$(BUILD)/record.o \
+			$(BUILD)/speaker.o \
+			$(BUILD)/channelshootersplitter.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -46,7 +48,7 @@ install:
 
 
 .PHONY:	uninstall
-unistall:
+uninstall:
 	rm -rf /usr/lib/lib$(LIB_NAME).so.$(LIB_VERSION)
 	rm -rf /usr/lib/lib$(LIB_NAME).so
 	rm -rf $(LIBDIR)
@@ -79,6 +81,11 @@ $(BUILD)/whitenoise.o: $(SRC)/modules/whitenoise.c \
 
 $(BUILD)/audiomath.o: $(SRC)/modules/audiomath.c \
 					  $(SRC)/modules/include/audiomath.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/audiofloatmath.o: $(SRC)/modules/audiofloatmath.c \
+					  $(SRC)/modules/include/audiofloatmath.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
@@ -119,5 +126,10 @@ $(BUILD)/record.o: $(SRC)/modules/record.c $(SRC)/modules/include/record.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 $(BUILD)/speaker.o: $(SRC)/modules/speaker.c $(SRC)/modules/include/speaker.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/channelshootersplitter.o: $(SRC)/modules/channelshootersplitter.c \
+													 $(SRC)/modules/include/channelshootersplitter.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)

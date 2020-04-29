@@ -1,6 +1,8 @@
 # Sound Design with *libmosaic-sound*
 
-**This repository contains the library libmosaic-sound written in the 'C' programming language based on the PortAudio API. This library provides resources for working with Sound Design.**
+**This repository contains the library libmosaic-sound written in the 'C'
+programming language based on the PortAudio API. This library provides resources
+for working with Sound Design.**
 
 -------------
 
@@ -18,6 +20,12 @@ There are the following implementations:
     * Parametric Equalizer
 
 * ### Audio Math
+    * Plus
+    * Minus
+    * Times
+    * Divided by
+
+* ### Audio Float Math
     * Plus
     * Minus
     * Times
@@ -44,20 +52,25 @@ There are the following implementations:
 
 ## Compiling and Installing the library
 
-Compiling library: `make`
+Compiling library: `$ make`
 
-Installing library: `sudo make install`
+Installing library: `$ sudo make install`
 
 
 ## Compiling and Running the examples
-Compiling examples: `sudo make examples`
+Compiling examples: `$ sudo make examples`
 
-Running: `./examples/bin/<filename>`
+Running:
+
+```
+$ cd examples/bin/
+$ ./<filename>
+```
 
 **Note:** We need to compile and install the library first.
 
 ## Cleaning the library and examples
 
-Cleaning library: `sudo make clean`
+Cleaning library: `$ sudo make clean`
 
-Cleaning examples: `sudo make clean_examples`
+Cleaning examples: `$ sudo make clean_examples`

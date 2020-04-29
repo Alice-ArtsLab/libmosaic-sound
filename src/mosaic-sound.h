@@ -1,7 +1,9 @@
-#ifndef MOSAIC_SOUND_H
-#define MOSAIC_SOUND_H
+#ifndef MSCSOUND_H
+#define MSCSOUND_H
 #include "/usr/include/mosaic/mosaic-sound/include/audiomath.h"
+#include "/usr/include/mosaic/mosaic-sound/include/audiofloatmath.h"
 #include "/usr/include/mosaic/mosaic-sound/include/biquad.h"
+#include "/usr/include/mosaic/mosaic-sound/include/channelshootersplitter.h"
 #include "/usr/include/mosaic/mosaic-sound/include/devices.h"
 #include "/usr/include/mosaic/mosaic-sound/include/highshelving.h"
 #include "/usr/include/mosaic/mosaic-sound/include/lowshelving.h"
@@ -13,14 +15,14 @@
 #include "/usr/include/mosaic/mosaic-sound/include/speaker.h"
 #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
 
-static int mosaicsound_callback();
-static void mosaicsound_finished(void *data);
+static int mscsound_callback();
+static void mscsound_finished(void *data);
 /*
  * This routine is called by portaudio when playbak is done.
  */
-static void StreamFinished(void *data) { mosaicsound_finished(data); }
+static void StreamFinished(void *data) { mscsound_finished(data); }
 
-static void *mosaicsound_inicialize(int sampleRate, int framesPerBuffer) {
+static void *mscsound_inicialize(int sampleRate, int framesPerBuffer) {
   PaStreamParameters inputParameters, outputParameters;
   PaStream *stream;
   PaError err;
@@ -57,7 +59,7 @@ static void *mosaicsound_inicialize(int sampleRate, int framesPerBuffer) {
                       framesPerBuffer,
                       paClipOff, /* we won't output out of range samples so
                                     don't bother clipping them */
-                      mosaicsound_callback, 0);
+                      mscsound_callback, 0);
   if (err != paNoError)
     goto error;
 
@@ -76,7 +78,7 @@ error:
   return 0;
 }
 
-static void mosaicsound_terminate(void *stream) {
+static void mscsound_terminate(void *stream) {
   PaError err;
   stream = (PaStream *)stream;
   err = Pa_StopStream(stream);

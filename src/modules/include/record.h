@@ -1,5 +1,5 @@
-#ifndef MOSAICSOUND_RECORD_H
-#define MOSAICSOUND_RECORD_H
+#ifndef MSCSOUND_RECORD_H
+#define MSCSOUND_RECORD_H
 
 typedef struct {
   int framesPerBuffer;
@@ -8,17 +8,17 @@ typedef struct {
   int time;
   int currentTime;
   int writeCount;
-  float *input0;
+  float **input0;
   void *sf;
   void (*process)(void *self);
   char *filename;
-} mosaicsound_record_t;
+} mscsound_record_t;
 
-mosaicsound_record_t *mosaicsound_create_record(char *filename,
+mscsound_record_t *mscsound_create_record(char *filename,
                                                 int framesPerBuffer, int fTime,
                                                 int sr);
 
-void mosaicsound_record_process();
-void mosaicsound_record_finished();
+void mscsound_record_process();
+void mscsound_record_finished();
 
 #endif /* record.h */

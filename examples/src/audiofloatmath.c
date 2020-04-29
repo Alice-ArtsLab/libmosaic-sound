@@ -8,8 +8,8 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-mscsound_playback_t *pb;
-mscsound_biquad_t *highpass;
+mscsound_osc_t *osc;
+mscsound_audiofloatmath_t *mul;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
@@ -25,8 +25,9 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  pb->process(&pb);
-  highpass->process(&highpass);
+  osc->process(&osc);
+  mul->process(&mul);
+
   speaker->process(&speaker, &out);
 
   return paContinue;
@@ -39,19 +40,21 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
-                                FRAMES_PER_BUFFER);
-  pb->loop = 1;
+  /* Sine 440.0 Hz */
+  osc = mscsound_create_osc(0, FRAMES_PER_BUFFER, 2048);
+  osc->sampleRate = SAMPLE_RATE;
+  osc->input0 = NULL;
+  osc->input1 = 440.0;
 
-  /* Second-order highpass*/
-  highpass = mscsound_create_biquad(2, 2, FRAMES_PER_BUFFER);
+  mul = mscsound_create_audiofloatmath(FRAMES_PER_BUFFER, mscsound_mul_freq_float);
+
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
-  highpass->input0 = pb->output0;
-  highpass->sampleRate = SAMPLE_RATE;
-  highpass->cutOff = 1200.0;
-  highpass->slope = 0.1;
-  speaker->input0 = highpass->output0;
+  mul->input0 = osc->output0;
+  mul->input1 = 0.01;
+
+  speaker->input0 = mul->output0;
+
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

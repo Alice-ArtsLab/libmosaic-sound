@@ -8,7 +8,9 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
+mscsound_device_list_t *devices;
+
+static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
                                 const PaStreamCallbackTimeInfo *timeInfo,
                                 PaStreamCallbackFlags statusFlags,
@@ -22,22 +24,23 @@ static int mosaicsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)in;
   (void)out;
 
+
   return paComplete;
 }
 
 /*
- * This routine is called by mosaic-sound when mosaicsound_callback is done.
+ * This routine is called by mscsound when mscsound_callback is done.
  */
-static void mosaicsound_finished(void *data) { printf("Stream Completed!\n"); }
+static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  mosaicsound_device_list_t *devices = mosaicsound_create_devices();
-  devices->process(devices);
-  devices->show(devices);
+  devices = mscsound_create_devices();
+  devices->process(&devices);
+  devices->show(&devices);
 
-  void *stream = mosaicsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
-  mosaicsound_terminate(stream);
+  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  mscsound_terminate(stream);
 
   return 0;
 }
