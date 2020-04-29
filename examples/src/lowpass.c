@@ -25,10 +25,9 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  pb->process(pb);
-  lowpass->process(lowpass);
-  speaker->input0 = lowpass->output0;
-  speaker->process(speaker, out);
+  pb->process(&pb);
+  lowpass->process(&lowpass);
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }
@@ -52,6 +51,7 @@ int main(int argc, char *argv[]) {
   lowpass->sampleRate = SAMPLE_RATE;
   lowpass->cutOff = 500.0;
   lowpass->slope = 0.1;
+  speaker->input0 = lowpass->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

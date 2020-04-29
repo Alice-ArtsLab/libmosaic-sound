@@ -25,9 +25,9 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  noise->process(noise);
-  css->process(css);
-  speaker->process(speaker, out);
+  noise->process(&noise);
+  css->process(&css);
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }

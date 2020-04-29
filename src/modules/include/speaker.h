@@ -1,9 +1,9 @@
 #ifndef MSCSOUND_SPEAKER_H
 #define MSCSOUND_SPEAKER_H
 typedef struct {
-  float *input0;
+  float **input0;
   int framesPerBuffer;
-  void (*process)(void *self, float *);
+  void (*process)(void *self, float **output);
 } mscsound_speaker_t;
 
 mscsound_speaker_t *mscsound_create_speaker(int framesPerBuffer);

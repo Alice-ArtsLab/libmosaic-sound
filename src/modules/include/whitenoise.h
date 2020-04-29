@@ -3,7 +3,7 @@
 
 typedef struct {
   void (*process)(void *self);
-  float *output0;
+  float **output0;
   int framesPerBuffer;
 } mscsound_noise_t;
 

@@ -9,7 +9,7 @@
 #define FRAMES_PER_BUFFER 256
 
 mscsound_playback_t *pb;
-mscsound_math_t *add;
+mscsound_audiomath_t *add;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
@@ -25,10 +25,9 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  pb->process(pb);
-  add->process(add);
-  speaker->input0 = add->output0;
-  speaker->process(speaker, out);
+  pb->process(&pb);
+  add->process(&add);
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }
@@ -44,11 +43,12 @@ int main(int argc, char *argv[]) {
                                 FRAMES_PER_BUFFER);
   pb->loop = 1;
 
-  add = mscsound_create_math(FRAMES_PER_BUFFER, mscsound_add_2freq);
+  add = mscsound_create_audiomath(FRAMES_PER_BUFFER, mscsound_add_2freq);
+  speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
+
   add->input0 = pb->output0;
   add->input1 = pb->output1;
-
-  speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
+  speaker->input0 = add->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

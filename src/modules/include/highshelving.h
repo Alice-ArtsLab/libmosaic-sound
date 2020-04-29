@@ -2,8 +2,8 @@
 #define MSCSOUND_HIGHSHELVING_H
 
 typedef struct {
-  float *input0;
-  float *output0;
+  float **input0;
+  float **output0;
   float gain;
   int framesPerBuffer;
   float sampleRate;

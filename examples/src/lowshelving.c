@@ -25,10 +25,9 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  pb->process(pb);
-  lowshelving->process(lowshelving);
-  speaker->input0 = lowshelving->output0;
-  speaker->process(speaker, out);
+  pb->process(&pb);
+  lowshelving->process(&lowshelving);
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }
@@ -51,6 +50,9 @@ int main(int argc, char *argv[]) {
   lowshelving->sampleRate = SAMPLE_RATE;
   lowshelving->cutOff = 500.0;
   lowshelving->gain = 1.0;
+
+  speaker->input0 = lowshelving->output0;
+
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   printf("Playing until the Enter key is pressed.\n");

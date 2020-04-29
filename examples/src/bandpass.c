@@ -25,10 +25,9 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  pb->process(pb);
-  bandpass->process(bandpass);
-  speaker->input0 = bandpass->output0;
-  speaker->process(speaker, out);
+  pb->process(&pb);
+  bandpass->process(&bandpass);
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }
@@ -51,7 +50,8 @@ int main(int argc, char *argv[]) {
   bandpass->input0 = pb->output0;
   bandpass->sampleRate = SAMPLE_RATE;
   bandpass->cutOff = 700.0;
-  bandpass->slope = 0.3;
+  bandpass->slope = 300;
+  speaker->input0 = bandpass->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

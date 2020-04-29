@@ -8,6 +8,8 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
+mscsound_device_list_t *devices;
+
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
                                 unsigned long framesPerBuffer,
                                 const PaStreamCallbackTimeInfo *timeInfo,
@@ -22,6 +24,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)in;
   (void)out;
 
+
   return paComplete;
 }
 
@@ -32,9 +35,9 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  mscsound_device_list_t *devices = mscsound_create_devices();
-  devices->process(devices);
-  devices->show(devices);
+  devices = mscsound_create_devices();
+  devices->process(&devices);
+  devices->show(&devices);
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
   mscsound_terminate(stream);

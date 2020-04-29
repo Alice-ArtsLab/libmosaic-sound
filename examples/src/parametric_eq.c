@@ -25,10 +25,10 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  pb->process(pb);
-  eq->process(eq);
-  speaker->input0 = eq->output0;
-  speaker->process(speaker, out);
+  pb->process(&pb);
+  eq->process(&eq);
+
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }
@@ -50,8 +50,10 @@ int main(int argc, char *argv[]) {
   eq->input0 = pb->output0;
   eq->sampleRate = SAMPLE_RATE;
   eq->cutOff = 1000.0;
-  eq->slope = 0.2;
+  eq->slope = 100.0;
   eq->gain = 1.0;
+
+  speaker->input0 = eq->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

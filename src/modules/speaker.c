@@ -12,9 +12,9 @@ mscsound_speaker_t *mscsound_create_speaker(int framesPerBuffer) {
   return speaker;
 }
 
-void mscsound_speaker_process(mscsound_speaker_t *speaker,
-                                 float *output) {
-  for (int i = 0; i < speaker->framesPerBuffer; i++) {
-    output[i] = speaker->input0[i];
+void mscsound_speaker_process(mscsound_speaker_t **self,
+                                 float **output) {
+  for (int i = 0; i < (*self)->framesPerBuffer; i++) {
+    (*output)[i] = (*((*self)->input0))[i];
   }
 }

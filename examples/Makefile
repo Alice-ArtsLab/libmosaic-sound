@@ -4,26 +4,13 @@ LIBS :=	-lportaudio -lm `pkg-config --libs sndfile`
 LIB_FLAGS :=  -I/usr/include/mosaic/mosaic-sound -lmosaic-sound
 SRC :=	src/
 BUILD :=	build/
-OBJSRC :=	../build/
 BIN :=	bin/
-OBJS := $(OBJSRC)list.o \
-        $(OBJSRC)devices.o \
-        $(OBJSRC)whitenoise.o \
-        $(OBJSRC)audiomath.o \
-        $(OBJSRC)oscillators.o \
-        $(OBJSRC)mic.o \
-        $(OBJSRC)biquad.o \
-        $(OBJSRC)parametricequalizer.o \
-        $(OBJSRC)lowshelving.o \
-        $(OBJSRC)highshelving.o \
-        $(OBJSRC)playback.o \
-				$(OBJSRC)record.o \
-				$(OBJSRC)channelshootersplitter.o
 
 TARGET := $(BIN)record_mic $(BIN)playback_mono $(BIN)playback_stereo \
 		  $(BIN)osc_math $(BIN)noise $(BIN)devices $(BIN)allpass $(BIN)lowpass \
 		  $(BIN)highpass $(BIN)bandpass $(BIN)bandreject $(BIN)parametric_eq \
-		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter
+		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter \
+			$(BIN)audiofloatmath
 
 
 all: $(TARGET)
@@ -110,7 +97,7 @@ $(BUILD)highpass.o: $(SRC)highpass.c
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
 
 # Example: bandpass
-$(BIN)bandpass:	$(BUILD)bandpass.o $(OBJS)
+$(BIN)bandpass:	$(BUILD)bandpass.o
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
@@ -160,5 +147,14 @@ $(BIN)channelshootersplitter:	$(BUILD)channelshootersplitter.o
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
 $(BUILD)channelshootersplitter.o: $(SRC)channelshootersplitter.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: Change gain
+$(BIN)audiofloatmath:	$(BUILD)audiofloatmath.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)audiofloatmath.o: $(SRC)audiofloatmath.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)

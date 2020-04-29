@@ -10,7 +10,7 @@
 
 mscsound_osc_t *osc1;
 mscsound_osc_t *osc2;
-mscsound_math_t *add;
+mscsound_audiomath_t *add;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
@@ -26,15 +26,11 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  osc1->process(osc1);
-  osc2->process(osc2);
+  osc1->process(&osc1);
+  osc2->process(&osc2);
+  add->process(&add);
 
-  add->input0 = osc1->output0;
-  add->input1 = osc2->output0;
-  add->process(add);
-
-  speaker->input0 = add->output0;
-  speaker->process(speaker, out);
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }
@@ -58,9 +54,15 @@ int main(int argc, char *argv[]) {
   osc2->input0 = NULL;
   osc2->input1 = 880.0;
 
-  add = mscsound_create_math(FRAMES_PER_BUFFER, mscsound_add_2freq);
+  add = mscsound_create_audiomath(FRAMES_PER_BUFFER, mscsound_add_2freq);
 
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
+
+  add->input0 = osc1->output0;
+  add->input1 = osc2->output0;
+
+  speaker->input0 = add->output0;
+
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

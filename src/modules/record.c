@@ -32,26 +32,27 @@ mscsound_record_t *mscsound_create_record(char *filename,
   };
 
   record->process = mscsound_record_process;
-  record->input0 = malloc(framesPerBuffer * sizeof(float));
+  record->input0 = calloc(1, sizeof(float*));
+  record->input0[0] = calloc(framesPerBuffer, sizeof(float));
 
   return record;
 }
 
-void mscsound_record_process(mscsound_record_t *record) {
-  if (record->currentTime >= record->time) {
-    record->process = mscsound_record_finished;
-    sf_close(record->sf);
-    printf(">> Rec finished:\n\tFile: %s\n\tTime: %ds\n", record->filename,
-           record->time);
+void mscsound_record_process(mscsound_record_t **record) {
+  if ((*record)->currentTime >= (*record)->time) {
+    (*record)->process = mscsound_record_finished;
+    sf_close((*record)->sf);
+    printf(">> Rec finished:\n\tFile: %s\n\tTime: %ds\n", (*record)->filename,
+           (*record)->time);
     return;
   }
 
-  if (!record->paused) {
-    if (record->writeCount >= 44100 * (record->currentTime + 1)) {
-      record->currentTime++;
+  if (!(*record)->paused) {
+    if ((*record)->writeCount >= 44100 * ((*record)->currentTime + 1)) {
+      (*record)->currentTime++;
     }
-    record->writeCount += record->framesPerBuffer;
-    sf_write_float(record->sf, record->input0, record->framesPerBuffer);
+    (*record)->writeCount += (*record)->framesPerBuffer;
+    sf_write_float((*record)->sf, *((*record)->input0), (*record)->framesPerBuffer);
   }
 }
 

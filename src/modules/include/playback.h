@@ -9,8 +9,8 @@ typedef struct {
   int fileFrames;
   int readCount;
   int paused;     /* 0: paused ; 1: playing*/
-  float *output0; /* Left*/
-  float *output1; /*  Right */
+  float **output0; /* Left*/
+  float **output1; /*  Right */
   float *file;
   char *filename;
   void (*process)(void *self);

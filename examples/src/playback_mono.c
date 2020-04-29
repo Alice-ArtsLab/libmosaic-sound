@@ -24,8 +24,8 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)userData;
   (void)in;
 
-  pb->process(pb);
-  speaker->process(speaker, out);
+  pb->process(&pb);
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }

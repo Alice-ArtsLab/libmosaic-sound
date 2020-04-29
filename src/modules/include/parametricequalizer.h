@@ -2,8 +2,8 @@
 #define MSCSOUND_PARAMETRIC_EQUALIZER_H
 
 typedef struct {
-  float *input0;
-  float *output0;
+  float **input0;
+  float **output0;
   int framesPerBuffer;
   float sampleRate;
   float slope;

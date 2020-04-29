@@ -24,11 +24,9 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)statusFlags;
   (void)userData;
 
-  mic->process(mic, in);
-  rec->input0 = mic->output0;
-  rec->process(rec);
-  speaker->input0 = mic->output0;
-  speaker->process(speaker, out);
+  mic->process(&mic, &in);
+  rec->process(&rec);
+  speaker->process(&speaker, &out);
 
   return paContinue;
 }
@@ -44,6 +42,9 @@ int main(int argc, char *argv[]) {
   rec =
       mscsound_create_record("./record_mic.wav", FRAMES_PER_BUFFER, 10, 44100);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
+
+  rec->input0 = mic->output0;
+  speaker->input0 = mic->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

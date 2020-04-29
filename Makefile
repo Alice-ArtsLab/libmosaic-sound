@@ -12,6 +12,7 @@ OBJS :=	$(BUILD)/list.o \
     	$(BUILD)/devices.o \
     	$(BUILD)/whitenoise.o \
     	$(BUILD)/audiomath.o \
+			$(BUILD)/audiofloatmath.o \
     	$(BUILD)/oscillators.o \
     	$(BUILD)/mic.o \
     	$(BUILD)/biquad.o \
@@ -80,6 +81,11 @@ $(BUILD)/whitenoise.o: $(SRC)/modules/whitenoise.c \
 
 $(BUILD)/audiomath.o: $(SRC)/modules/audiomath.c \
 					  $(SRC)/modules/include/audiomath.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/audiofloatmath.o: $(SRC)/modules/audiofloatmath.c \
+					  $(SRC)/modules/include/audiofloatmath.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
