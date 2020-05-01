@@ -5,7 +5,7 @@ typedef struct {
   float *table;
   int tableSize;
   int index;
-  int type;      /*0: Sine; 1: Square; 2: Triangle; 3: Sawtooth.*/
+  char **type; /* sine; square; triangle; sawtooth.*/
   float **input0; /* freq*/
   float input1;  /* freqValue */
   float **output0;
@@ -14,7 +14,7 @@ typedef struct {
   void (*process)(void *self);
 } mscsound_osc_t;
 
-mscsound_osc_t *mscsound_create_osc(int type, int framesPerBuffer,
+mscsound_osc_t *mscsound_create_osc(char *type, int framesPerBuffer,
                                           float tableSize);
 void mscsound_osc_process();
 

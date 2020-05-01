@@ -1,11 +1,14 @@
 #include "include/oscillators.h"
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
-mscsound_osc_t *mscsound_create_osc(int type, int framesPerBuffer,
+mscsound_osc_t *mscsound_create_osc(char *type, int framesPerBuffer,
                                           float tableSize) {
   mscsound_osc_t *osc = malloc(sizeof(mscsound_osc_t));
-  osc->type = type;
+  osc->type = calloc(1, sizeof(char*));
+  osc->type[0] = calloc(9, sizeof(char)); // strlen("sawtooth") + 1
+  strcpy(osc->type[0], type);
   osc->framesPerBuffer = framesPerBuffer;
   osc->tableSize = tableSize;
   osc->index = 0;
@@ -13,21 +16,14 @@ mscsound_osc_t *mscsound_create_osc(int type, int framesPerBuffer,
   osc->output0[0] = calloc(framesPerBuffer, sizeof(float));
   osc->process = mscsound_osc_process;
 
-  switch (type) {
-  case 0:
+  if (! strcmp(type, "sine")) {
     osc->table = mscsound_create_sine_table(tableSize);
-    break;
-
-  case 1:
+  }else if (! strcmp(type, "square")) {
     osc->table = mscsound_create_square_table(tableSize);
-    break;
-  case 2:
+  }else if (! strcmp(type, "triangle")) {
     osc->table = mscsound_create_triangle_table(tableSize);
-
-    break;
-  case 3:
+  }else if (! strcmp(type, "sawtooth")) {
     osc->table = mscsound_create_sawtooth_table(tableSize);
-    break;
   }
 
   return osc;
