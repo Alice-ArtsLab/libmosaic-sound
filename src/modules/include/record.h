@@ -11,7 +11,7 @@ typedef struct {
   float **input0;
   void *sf;
   void (*process)(void *self);
-  char *filename;
+  char **filename;
 } mscsound_record_t;
 
 mscsound_record_t *mscsound_create_record(char *filename,
