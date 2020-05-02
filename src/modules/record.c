@@ -5,14 +5,20 @@
 #include <string.h>
 
 mscsound_record_t *mscsound_create_record(char *filename,
-                                                int framesPerBuffer, int fTime,
-                                                int sr) {
+                                                int framesPerBuffer, int sr) {
   mscsound_record_t *record = malloc(sizeof(mscsound_record_t));
 
   record->writeCount = 0;
   record->currentTime = 0;
-  record->time = fTime;
-  record->paused = 0;
+
+  record->paused = calloc(1, sizeof(char*));
+  record->paused[0] = calloc(4, sizeof(char)); // strlen("yes") + 1
+  strcpy(*(record->paused), "no");
+
+  record->stop = calloc(1, sizeof(char*));
+  record->stop[0] = calloc(4, sizeof(char)); // strlen("yes") + 1
+  strcpy(*(record->stop), "no");
+
   record->sampleRate = sr;
   record->framesPerBuffer = framesPerBuffer;
   record->filename = calloc(1, sizeof(char*));
@@ -40,15 +46,15 @@ mscsound_record_t *mscsound_create_record(char *filename,
 }
 
 void mscsound_record_process(mscsound_record_t **record) {
-  if ((*record)->currentTime >= (*record)->time) {
+  if (! strcmp(*((*record)->stop), "yes")) {
     (*record)->process = mscsound_record_finished;
     sf_close((*record)->sf);
     printf(">> Rec finished:\n\tFile: %s\n\tTime: %ds\n", *((*record)->filename),
-           (*record)->time);
+           (*record)->currentTime);
     return;
   }
 
-  if (!(*record)->paused) {
+  if (! strcmp(*((*record)->paused), "no")) { // record->paused = "no"
     if ((*record)->writeCount >= 44100 * ((*record)->currentTime + 1)) {
       (*record)->currentTime++;
     }

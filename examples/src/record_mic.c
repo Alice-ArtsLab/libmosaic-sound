@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define NUM_SECONDS 12
 #define SAMPLE_RATE 44100
@@ -40,7 +41,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 int main(int argc, char *argv[]) {
   mic = mscsound_create_mic(FRAMES_PER_BUFFER);
   rec =
-      mscsound_create_record("./record_mic.wav", FRAMES_PER_BUFFER, 10, 44100);
+      mscsound_create_record("./record_mic.wav", FRAMES_PER_BUFFER, 44100);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
   rec->input0 = mic->output0;
@@ -48,9 +49,12 @@ int main(int argc, char *argv[]) {
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
-  printf("Recording until the Enter key is pressed.\n");
-  getchar();
 
+  printf("Recording... Wait 10 seconds!\n");
+  sleep(10);
+  strcpy(*(rec->stop), "yes");
+
+  printf("Done!\n");
   mscsound_terminate(stream);
 
   return 0;
