@@ -43,13 +43,13 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 /*******************************************************************/
 int main(int argc, char *argv[]) {
   /* Sine 440.0 Hz */
-  osc1 = mscsound_create_osc(0, FRAMES_PER_BUFFER, 2048);
+  osc1 = mscsound_create_osc("sine", FRAMES_PER_BUFFER, 2048);
   osc1->sampleRate = SAMPLE_RATE;
   osc1->input0 = NULL;
   osc1->input1 = 440.0;
 
   /* Sawtooth 880.0 Hz*/
-  osc2 = mscsound_create_osc(3, FRAMES_PER_BUFFER, 2048);
+  osc2 = mscsound_create_osc("sawtooth", FRAMES_PER_BUFFER, 2048);
   osc2->sampleRate = SAMPLE_RATE;
   osc2->input0 = NULL;
   osc2->input1 = 880.0;
