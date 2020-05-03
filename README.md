@@ -58,7 +58,7 @@ Installing library: `$ sudo make install`
 
 
 ## Compiling and Running the examples
-Compiling examples: `$ sudo make examples`
+Compiling examples: `$ make examples`
 
 Running:
 
@@ -71,6 +71,10 @@ $ ./<filename>
 
 ## Cleaning the library and examples
 
-Cleaning library: `$ sudo make clean`
+Cleaning library: `$ make clean`
 
-Cleaning examples: `$ sudo make clean_examples`
+Cleaning examples: `$ make clean_examples`
+
+## Uninstalling
+
+Terminal: `$ sudo make uninstall`

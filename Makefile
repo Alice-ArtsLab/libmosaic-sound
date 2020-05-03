@@ -34,18 +34,15 @@ static:
 # dynamic
 .PHONY:	install
 install:
-	rm -rf "$(DIST)"
-	mkdir -p "$(DIST)"
 	$(CC) $(CFLAGS) -shared -o $(DIST)/lib$(LIB_NAME).so.$(LIB_VERSION) $(OBJS)
 	ln -s lib$(LIB_NAME).so.$(LIB_VERSION) $(DIST)/lib$(LIB_NAME).so
 	rm -rf "$(LIBDIR)/include"
 	mkdir -p "$(LIBDIR)/include"
-	cp $(DIST)/lib$(LIB_NAME).so.$(LIB_VERSION) /usr/lib
-	cp $(DIST)/lib$(LIB_NAME).so /usr/lib
+	mv $(DIST)/lib$(LIB_NAME).so.$(LIB_VERSION) /usr/lib
+	mv $(DIST)/lib$(LIB_NAME).so /usr/lib
 	cp $(SRC)/$(LIB_NAME).h $(LIBDIR)
 	cp $(SRC)/modules/include/*  $(LIBDIR)/include
 	cp $(SRC)/util/include/*  $(LIBDIR)/include
-
 
 .PHONY:	uninstall
 uninstall:

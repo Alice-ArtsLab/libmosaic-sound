@@ -41,7 +41,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 /*******************************************************************/
 int main(int argc, char *argv[]) {
   /* Sine 440.0 Hz */
-  osc = mscsound_create_osc(0, FRAMES_PER_BUFFER, 2048);
+  osc = mscsound_create_osc("sine", FRAMES_PER_BUFFER, 2048);
   osc->sampleRate = SAMPLE_RATE;
   osc->input0 = NULL;
   osc->input1 = 440.0;

@@ -8,19 +8,26 @@ mscsound_playback_t *mscsound_create_playback(char *filename,
                                                     int framesPerBuffer) {
   mscsound_playback_t *playback = malloc(sizeof(mscsound_playback_t));
   playback->readCount = 0;
-  playback->paused = 0;
-  playback->loop = 0;
+  playback->paused = calloc(1, sizeof(char*));
+  playback->paused[0] = calloc(4, sizeof(char)); // strlen("yes") + 1
+  strcpy(*(playback->paused), "no");
+
+  playback->loop = calloc(1, sizeof(char*));
+  playback->loop[0] = calloc(4, sizeof(char)); // strlen("yes") + 1
+  strcpy(*(playback->loop), "no");
+
   playback->framesPerBuffer = framesPerBuffer;
 
   SNDFILE *sf;
   SF_INFO info;
 
-  playback->filename = malloc(strlen(filename) + 1);
-  strcpy(playback->filename, filename);
+  playback->filename = calloc(1, sizeof(char));
+  playback->filename[0] = calloc(strlen(filename) + 1, sizeof(char));
+  strcpy(*(playback->filename), filename);
 
-  sf = sf_open(playback->filename, SFM_READ, &info);
+  sf = sf_open(*(playback->filename), SFM_READ, &info);
   if (!sf) {
-    printf("Not able to open input file %s.\n", playback->filename);
+    printf("Not able to open input file %s.\n", *(playback->filename));
     puts(sf_strerror(NULL));
     return NULL;
   }
@@ -55,13 +62,14 @@ mscsound_playback_t *mscsound_create_playback(char *filename,
 void mscsound_playback_process_mono(mscsound_playback_t **playback) {
   int i = 0;
 
-  if (!(*playback)->paused) {
+  if (! strcmp(*((*playback)->paused), "no")) { // If is not paused
     for (i = 0; i < (*playback)->framesPerBuffer &&
                 (*playback)->readCount < (*playback)->fileFrames;
          i++) {
       (*((*playback)->output0))[i] = (*playback)->file[(*playback)->readCount];
       (*playback)->readCount++;
-      if ((*playback)->loop && (*playback)->readCount >= (*playback)->fileFrames)
+      if ((!strcmp(*((*playback)->loop), "yes")) && (*playback)->readCount
+                                                 >= (*playback)->fileFrames)
         (*playback)->readCount = 0;
     }
     for (; i < (*playback)->framesPerBuffer &&
@@ -80,14 +88,15 @@ void mscsound_playback_process_mono(mscsound_playback_t **playback) {
 void mscsound_playback_process_stereo(mscsound_playback_t **playback) {
   int i = 0;
 
-  if (!(*playback)->paused) {
+  if (! strcmp(*((*playback)->paused), "no")) { // If is not paused
     for (i = 0; i < (*playback)->framesPerBuffer &&
                 (*playback)->readCount < (*playback)->fileFrames;
          i++) {
       (*((*playback)->output0))[i] = (*playback)->file[(*playback)->readCount];
       (*((*playback)->output1))[i]= (*playback)->file[(*playback)->readCount + 1];
       (*playback)->readCount += 2;
-      if ((*playback)->loop && (*playback)->readCount >= (*playback)->fileFrames)
+      if ((!strcmp(*((*playback)->loop), "yes")) && (*playback)->readCount
+                                                     >= (*playback)->fileFrames)
         (*playback)->readCount = 0;
     }
     for (; i < (*playback)->framesPerBuffer &&

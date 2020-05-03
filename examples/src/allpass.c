@@ -42,7 +42,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
-  pb->loop = 1;
+  strcpy(*(pb->loop), "yes");
 
   /* Second-order allpass*/
   allpass = mscsound_create_biquad(0, 2, FRAMES_PER_BUFFER);
