@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
   strcpy(*(pb->loop), "yes");
 
   /* Second-order bandpass*/
-  bandpass = mscsound_create_biquad(3, 2, FRAMES_PER_BUFFER);
+  bandpass = mscsound_create_biquad("bandpass", 2, FRAMES_PER_BUFFER);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
   bandpass->input0 = pb->output0;

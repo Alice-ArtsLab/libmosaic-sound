@@ -2,7 +2,7 @@
 #define MSCSOUND_BIQUAD_H
 
 typedef struct {
-  int type;  /*0: Allpass; 1: Lowpass; 2: Highpass; 3: Bandpass; 4: Bandreject*/
+  char ** type;  /*allpass; lowpass; highpass; bandpass; bandreject*/
   int order; /*1: First-order; 2: Second-order*/
   float **input0;
   float **output0;
@@ -17,7 +17,7 @@ typedef struct {
   void (*process)(void *self);
 } mscsound_biquad_t;
 
-mscsound_biquad_t *mscsound_create_biquad(int type, int order,
+mscsound_biquad_t *mscsound_create_biquad(char *type, int order,
                                                 int framesPerBuffer);
 
 void mscsound_allpass_process();

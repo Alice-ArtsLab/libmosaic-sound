@@ -1,36 +1,33 @@
 #include "include/biquad.h"
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
-mscsound_biquad_t *mscsound_create_biquad(int type, int order,
+mscsound_biquad_t *mscsound_create_biquad(char *type, int order,
                                           int framesPerBuffer) {
   mscsound_biquad_t *filter = malloc(sizeof(mscsound_biquad_t));
 
   filter->output0 = calloc(1, sizeof(float*));
-  filter->type = type;
   filter->order = order;
   filter->framesPerBuffer = framesPerBuffer;
   filter->xn1 = 0;
   filter->xn2 = 0;
   filter->yn1 = 0;
   filter->yn2 = 0;
+  filter->type = calloc(1, sizeof(char *));
+  filter->type[0] = calloc(11, sizeof(char *)); //  strlen("bandreject") + 1
+  strcpy(*(filter->type), type);
 
-  switch (type) {
-  case 0:
-    filter->process = mscsound_allpass_process;
-    break;
-  case 1:
+  if (! strcmp(type, "lowpass")) {
     filter->process = mscsound_lowpass_process;
-    break;
-  case 2:
+  } else if (! strcmp(type, "highpass")) {
     filter->process = mscsound_highpass_process;
-    break;
-  case 3:
+  } else if (! strcmp(type, "bandpass")) {
     filter->process = mscsound_bandpass_process;
-    break;
-  case 4:
+  } else if (! strcmp(type, "bandreject")) {
     filter->process = mscsound_bandreject_process;
-    break;
+  } else if (! strcmp(type, "allpass")) {
+      filter->process = mscsound_allpass_process;
   }
 
   return filter;

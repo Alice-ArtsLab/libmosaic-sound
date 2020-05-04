@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
   strcpy(*(pb->loop), "yes");
 
   /* Second-order allpass*/
-  allpass = mscsound_create_biquad(0, 2, FRAMES_PER_BUFFER);
+  allpass = mscsound_create_biquad("allpass", 2, FRAMES_PER_BUFFER);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
   allpass->input0 = pb->output0;
