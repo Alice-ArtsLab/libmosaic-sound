@@ -8,7 +8,7 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-mscsound_noise_t *noise;
+mscsound_whitenoise_t *noise;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,

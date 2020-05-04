@@ -32,7 +32,8 @@ There are the following implementations:
     * Divided by
 
 * ### General
-    * List audio devices
+    * Channel shooter splitter
+    * List all audio devices
 
 * ### Output
     * Buffer
@@ -43,7 +44,7 @@ There are the following implementations:
     * Oscillators
     * White Noise
     * Microphones
-    * File / Buffer
+    * Record
 
 ## Solving Dependecies
 `sudo apt-get install libsndfile1-dev`
