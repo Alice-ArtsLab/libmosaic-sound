@@ -24,7 +24,6 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)in;
   (void)out;
 
-
   return paComplete;
 }
 
@@ -36,6 +35,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 /*******************************************************************/
 int main(int argc, char *argv[]) {
   devices = mscsound_create_devices();
+
   devices->process(&devices);
   devices->show(&devices);
 
