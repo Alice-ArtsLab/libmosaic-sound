@@ -16,7 +16,7 @@ typedef struct {
   int initialSample;
   int currentSample;
   int finalSample;
-  int currentAmplitude;
+  float currentAmplitude;
   int currentFrame;
 
   void (*process)();

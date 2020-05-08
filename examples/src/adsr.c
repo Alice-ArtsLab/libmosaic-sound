@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
   osc->input1 = 440.0;
 
   adsr = mscsound_create_adsr(SAMPLE_RATE, FRAMES_PER_BUFFER);
-  adsr->attack = 500;
+  adsr->attack = 2000;
   adsr->decay = 500;
   adsr->sustain = 500;
   adsr->release = 500;

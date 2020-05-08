@@ -42,6 +42,7 @@ void mscsound_process_silence(mscsound_adsr_t **adsr){
       (*((*adsr)->output0))[i] = 0.0;
   } else {
     (*adsr)->process = mscsound_process_attack;
+    (*adsr)->finalSample = (((*adsr)->sampleRate * (*adsr)->attack) / 1000) - 1;
     (*adsr)->process(adsr);
   }
 }
@@ -53,9 +54,8 @@ void mscsound_process_attack(mscsound_adsr_t **adsr) {
   if ((*adsr)->play)
     restart_adsr(adsr);
 
-  (*adsr)->finalSample = ((*adsr)->sampleRate * (*adsr)->attack) / 1000;
-  int amplitudeStep = 1 / ((*adsr)->finalSample - (*adsr)->initialSample - 1);
-
+  float amplitudeStep = 1 / (float)(((*adsr)->finalSample) - \
+                                                  ((*adsr)->initialSample) - 1);
   int remainingSamples = (*adsr)->finalSample - (*adsr)->currentSample;
   if (remainingSamples > (*adsr)->framesPerBuffer) {
     for (int i = (*adsr)->currentFrame; i < (*adsr)->framesPerBuffer; i++) {
@@ -63,6 +63,7 @@ void mscsound_process_attack(mscsound_adsr_t **adsr) {
       ((*adsr)->currentFrame)++;
       ((*adsr)->currentSample)++;
       ((*adsr)->currentAmplitude) += amplitudeStep;
+
     }
 
   } else {
@@ -74,11 +75,12 @@ void mscsound_process_attack(mscsound_adsr_t **adsr) {
     }
 
     (*adsr)->process = mscsound_process_decay;
-    if (remainingSamples != (*adsr)->framesPerBuffer) {}
+    (*adsr)->initialSample = (*adsr)->currentSample;
+    (*adsr)->finalSample += (((*adsr)->sampleRate * (*adsr)->decay) / 1000) -1;
+    if (remainingSamples != (*adsr)->framesPerBuffer)
       (*adsr)->process(adsr);
-
-    ((*adsr)->currentFrame) = 0;
   }
+  ((*adsr)->currentFrame) = 0;
 }
 
 
@@ -86,7 +88,6 @@ void mscsound_process_decay(mscsound_adsr_t **adsr) {
   printf("Decay\n");
   *((*adsr)->output0) = *((*adsr)->input0);
 
-  (*adsr)->currentAmplitude = 1;
   if ((*adsr)->play) {
     restart_adsr(adsr);
     (*adsr)->process = mscsound_process_attack;
@@ -94,12 +95,8 @@ void mscsound_process_decay(mscsound_adsr_t **adsr) {
     return;
   }
 
-  (*adsr)->initialSample = (*adsr)->finalSample;
-  (*adsr)->finalSample += ((*adsr)->sampleRate * (*adsr)->decay) / 1000;
-
-  int amplitudeStep = ((*adsr)->currentAmplitude - (*adsr)->gain) / \
-            ((*adsr)->finalSample - (*adsr)->initialSample);
-
+  float amplitudeStep = (1 - (*adsr)->gain) / \
+            (float)((*adsr)->finalSample - (float)((*adsr)->initialSample));
 
   int remainingSamples = (*adsr)->finalSample - (*adsr)->currentSample;
 
@@ -120,11 +117,12 @@ void mscsound_process_decay(mscsound_adsr_t **adsr) {
     }
 
     (*adsr)->process = mscsound_process_sustain;
+    (*adsr)->initialSample = (*adsr)->currentSample;
+    (*adsr)->finalSample += (((*adsr)->sampleRate * (*adsr)->sustain) / 1000)-1;
     if (remainingSamples != (*adsr)->framesPerBuffer)
       (*adsr)->process(adsr);
-
-    ((*adsr)->currentFrame) = 0;
   }
+  ((*adsr)->currentFrame) = 0;
 }
 
 void mscsound_process_sustain(mscsound_adsr_t **adsr) {
@@ -137,9 +135,6 @@ void mscsound_process_sustain(mscsound_adsr_t **adsr) {
     (*adsr)->process(adsr);
     return;
   }
-
-  (*adsr)->initialSample = (*adsr)->finalSample;
-  (*adsr)->finalSample += ((*adsr)->sampleRate * (*adsr)->sustain) / 1000;
 
   int remainingSamples = (*adsr)->finalSample - (*adsr)->currentSample;
 
@@ -158,10 +153,12 @@ void mscsound_process_sustain(mscsound_adsr_t **adsr) {
     }
 
     (*adsr)->process = mscsound_process_release;
+    (*adsr)->initialSample = (*adsr)->currentSample;
+    (*adsr)->finalSample += (((*adsr)->sampleRate * (*adsr)->release) / 1000)-1;
     if (remainingSamples != (*adsr)->framesPerBuffer)
       (*adsr)->process(adsr);
-    ((*adsr)->currentFrame) = 0;
   }
+  ((*adsr)->currentFrame) = 0;
 }
 
 void mscsound_process_release(mscsound_adsr_t **adsr) {
@@ -175,12 +172,8 @@ void mscsound_process_release(mscsound_adsr_t **adsr) {
     return;
   }
 
-  (*adsr)->initialSample = (*adsr)->finalSample;
-  (*adsr)->finalSample += ((*adsr)->sampleRate * (*adsr)->release) / 1000;
-
-  int amplitudeStep = (*adsr)->currentAmplitude / \
-            ((*adsr)->finalSample - (*adsr)->initialSample);
-
+  float amplitudeStep = (*adsr)->currentAmplitude / \
+            (float)((*adsr)->finalSample - (*adsr)->currentSample);
 
   int remainingSamples = (*adsr)->finalSample - (*adsr)->currentSample;
 
@@ -193,6 +186,7 @@ void mscsound_process_release(mscsound_adsr_t **adsr) {
     }
 
   } else {
+
     for (int i = (*adsr)->currentFrame; i < remainingSamples; i++) {
       ((*adsr)->currentAmplitude) -= amplitudeStep;
       (*((*adsr)->output0))[i] *= (*adsr)->currentAmplitude;
@@ -200,12 +194,15 @@ void mscsound_process_release(mscsound_adsr_t **adsr) {
       ((*adsr)->currentSample)++;
     }
 
-    (*adsr)->process = mscsound_process_silence;
+
     if (remainingSamples != (*adsr)->framesPerBuffer) {
       for (int i = (*adsr)->currentFrame; i < (*adsr)->framesPerBuffer; i++)
-        (*((*adsr)->output0))[i] = 0.0;
+        (*((*adsr)->output0))[i] *= 0.0;
+        ((*adsr)->currentFrame)++;
+        ((*adsr)->currentSample)++;
     }
 
     restart_adsr(adsr);
+    (*adsr)->process = mscsound_process_silence;
   }
 }
