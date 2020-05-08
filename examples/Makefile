@@ -10,7 +10,7 @@ TARGET := $(BIN)record_mic $(BIN)playback_mono $(BIN)playback_stereo \
 		  $(BIN)osc_math $(BIN)whitenoise $(BIN)devices $(BIN)allpass $(BIN)lowpass \
 		  $(BIN)highpass $(BIN)bandpass $(BIN)bandreject $(BIN)parametric_eq \
 		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter \
-			$(BIN)audiofloatmath $(BIN)vubar
+			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr
 
 
 all: $(TARGET)
@@ -159,11 +159,20 @@ $(BUILD)audiofloatmath.o: $(SRC)audiofloatmath.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
 
-# Example: Change gain
+# Example: VUBar
 $(BIN)vubar:	$(BUILD)vubar.o
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
 $(BUILD)vubar.o: $(SRC)vubar.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: ADSR
+$(BIN)adsr:	$(BUILD)adsr.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)adsr.o: $(SRC)adsr.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)

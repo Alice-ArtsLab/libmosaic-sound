@@ -16,6 +16,7 @@
 #include "/usr/include/mosaic/mosaic-sound/include/speaker.h"
 #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
 #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
+#include "/usr/include/mosaic/mosaic-sound/include/adsr.h"
 
 /* GUI */
 #include "/usr/include/mosaic/mosaic-sound/include/vubar.h"
