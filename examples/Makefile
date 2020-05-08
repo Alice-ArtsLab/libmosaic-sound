@@ -1,6 +1,6 @@
 CC := gcc
 CFLAGS :=	-g -Wall
-LIBS :=	-lportaudio -lm `pkg-config --libs sndfile`
+LIBS :=	-lportaudio -lm `pkg-config --libs sndfile --cflags gtk+-3.0`
 LIB_FLAGS :=  -I/usr/include/mosaic/mosaic-sound -lmosaic-sound
 SRC :=	src/
 BUILD :=	build/
@@ -10,7 +10,7 @@ TARGET := $(BIN)record_mic $(BIN)playback_mono $(BIN)playback_stereo \
 		  $(BIN)osc_math $(BIN)whitenoise $(BIN)devices $(BIN)allpass $(BIN)lowpass \
 		  $(BIN)highpass $(BIN)bandpass $(BIN)bandreject $(BIN)parametric_eq \
 		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter \
-			$(BIN)audiofloatmath
+			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr
 
 
 all: $(TARGET)
@@ -156,5 +156,23 @@ $(BIN)audiofloatmath:	$(BUILD)audiofloatmath.o
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
 $(BUILD)audiofloatmath.o: $(SRC)audiofloatmath.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: VUBar
+$(BIN)vubar:	$(BUILD)vubar.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)vubar.o: $(SRC)vubar.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: ADSR
+$(BIN)adsr:	$(BUILD)adsr.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)adsr.o: $(SRC)adsr.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)

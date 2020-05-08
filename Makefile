@@ -1,6 +1,6 @@
 CC :=	gcc
-CFLAGS :=	-g -Wall -Werror -fPIC
-LIBS :=	-lportaudio -lm `pkg-config --libs sndfile`
+CFLAGS :=	-g -fPIC #-g -Wall -Werror -fPIC
+LIBS :=	-lportaudio -lm `pkg-config --libs sndfile --cflags gtk+-3.0`
 SRC :=	src
 LIBDIR :=	/usr/include/mosaic/mosaic-sound
 LIB_NAME :=	mosaic-sound
@@ -22,7 +22,9 @@ OBJS :=	$(BUILD)/list.o \
     	$(BUILD)/playback.o \
 			$(BUILD)/record.o \
 			$(BUILD)/speaker.o \
-			$(BUILD)/channelshootersplitter.o
+			$(BUILD)/channelshootersplitter.o \
+			$(BUILD)/vubar.o \
+			$(BUILD)/adsr.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -42,6 +44,7 @@ install:
 	mv $(DIST)/lib$(LIB_NAME).so /usr/lib
 	cp $(SRC)/$(LIB_NAME).h $(LIBDIR)
 	cp $(SRC)/modules/include/*  $(LIBDIR)/include
+	cp $(SRC)/GUI/include/*  $(LIBDIR)/include
 	cp $(SRC)/util/include/*  $(LIBDIR)/include
 
 .PHONY:	uninstall
@@ -128,5 +131,13 @@ $(BUILD)/speaker.o: $(SRC)/modules/speaker.c $(SRC)/modules/include/speaker.h
 
 $(BUILD)/channelshootersplitter.o: $(SRC)/modules/channelshootersplitter.c \
 													 $(SRC)/modules/include/channelshootersplitter.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/vubar.o: $(SRC)/GUI/vubar.c $(SRC)/GUI/include/vubar.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/adsr.o: $(SRC)/modules/adsr.c $(SRC)/modules/include/adsr.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)

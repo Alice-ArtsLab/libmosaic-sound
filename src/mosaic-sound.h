@@ -1,5 +1,6 @@
 #ifndef MSCSOUND_H
 #define MSCSOUND_H
+
 #include "/usr/include/mosaic/mosaic-sound/include/audiomath.h"
 #include "/usr/include/mosaic/mosaic-sound/include/audiofloatmath.h"
 #include "/usr/include/mosaic/mosaic-sound/include/biquad.h"
@@ -14,6 +15,11 @@
 #include "/usr/include/mosaic/mosaic-sound/include/record.h"
 #include "/usr/include/mosaic/mosaic-sound/include/speaker.h"
 #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
+#include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
+#include "/usr/include/mosaic/mosaic-sound/include/adsr.h"
+
+/* GUI */
+#include "/usr/include/mosaic/mosaic-sound/include/vubar.h"
 
 static int mscsound_callback();
 static void mscsound_finished(void *data);
