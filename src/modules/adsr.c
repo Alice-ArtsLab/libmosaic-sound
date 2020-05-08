@@ -34,7 +34,6 @@ mscsound_adsr_t *mscsound_create_adsr(int sampleRate, int framesPerBuffer) {
 }
 
 void mscsound_process_silence(mscsound_adsr_t **adsr){
-  printf("Silence\n");
   *((*adsr)->output0) = *((*adsr)->input0);
 
   if (! (*adsr)->play) {
@@ -48,15 +47,14 @@ void mscsound_process_silence(mscsound_adsr_t **adsr){
 }
 
 void mscsound_process_attack(mscsound_adsr_t **adsr) {
-  printf("Attack\n");
   *((*adsr)->output0) = *((*adsr)->input0);
 
   if ((*adsr)->play)
     restart_adsr(adsr);
 
   float amplitudeStep = 1 / (float)(((*adsr)->finalSample) - \
-                                                  ((*adsr)->initialSample) - 1);
-  int remainingSamples = (*adsr)->finalSample - (*adsr)->currentSample;
+                                                  (*adsr)->initialSample);
+  int remainingSamples = (*adsr)->finalSample + 1 - (*adsr)->currentSample;
   if (remainingSamples > (*adsr)->framesPerBuffer) {
     for (int i = (*adsr)->currentFrame; i < (*adsr)->framesPerBuffer; i++) {
       (*((*adsr)->output0))[i] *= (*adsr)->currentAmplitude;
@@ -85,7 +83,6 @@ void mscsound_process_attack(mscsound_adsr_t **adsr) {
 
 
 void mscsound_process_decay(mscsound_adsr_t **adsr) {
-  printf("Decay\n");
   *((*adsr)->output0) = *((*adsr)->input0);
 
   if ((*adsr)->play) {
@@ -98,7 +95,7 @@ void mscsound_process_decay(mscsound_adsr_t **adsr) {
   float amplitudeStep = (1 - (*adsr)->gain) / \
             (float)((*adsr)->finalSample - (float)((*adsr)->initialSample));
 
-  int remainingSamples = (*adsr)->finalSample - (*adsr)->currentSample;
+  int remainingSamples = (*adsr)->finalSample + 1 - (*adsr)->currentSample;
 
   if (remainingSamples > (*adsr)->framesPerBuffer) {
     for (int i = (*adsr)->currentFrame; i < (*adsr)->framesPerBuffer; i++) {
@@ -126,7 +123,6 @@ void mscsound_process_decay(mscsound_adsr_t **adsr) {
 }
 
 void mscsound_process_sustain(mscsound_adsr_t **adsr) {
-  printf("Sustain\n");
   *((*adsr)->output0) = *((*adsr)->input0);
 
   if ((*adsr)->play) {
@@ -136,7 +132,7 @@ void mscsound_process_sustain(mscsound_adsr_t **adsr) {
     return;
   }
 
-  int remainingSamples = (*adsr)->finalSample - (*adsr)->currentSample;
+  int remainingSamples = (*adsr)->finalSample + 1 - (*adsr)->currentSample;
 
   if (remainingSamples > (*adsr)->framesPerBuffer) {
     for (int i = (*adsr)->currentFrame; i < (*adsr)->framesPerBuffer; i++) {
@@ -162,7 +158,6 @@ void mscsound_process_sustain(mscsound_adsr_t **adsr) {
 }
 
 void mscsound_process_release(mscsound_adsr_t **adsr) {
-  printf("Release\n");
   *((*adsr)->output0) = *((*adsr)->input0);
 
   if ((*adsr)->play) {
@@ -175,7 +170,7 @@ void mscsound_process_release(mscsound_adsr_t **adsr) {
   float amplitudeStep = (*adsr)->currentAmplitude / \
             (float)((*adsr)->finalSample - (*adsr)->currentSample);
 
-  int remainingSamples = (*adsr)->finalSample - (*adsr)->currentSample;
+  int remainingSamples = (*adsr)->finalSample + 1 - (*adsr)->currentSample;
 
   if (remainingSamples > (*adsr)->framesPerBuffer) {
     for (int i = (*adsr)->currentFrame; i < (*adsr)->framesPerBuffer; i++) {
@@ -194,7 +189,6 @@ void mscsound_process_release(mscsound_adsr_t **adsr) {
       ((*adsr)->currentSample)++;
     }
 
-
     if (remainingSamples != (*adsr)->framesPerBuffer) {
       for (int i = (*adsr)->currentFrame; i < (*adsr)->framesPerBuffer; i++)
         (*((*adsr)->output0))[i] *= 0.0;
@@ -205,4 +199,5 @@ void mscsound_process_release(mscsound_adsr_t **adsr) {
     restart_adsr(adsr);
     (*adsr)->process = mscsound_process_silence;
   }
+  ((*adsr)->currentFrame) = 0;
 }
