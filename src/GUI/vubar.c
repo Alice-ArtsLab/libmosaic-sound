@@ -106,12 +106,15 @@ GtkWidget *vi_led_get_widget(struct vi_led_t *led)
 
 
 /* --------------------------------------------------------- */
-mscsound_vubar_t *mscsound_create_vubar(int framesPerBuffer, GtkWidget **mainPanel) {
+mscsound_vubar_t *mscsound_create_vubar(int framesPerBuffer, void * widget) {
   mscsound_vubar_t *vubar = malloc(sizeof(mscsound_vubar_t));
   vubar->framesPerBuffer = framesPerBuffer;
   vubar->process = mscsound_vubar_process;
   vi_led_create(13, &vubar);
-  gtk_box_pack_start(GTK_BOX(*mainPanel), vi_led_get_widget(vubar->vi_led), FALSE, TRUE, 0);
+
+  gtk_box_pack_start(GTK_BOX((GtkWidget*)(widget)),
+                     vi_led_get_widget(vubar->vi_led),
+                     FALSE, TRUE, 20);
 
   return vubar;
 }

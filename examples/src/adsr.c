@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define NUM_SECONDS 12
 #define SAMPLE_RATE 44100
@@ -47,10 +48,10 @@ int main(int argc, char *argv[]) {
   osc->input1 = 440.0;
 
   adsr = mscsound_create_adsr(SAMPLE_RATE, FRAMES_PER_BUFFER);
-  adsr->attack = 2000;
-  adsr->decay = 500;
-  adsr->sustain = 500;
-  adsr->release = 500;
+  adsr->attack = 1000;
+  adsr->decay = 100;
+  adsr->sustain = 300;
+  adsr->release = 400;
   adsr->gain = 0.7;
   adsr->play = 1;
 
@@ -63,9 +64,11 @@ int main(int argc, char *argv[]) {
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
+  sleep(3);
+  adsr->play = 1;
   printf("Playing until the Enter key is pressed.\n");
-  getchar();
 
+  getchar();
   mscsound_terminate(stream);
 
   return 0;
