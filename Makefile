@@ -24,7 +24,8 @@ OBJS :=	$(BUILD)/list.o \
 			$(BUILD)/speaker.o \
 			$(BUILD)/channelshootersplitter.o \
 			$(BUILD)/vubar.o \
-			$(BUILD)/adsr.o
+			$(BUILD)/adsr.o \
+			$(BUILD)/gui.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -139,5 +140,9 @@ $(BUILD)/vubar.o: $(SRC)/GUI/vubar.c $(SRC)/GUI/include/vubar.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 $(BUILD)/adsr.o: $(SRC)/modules/adsr.c $(SRC)/modules/include/adsr.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/gui.o: $(SRC)/GUI/gui.c $(SRC)/GUI/include/gui.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
