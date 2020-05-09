@@ -1,8 +1,9 @@
 #ifndef MSCSOUND_H
 #define MSCSOUND_H
 
-#include "/usr/include/mosaic/mosaic-sound/include/audiomath.h"
+#include "/usr/include/mosaic/mosaic-sound/include/adsr.h"
 #include "/usr/include/mosaic/mosaic-sound/include/audiofloatmath.h"
+#include "/usr/include/mosaic/mosaic-sound/include/audiomath.h"
 #include "/usr/include/mosaic/mosaic-sound/include/biquad.h"
 #include "/usr/include/mosaic/mosaic-sound/include/channelshootersplitter.h"
 #include "/usr/include/mosaic/mosaic-sound/include/devices.h"
@@ -15,10 +16,9 @@
 #include "/usr/include/mosaic/mosaic-sound/include/record.h"
 #include "/usr/include/mosaic/mosaic-sound/include/speaker.h"
 #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
-#include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
-#include "/usr/include/mosaic/mosaic-sound/include/adsr.h"
 
 /* GUI */
+#include "/usr/include/mosaic/mosaic-sound/include/grid.h"
 #include "/usr/include/mosaic/mosaic-sound/include/gui.h"
 #include "/usr/include/mosaic/mosaic-sound/include/vubar.h"
 

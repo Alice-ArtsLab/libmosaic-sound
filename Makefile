@@ -8,24 +8,12 @@ LIB_FLAGS :=  -I/usr/include/mosaic/mosaic-sound -lmosaic-sound
 LIB_VERSION :=	1
 BUILD :=	build
 DIST :=	dist
-OBJS :=	$(BUILD)/list.o \
-    	$(BUILD)/devices.o \
-    	$(BUILD)/whitenoise.o \
-    	$(BUILD)/audiomath.o \
-			$(BUILD)/audiofloatmath.o \
-    	$(BUILD)/oscillators.o \
-    	$(BUILD)/mic.o \
-    	$(BUILD)/biquad.o \
-    	$(BUILD)/parametricequalizer.o \
-    	$(BUILD)/lowshelving.o \
-    	$(BUILD)/highshelving.o \
-    	$(BUILD)/playback.o \
-			$(BUILD)/record.o \
-			$(BUILD)/speaker.o \
-			$(BUILD)/channelshootersplitter.o \
-			$(BUILD)/vubar.o \
-			$(BUILD)/adsr.o \
-			$(BUILD)/gui.o
+OBJS :=	$(BUILD)/list.o $(BUILD)/devices.o $(BUILD)/whitenoise.o \
+    	$(BUILD)/audiomath.o $(BUILD)/audiofloatmath.o $(BUILD)/oscillators.o \
+    	$(BUILD)/mic.o $(BUILD)/biquad.o $(BUILD)/parametricequalizer.o \
+    	$(BUILD)/lowshelving.o $(BUILD)/highshelving.o $(BUILD)/playback.o \
+			$(BUILD)/record.o $(BUILD)/speaker.o $(BUILD)/channelshootersplitter.o \
+			$(BUILD)/vubar.o $(BUILD)/adsr.o $(BUILD)/gui.o $(BUILD)/grid.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -144,5 +132,9 @@ $(BUILD)/adsr.o: $(SRC)/modules/adsr.c $(SRC)/modules/include/adsr.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 $(BUILD)/gui.o: $(SRC)/GUI/gui.c $(SRC)/GUI/include/gui.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/grid.o: $(SRC)/GUI/grid.c $(SRC)/GUI/include/grid.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)

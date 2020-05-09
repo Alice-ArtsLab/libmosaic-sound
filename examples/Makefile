@@ -10,7 +10,7 @@ TARGET := $(BIN)record_mic $(BIN)playback_mono $(BIN)playback_stereo \
 		  $(BIN)osc_math $(BIN)whitenoise $(BIN)devices $(BIN)allpass $(BIN)lowpass \
 		  $(BIN)highpass $(BIN)bandpass $(BIN)bandreject $(BIN)parametric_eq \
 		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter \
-			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr
+			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr $(BIN)grid
 
 
 all: $(TARGET)
@@ -174,5 +174,14 @@ $(BIN)adsr:	$(BUILD)adsr.o
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
 $(BUILD)adsr.o: $(SRC)adsr.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: Grid
+$(BIN)grid:	$(BUILD)grid.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)grid.o: $(SRC)grid.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
