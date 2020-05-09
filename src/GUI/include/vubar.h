@@ -3,7 +3,9 @@
 
 typedef struct {
   float **input0;
-  void *vi_led;
+  void *widget;
+  float value;
+  void *color;
   float framesPerBuffer;
   void (*process)(void *self);
 } mscsound_vubar_t;
