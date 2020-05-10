@@ -1,19 +1,26 @@
 #ifndef MSCSOUND_H
 #define MSCSOUND_H
-#include "/usr/include/mosaic/mosaic-sound/include/audiomath.h"
+
+#include "/usr/include/mosaic/mosaic-sound/include/adsr.h"
 #include "/usr/include/mosaic/mosaic-sound/include/audiofloatmath.h"
+#include "/usr/include/mosaic/mosaic-sound/include/audiomath.h"
 #include "/usr/include/mosaic/mosaic-sound/include/biquad.h"
 #include "/usr/include/mosaic/mosaic-sound/include/channelshootersplitter.h"
 #include "/usr/include/mosaic/mosaic-sound/include/devices.h"
 #include "/usr/include/mosaic/mosaic-sound/include/highshelving.h"
 #include "/usr/include/mosaic/mosaic-sound/include/lowshelving.h"
 #include "/usr/include/mosaic/mosaic-sound/include/mic.h"
+#include "/usr/include/mosaic/mosaic-sound/include/midi.h"
 #include "/usr/include/mosaic/mosaic-sound/include/oscillators.h"
 #include "/usr/include/mosaic/mosaic-sound/include/parametricequalizer.h"
 #include "/usr/include/mosaic/mosaic-sound/include/playback.h"
 #include "/usr/include/mosaic/mosaic-sound/include/record.h"
 #include "/usr/include/mosaic/mosaic-sound/include/speaker.h"
 #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
+
+/* GUI */
+#include "/usr/include/mosaic/mosaic-sound/include/gui.h"
+#include "/usr/include/mosaic/mosaic-sound/include/vubar.h"
 
 static int mscsound_callback();
 static void mscsound_finished(void *data);

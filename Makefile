@@ -1,6 +1,7 @@
 CC :=	gcc
-CFLAGS :=	-g -Wall -Werror -fPIC
-LIBS :=	-lportaudio -lm `pkg-config --libs sndfile`
+CFLAGS :=	-g -fPIC #-g -Wall -Werror -fPIC
+LIBS :=	-lportaudio -lm  -lasound -lpthread \
+				`pkg-config --libs sndfile --cflags gtk+-3.0`
 SRC :=	src
 LIBDIR :=	/usr/include/mosaic/mosaic-sound
 LIB_NAME :=	mosaic-sound
@@ -8,21 +9,12 @@ LIB_FLAGS :=  -I/usr/include/mosaic/mosaic-sound -lmosaic-sound
 LIB_VERSION :=	1
 BUILD :=	build
 DIST :=	dist
-OBJS :=	$(BUILD)/list.o \
-    	$(BUILD)/devices.o \
-    	$(BUILD)/whitenoise.o \
-    	$(BUILD)/audiomath.o \
-			$(BUILD)/audiofloatmath.o \
-    	$(BUILD)/oscillators.o \
-    	$(BUILD)/mic.o \
-    	$(BUILD)/biquad.o \
-    	$(BUILD)/parametricequalizer.o \
-    	$(BUILD)/lowshelving.o \
-    	$(BUILD)/highshelving.o \
-    	$(BUILD)/playback.o \
-			$(BUILD)/record.o \
-			$(BUILD)/speaker.o \
-			$(BUILD)/channelshootersplitter.o
+OBJS :=	$(BUILD)/list.o $(BUILD)/devices.o $(BUILD)/whitenoise.o \
+    	$(BUILD)/audiomath.o $(BUILD)/audiofloatmath.o $(BUILD)/oscillators.o \
+    	$(BUILD)/mic.o $(BUILD)/biquad.o $(BUILD)/parametricequalizer.o \
+    	$(BUILD)/lowshelving.o $(BUILD)/highshelving.o $(BUILD)/playback.o \
+			$(BUILD)/record.o $(BUILD)/speaker.o $(BUILD)/channelshootersplitter.o \
+			$(BUILD)/vubar.o $(BUILD)/adsr.o $(BUILD)/gui.o $(BUILD)/midi.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -34,18 +26,16 @@ static:
 # dynamic
 .PHONY:	install
 install:
-	rm -rf "$(DIST)"
-	mkdir -p "$(DIST)"
 	$(CC) $(CFLAGS) -shared -o $(DIST)/lib$(LIB_NAME).so.$(LIB_VERSION) $(OBJS)
 	ln -s lib$(LIB_NAME).so.$(LIB_VERSION) $(DIST)/lib$(LIB_NAME).so
 	rm -rf "$(LIBDIR)/include"
 	mkdir -p "$(LIBDIR)/include"
-	cp $(DIST)/lib$(LIB_NAME).so.$(LIB_VERSION) /usr/lib
-	cp $(DIST)/lib$(LIB_NAME).so /usr/lib
+	mv $(DIST)/lib$(LIB_NAME).so.$(LIB_VERSION) /usr/lib
+	mv $(DIST)/lib$(LIB_NAME).so /usr/lib
 	cp $(SRC)/$(LIB_NAME).h $(LIBDIR)
 	cp $(SRC)/modules/include/*  $(LIBDIR)/include
+	cp $(SRC)/GUI/include/*  $(LIBDIR)/include
 	cp $(SRC)/util/include/*  $(LIBDIR)/include
-
 
 .PHONY:	uninstall
 uninstall:
@@ -131,5 +121,21 @@ $(BUILD)/speaker.o: $(SRC)/modules/speaker.c $(SRC)/modules/include/speaker.h
 
 $(BUILD)/channelshootersplitter.o: $(SRC)/modules/channelshootersplitter.c \
 													 $(SRC)/modules/include/channelshootersplitter.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/vubar.o: $(SRC)/GUI/vubar.c $(SRC)/GUI/include/vubar.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/adsr.o: $(SRC)/modules/adsr.c $(SRC)/modules/include/adsr.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/gui.o: $(SRC)/GUI/gui.c $(SRC)/GUI/include/gui.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/midi.o: $(SRC)/modules/midi.c $(SRC)/modules/include/midi.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)

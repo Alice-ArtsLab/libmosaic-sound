@@ -32,7 +32,8 @@ There are the following implementations:
     * Divided by
 
 * ### General
-    * List audio devices
+    * Channel shooter splitter
+    * List all audio devices
 
 * ### Output
     * Buffer
@@ -43,7 +44,7 @@ There are the following implementations:
     * Oscillators
     * White Noise
     * Microphones
-    * File / Buffer
+    * Record
 
 ## Solving Dependecies
 `sudo apt-get install libsndfile1-dev`
@@ -58,7 +59,7 @@ Installing library: `$ sudo make install`
 
 
 ## Compiling and Running the examples
-Compiling examples: `$ sudo make examples`
+Compiling examples: `$ make examples`
 
 Running:
 
@@ -71,6 +72,10 @@ $ ./<filename>
 
 ## Cleaning the library and examples
 
-Cleaning library: `$ sudo make clean`
+Cleaning library: `$ make clean`
 
-Cleaning examples: `$ sudo make clean_examples`
+Cleaning examples: `$ make clean_examples`
+
+## Uninstalling
+
+Terminal: `$ sudo make uninstall`

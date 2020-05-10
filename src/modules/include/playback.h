@@ -2,17 +2,17 @@
 #define MSCSOUND_PLAYBACK_H
 
 typedef struct {
-  int loop;
+  char ** loop;  /* yes; no*/
   int channels;
   int framesPerBuffer;
   int fileSampleRate;
   int fileFrames;
   int readCount;
-  int paused;     /* 0: paused ; 1: playing*/
-  float **output0; /* Left*/
+  char ** paused; /* yes; no*/
+  float **output0; /* Mono / Left*/
   float **output1; /*  Right */
   float *file;
-  char *filename;
+  char **filename;
   void (*process)(void *self);
 } mscsound_playback_t;
 

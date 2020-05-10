@@ -53,8 +53,7 @@ int main(int argc, char *argv[]) {
   printf("Recording... Wait 10 seconds!\n");
   sleep(10);
   strcpy(*(rec->stop), "yes");
-
-  printf("Done!\n");
+  
   mscsound_terminate(stream);
 
   return 0;

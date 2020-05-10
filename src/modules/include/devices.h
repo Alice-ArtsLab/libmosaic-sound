@@ -20,7 +20,9 @@ typedef struct {
 } mscsound_device_t;
 
 typedef struct {
-  void *output0;
+  void **output0; // List
+  char **output1; // String
+  int lenOutput1;
   void (*process)(void *self);
   void (*show)(void *devices);
 } mscsound_device_list_t;

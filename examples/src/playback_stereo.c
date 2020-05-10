@@ -41,7 +41,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/miles_davis-solar.wav",
                                 FRAMES_PER_BUFFER);
-  pb->loop = 1;
+  strcpy(*(pb->loop), "yes");
 
   add = mscsound_create_audiomath(FRAMES_PER_BUFFER, mscsound_add_2freq);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
