@@ -1,15 +1,23 @@
+#include <alsa/asoundlib.h>
 #include <mosaic-sound.h>
 #include <portaudio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define NUM_SECONDS 12
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-mscsound_whitenoise_t *noise;
-mscsound_speaker_t *speaker;
+void midi_in(snd_seq_event_t *ev) {
+  printf("Note event: %d %d %d %d      \n", ev->type, ev->data.note.channel,
+         ev->data.note.velocity, ev->data.note.note);
+
+  printf("Control event: %d %d %d %d      \n", ev->type,
+         ev->data.control.channel, ev->data.control.param,
+         ev->data.control.value);
+}
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
                              unsigned long framesPerBuffer,
@@ -23,9 +31,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)statusFlags;
   (void)userData;
   (void)in;
-
-  noise->process(&noise);
-  speaker->process(&speaker, &out);
+  (void)out;
 
   return paContinue;
 }
@@ -37,10 +43,18 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  noise = mscsound_create_noise(FRAMES_PER_BUFFER);
-  speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
-  speaker->input0 = noise->output0;
+  mscsound_midi_t *midi =
+      mscsound_create_midi("Test", SND_SEQ_OPEN_DUPLEX, &midi_in);
+
+  while (1) {
+    midi->send_control(&midi, 0, 0, 127);
+    midi->send_note(&midi, SND_SEQ_EVENT_NOTEON, 0, 127, 60);
+    usleep(1000000);
+    midi->send_note(&midi, SND_SEQ_EVENT_NOTEOFF, 0, 127, 60);
+    usleep(1000000); // 1 segundo
+    printf("bip!\n");
+  }
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
