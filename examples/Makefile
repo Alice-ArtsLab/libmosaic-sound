@@ -1,6 +1,7 @@
 CC := gcc
 CFLAGS :=	-g -Wall
-LIBS :=	-lportaudio -lm `pkg-config --libs sndfile --cflags gtk+-3.0`
+LIBS :=	-lportaudio -lm  -lasound -lpthread \
+				`pkg-config --libs sndfile --cflags gtk+-3.0`
 LIB_FLAGS :=  -I/usr/include/mosaic/mosaic-sound -lmosaic-sound
 SRC :=	src/
 BUILD :=	build/
@@ -10,7 +11,7 @@ TARGET := $(BIN)record_mic $(BIN)playback_mono $(BIN)playback_stereo \
 		  $(BIN)osc_math $(BIN)whitenoise $(BIN)devices $(BIN)allpass $(BIN)lowpass \
 		  $(BIN)highpass $(BIN)bandpass $(BIN)bandreject $(BIN)parametric_eq \
 		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter \
-			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr
+			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr $(BIN)midi
 
 
 all: $(TARGET)
@@ -174,5 +175,14 @@ $(BIN)adsr:	$(BUILD)adsr.o
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
 $(BUILD)adsr.o: $(SRC)adsr.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: MIDI
+$(BIN)midi:	$(BUILD)midi.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)midi.o: $(SRC)midi.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
