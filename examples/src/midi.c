@@ -45,7 +45,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 int main(int argc, char *argv[]) {
 
   mscsound_midi_t *midi =
-      mscsound_create_midi("Test", SND_SEQ_OPEN_DUPLEX, &midi_in);
+      mscsound_create_midi("Test", SND_SEQ_OPEN_DUPLEX, midi_in);
 
   while (1) {
     midi->send_control(&midi, 0, 0, 127);

@@ -7,7 +7,6 @@ typedef struct {
   void (*send_note)(void *self, int type, int channel, unsigned char vel,
                     unsigned char note);
   void (*send_control)(void *self, int channel, int control, int value);
-
 } mscsound_midi_t;
 
 mscsound_midi_t *mscsound_create_midi();

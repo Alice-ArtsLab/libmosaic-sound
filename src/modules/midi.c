@@ -1,23 +1,23 @@
 #include "include/midi.h"
 #include <alsa/asoundlib.h>
 #include <pthread.h>
-
+snd_seq_t *handle_thread;
 typedef void (*mscsound_midi_t_event_callback_function)(snd_seq_event_t *event);
 
 snd_seq_t *get_handle(mscsound_midi_t **self) {
-  return (snd_seq_t *)((*self)->handle);
+  snd_seq_t *handle = (snd_seq_t *)((*self)->handle);
+  return handle;
 }
 
 void *mscsound_midi_thread(void *data) {
   mscsound_midi_t *midi = *((mscsound_midi_t **)data);
 
-  if (midi->callback == NULL) {
+  if (&(midi->callback) == NULL) {
     pthread_exit((void *)NULL);
   }
   snd_seq_event_t *ev;
   while (1) {
-    snd_seq_event_input(get_handle(&midi), &ev);
-    printf("Chegou evento!!\n");
+    snd_seq_event_input(handle_thread, &ev);
     (midi->callback)(ev);
   }
 }
@@ -33,12 +33,12 @@ mscsound_midi_t *mscsound_create_midi(
   midi->send_control = mscsound_midi_send_control;
 
   int portid;
-
   snd_seq_t *handle;
-  midi->handle = handle;
-  if (snd_seq_open((snd_seq_t **)&(midi->handle), "hw", port_type, 0) < 0) {
+  if (snd_seq_open(&handle, "hw", port_type, 0) < 0) {
     return NULL;
   }
+  midi->handle = handle;
+  handle_thread = (snd_seq_t *)midi->handle;
   snd_seq_set_client_name(get_handle(&midi), device);
 
   if (port_type == SND_SEQ_OPEN_DUPLEX || port_type == SND_SEQ_OPEN_INPUT) {
