@@ -15,7 +15,7 @@ OBJS :=	$(BUILD)/list.o $(BUILD)/devices.o $(BUILD)/whitenoise.o \
     	$(BUILD)/lowshelving.o $(BUILD)/highshelving.o $(BUILD)/playback.o \
 			$(BUILD)/record.o $(BUILD)/speaker.o $(BUILD)/channelshootersplitter.o \
 			$(BUILD)/vubar.o $(BUILD)/adsr.o $(BUILD)/gui.o $(BUILD)/midi.o \
-			$(BUILD)/volume.o $(BUILD)/grid.o
+			$(BUILD)/volume.o $(BUILD)/grid.o $(BUILD)/rms.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -146,5 +146,9 @@ $(BUILD)/volume.o: $(SRC)/GUI/volume.c $(SRC)/GUI/include/volume.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 $(BUILD)/grid.o: $(SRC)/GUI/grid.c $(SRC)/GUI/include/grid.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/rms.o: $(SRC)/modules/rms.c $(SRC)/modules/include/rms.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)

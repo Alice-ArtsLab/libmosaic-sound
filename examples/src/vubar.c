@@ -9,8 +9,9 @@
 #define FRAMES_PER_BUFFER 256
 
 mscsound_playback_t *pb;
-mscsound_vubar_t *vubar;
 mscsound_volume_t *volume;
+mscsound_rms_t *rms;
+mscsound_vubar_t *vubar;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
@@ -29,6 +30,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
 
   pb->process(&pb);
   volume->process(&volume);
+  rms->process(&rms);
   vubar->process(&vubar);
   speaker->process(&speaker, &out);
 
@@ -57,8 +59,12 @@ int main(int argc, char *argv[]) {
 
   volume = mscsound_create_volume("Volume: ", FRAMES_PER_BUFFER);
   gui->add(&gui, &(volume->widget));
+
+  rms = mscsound_create_rms(FRAMES_PER_BUFFER);
+
   volume->input0 = pb->output0;
-  vubar->input0 = volume->output0;
+  rms->input0 = volume->output0;
+  vubar->input0 = rms->output0;
   speaker->input0 = volume->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);

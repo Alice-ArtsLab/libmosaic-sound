@@ -15,6 +15,7 @@
 #include "/usr/include/mosaic/mosaic-sound/include/parametricequalizer.h"
 #include "/usr/include/mosaic/mosaic-sound/include/playback.h"
 #include "/usr/include/mosaic/mosaic-sound/include/record.h"
+#include "/usr/include/mosaic/mosaic-sound/include/rms.h"
 #include "/usr/include/mosaic/mosaic-sound/include/speaker.h"
 #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
 
