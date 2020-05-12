@@ -42,14 +42,18 @@ int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
+  int readCount = 0;
+  pb->readCount = &readCount;
 
   highshelving = mscsound_create_highshelving(FRAMES_PER_BUFFER);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
   highshelving->input0 = pb->output0;
   highshelving->sampleRate = SAMPLE_RATE;
-  highshelving->cutOff = 1200.0;
-  highshelving->gain = 0.1;
+  float cutOff = 1200.0;
+  highshelving->cutOff = &cutOff;
+  float gain = 0.1;
+  highshelving->gain = &gain;
   speaker->input0 = highshelving->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);

@@ -6,9 +6,8 @@ typedef struct {
   float **output0;
   int framesPerBuffer;
   float sampleRate;
-  float slope;
-  float gain;
-  float cutOff;
+  float *gain;
+  float *cutOff;
   float xn1; /* x(n-1) */
   float xn2; /* x(n-2) */
   float yn1; /* y(n-1) */
@@ -16,8 +15,7 @@ typedef struct {
   void (*process)(void *self);
 } mscsound_parametric_eq_t;
 
-mscsound_parametric_eq_t *
-mscsound_create_parametric_eq(int framesPerBuffer);
+mscsound_parametric_eq_t *mscsound_create_parametric_eq(int framesPerBuffer);
 void mscsound_parametric_eq_process();
 
 #endif /* parametric_equalizer.h */
