@@ -19,6 +19,7 @@
 #include "/usr/include/mosaic/mosaic-sound/include/whitenoise.h"
 
 /* GUI */
+#include "/usr/include/mosaic/mosaic-sound/include/grid.h"
 #include "/usr/include/mosaic/mosaic-sound/include/gui.h"
 #include "/usr/include/mosaic/mosaic-sound/include/volume.h"
 #include "/usr/include/mosaic/mosaic-sound/include/vubar.h"

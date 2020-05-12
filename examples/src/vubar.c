@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
   gui->add(&gui, &(vubar->widget));
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
-  volume = mscsound_create_volume("Volume: ");
+  volume = mscsound_create_volume("Volume: ", FRAMES_PER_BUFFER);
   gui->add(&gui, &(volume->widget));
   volume->input0 = pb->output0;
   vubar->input0 = volume->output0;

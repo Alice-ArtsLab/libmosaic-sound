@@ -59,7 +59,7 @@ static gboolean vubar_draw(GtkWidget *widget, GdkEventConfigure *event,
 
   /* Finish */
   cairo_destroy(cr);
-  return FALSE;
+  return TRUE;
 }
 
 void vubar_create(int radius, mscsound_vubar_t **vubar) {
