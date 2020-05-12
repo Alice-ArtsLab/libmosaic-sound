@@ -52,6 +52,8 @@ int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
+  int readCount = 0;
+  pb->readCount = &readCount;
 
   vubar = mscsound_create_vubar(FRAMES_PER_BUFFER);
   gui->add(&gui, &(vubar->widget));

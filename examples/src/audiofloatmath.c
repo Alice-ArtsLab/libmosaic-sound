@@ -44,17 +44,19 @@ int main(int argc, char *argv[]) {
   osc = mscsound_create_osc("sine", FRAMES_PER_BUFFER, 2048);
   osc->sampleRate = SAMPLE_RATE;
   osc->input0 = NULL;
-  osc->input1 = 440.0;
+  float freqValue = 440.0;
+  osc->input1 = &freqValue;
 
-  mul = mscsound_create_audiofloatmath(FRAMES_PER_BUFFER, mscsound_mul_freq_float);
+  mul = mscsound_create_audiofloatmath(FRAMES_PER_BUFFER,
+                                       mscsound_mul_freq_float);
 
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
   mul->input0 = osc->output0;
-  mul->input1 = 0.01;
+  float floatValue = 0.01;
+  mul->input1 = &floatValue;
 
   speaker->input0 = mul->output0;
-
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

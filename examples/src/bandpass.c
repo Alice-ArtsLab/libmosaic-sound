@@ -42,6 +42,8 @@ int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
+  int readCount = 0;
+  pb->readCount = &readCount;
 
   /* Second-order bandpass*/
   bandpass = mscsound_create_biquad("bandpass", 2, FRAMES_PER_BUFFER);
@@ -49,8 +51,10 @@ int main(int argc, char *argv[]) {
 
   bandpass->input0 = pb->output0;
   bandpass->sampleRate = SAMPLE_RATE;
-  bandpass->cutOff = 700.0;
-  bandpass->slope = 300;
+  float cutOff = 700.0;
+  bandpass->cutOff = &cutOff;
+  float slope = 300.0;
+  bandpass->slope = &slope;
   speaker->input0 = bandpass->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);

@@ -4,25 +4,25 @@
 #include <string.h>
 
 mscsound_osc_t *mscsound_create_osc(char *type, int framesPerBuffer,
-                                          float tableSize) {
+                                    float tableSize) {
   mscsound_osc_t *osc = malloc(sizeof(mscsound_osc_t));
-  osc->type = calloc(1, sizeof(char*));
+  osc->type = calloc(1, sizeof(char *));
   osc->type[0] = calloc(9, sizeof(char)); // strlen("sawtooth") + 1
   strcpy(osc->type[0], type);
   osc->framesPerBuffer = framesPerBuffer;
   osc->tableSize = tableSize;
   osc->index = 0;
-  osc->output0 = calloc(1, sizeof(float*));
+  osc->output0 = calloc(1, sizeof(float *));
   osc->output0[0] = calloc(framesPerBuffer, sizeof(float));
   osc->process = mscsound_osc_process;
 
-  if (! strcmp(type, "sine")) {
+  if (!strcmp(type, "sine")) {
     osc->table = mscsound_create_sine_table(tableSize);
-  }else if (! strcmp(type, "square")) {
+  } else if (!strcmp(type, "square")) {
     osc->table = mscsound_create_square_table(tableSize);
-  }else if (! strcmp(type, "triangle")) {
+  } else if (!strcmp(type, "triangle")) {
     osc->table = mscsound_create_triangle_table(tableSize);
-  }else if (! strcmp(type, "sawtooth")) {
+  } else if (!strcmp(type, "sawtooth")) {
     osc->table = mscsound_create_sawtooth_table(tableSize);
   }
 
@@ -83,7 +83,7 @@ float mscsound_get_interpolated_freq(mscsound_osc_t **osc) {
   float freqValue;
 
   if ((*osc)->input0 == NULL) {
-    freqValue = (*osc)->input1;
+    freqValue = *((*osc)->input1);
   } else
     freqValue = (*((*osc)->input0))[(*osc)->index];
 
@@ -91,17 +91,19 @@ float mscsound_get_interpolated_freq(mscsound_osc_t **osc) {
   int index1 =
       (my_floor - 1 >= 0) ? my_floor - 1 : (*osc)->tableSize + (my_floor - 1);
   int index2 = my_floor;
-  int index3 = (my_floor + 1 < (*osc)->tableSize) ? my_floor + 1
-                                            : my_floor + 1 - (*osc)->tableSize;
-  int index4 = (my_floor + 2 < (*osc)->tableSize) ? my_floor + 2
-                                            : my_floor + 2 - (*osc)->tableSize;
+  int index3 = (my_floor + 1 < (*osc)->tableSize)
+                   ? my_floor + 1
+                   : my_floor + 1 - (*osc)->tableSize;
+  int index4 = (my_floor + 2 < (*osc)->tableSize)
+                   ? my_floor + 2
+                   : my_floor + 2 - (*osc)->tableSize;
 
-  float v_interpolado = -((y) * (y - 1) * (y - 2) * (*osc)->table[index1]) /
-                            6 /* CUBIC INTERPOLATION*/
-                        +
-                        ((y + 1) * (y - 1) * (y - 2) * (*osc)->table[index2]) / 2 -
-                        ((y + 1) * (y) * (y - 2) * (*osc)->table[index3]) / 2 +
-                        ((y + 1) * (y) * (y - 1) * (*osc)->table[index4]) / 6;
+  float v_interpolado =
+      -((y) * (y - 1) * (y - 2) * (*osc)->table[index1]) /
+          6 /* CUBIC INTERPOLATION*/
+      + ((y + 1) * (y - 1) * (y - 2) * (*osc)->table[index2]) / 2 -
+      ((y + 1) * (y) * (y - 2) * (*osc)->table[index3]) / 2 +
+      ((y + 1) * (y) * (y - 1) * (*osc)->table[index4]) / 6;
 
   /* Next index to be read for this frequency*/
   (*osc)->index += (*osc)->tableSize * freqValue / (*osc)->sampleRate;

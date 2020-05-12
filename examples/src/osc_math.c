@@ -46,13 +46,15 @@ int main(int argc, char *argv[]) {
   osc1 = mscsound_create_osc("sine", FRAMES_PER_BUFFER, 2048);
   osc1->sampleRate = SAMPLE_RATE;
   osc1->input0 = NULL;
-  osc1->input1 = 440.0;
+  float osc1FreqValue = 440.0;
+  osc1->input1 = &osc1FreqValue;
 
-  /* Sawtooth 880.0 Hz*/
-  osc2 = mscsound_create_osc("sawtooth", FRAMES_PER_BUFFER, 2048);
+  /* Sine 880.0 Hz*/
+  osc2 = mscsound_create_osc("sine", FRAMES_PER_BUFFER, 2048);
   osc2->sampleRate = SAMPLE_RATE;
   osc2->input0 = NULL;
-  osc2->input1 = 880.0;
+  float osc2FreqValue = 880.0;
+  osc2->input1 = &osc2FreqValue;
 
   add = mscsound_create_audiomath(FRAMES_PER_BUFFER, mscsound_add_2freq);
 
@@ -62,7 +64,6 @@ int main(int argc, char *argv[]) {
   add->input1 = osc2->output0;
 
   speaker->input0 = add->output0;
-
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
