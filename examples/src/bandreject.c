@@ -42,6 +42,8 @@ int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
+  int readCount = 0;
+  pb->readCount = &readCount;
 
   /* Second-order bandreject*/
   bandreject = mscsound_create_biquad("bandreject", 2, FRAMES_PER_BUFFER);
@@ -49,8 +51,10 @@ int main(int argc, char *argv[]) {
 
   bandreject->input0 = pb->output0;
   bandreject->sampleRate = SAMPLE_RATE;
-  bandreject->cutOff = 1000.0;
-  bandreject->slope = 200;
+  float cutOff = 1000.0;
+  bandreject->cutOff = &cutOff;
+  float slope = 200.0;
+  bandreject->slope = &slope;
   speaker->input0 = bandreject->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);

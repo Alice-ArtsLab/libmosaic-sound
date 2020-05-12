@@ -4,10 +4,10 @@
 typedef struct {
   float **input0;
   float **output0;
-  float gain;
+  float *gain;
   int framesPerBuffer;
   float sampleRate;
-  float cutOff;
+  float *cutOff;
   float xn1; /* x(n-1) */
   float xn2; /* x(n-2) */
   float yn1; /* y(n-1) */

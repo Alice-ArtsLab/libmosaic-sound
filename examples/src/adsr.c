@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #define NUM_SECONDS 12
@@ -41,19 +42,28 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  /* Sine 440.0 Hz */
+  srand((unsigned int)time(NULL));
+  /* Sine */
   osc = mscsound_create_osc("sine", FRAMES_PER_BUFFER, 2048);
   osc->sampleRate = SAMPLE_RATE;
   osc->input0 = NULL;
-  osc->input1 = 440.0;
+  float freqValue = (float)(rand() % 2000);
+  osc->input1 = &freqValue;
 
   adsr = mscsound_create_adsr(SAMPLE_RATE, FRAMES_PER_BUFFER);
-  adsr->attack = 1000;
-  adsr->decay = 100;
-  adsr->sustain = 300;
-  adsr->release = 400;
-  adsr->gain = 0.7;
-  adsr->play = 1;
+
+  float attack = 300;
+  adsr->attack = &attack;
+  float decay = 30;
+  adsr->decay = &decay;
+  float sustain = 50;
+  adsr->sustain = &sustain;
+  float release = 100;
+  adsr->release = &release;
+  float gain = 0.7;
+  adsr->gain = &gain;
+  int play = 1;
+  adsr->play = &play;
 
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
@@ -61,11 +71,14 @@ int main(int argc, char *argv[]) {
 
   speaker->input0 = adsr->output0;
 
-
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
-  sleep(3);
-  adsr->play = 1;
+  while (1) {
+    printf("Frequency value: %.2f Hz\n", *(osc->input1));
+    usleep(600000);
+    *(osc->input1) = (float)(rand() % 2000);
+    *(adsr->play) = 1;
+  }
   printf("Playing until the Enter key is pressed.\n");
 
   getchar();

@@ -4,12 +4,12 @@
 typedef struct {
   float **input0;
   float **output0;
-  float attack;
-  float decay;
-  float sustain;
-  float release;
-  float gain;
-  int play;
+  float *attack;
+  float *decay;
+  float *sustain;
+  float *release;
+  float *gain;
+  int *play;
 
   int framesPerBuffer;
   int sampleRate;

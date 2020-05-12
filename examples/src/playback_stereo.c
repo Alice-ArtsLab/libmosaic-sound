@@ -42,6 +42,8 @@ int main(int argc, char *argv[]) {
   pb = mscsound_create_playback("../samples/miles_davis-solar.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
+  int readCount = 0;
+  pb->readCount = &readCount;
 
   add = mscsound_create_audiomath(FRAMES_PER_BUFFER, mscsound_add_2freq);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);

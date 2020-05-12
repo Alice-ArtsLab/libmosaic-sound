@@ -4,13 +4,13 @@
 typedef struct {
   float **output0;
   float **input0;
-  float input1;
+  float *input1;
   int framesPerBuffer;
   void (*process)(void *self);
 } mscsound_audiofloatmath_t;
 
 mscsound_audiofloatmath_t *mscsound_create_audiofloatmath(int framesPerBuffer,
-                                            void(*function));
+                                                          void(*function));
 
 void mscsound_add_freq_float();
 void mscsound_sub_freq_float();

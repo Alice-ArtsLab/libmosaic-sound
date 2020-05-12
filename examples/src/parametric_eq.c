@@ -49,9 +49,10 @@ int main(int argc, char *argv[]) {
 
   eq->input0 = pb->output0;
   eq->sampleRate = SAMPLE_RATE;
-  eq->cutOff = 1000.0;
-  eq->slope = 100.0;
-  eq->gain = 1.0;
+  float cutOff = 1000.0;
+  eq->cutOff = &cutOff;
+  float gain = 1.0;
+  eq->gain = &gain;
 
   speaker->input0 = eq->output0;
 

@@ -7,7 +7,7 @@ typedef struct {
   int framesPerBuffer;
 } mscsound_whitenoise_t;
 
-mscsound_whitenoise_t *mscsound_create_noise(int framesPerBuffer);
-void mscsound_noise_process();
+mscsound_whitenoise_t *mscsound_create_whitenoise(int framesPerBuffer);
+void mscsound_whitenoise_process();
 
 #endif /* whitenoise.h */
