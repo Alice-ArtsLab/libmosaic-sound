@@ -1,5 +1,6 @@
 #include "include/vubar.h"
 #include <gtk/gtk.h>
+#include <math.h>
 
 void vubar_free(mscsound_vubar_t **vubar) {
   // free();
@@ -81,7 +82,7 @@ mscsound_vubar_t *mscsound_create_vubar(int framesPerBuffer) {
   mscsound_vubar_t *vubar = malloc(sizeof(mscsound_vubar_t));
   vubar->framesPerBuffer = framesPerBuffer;
   vubar->process = mscsound_vubar_process;
-
+  vubar->previousValue = 0;
   vubar_create(13, &vubar);
 
   return vubar;
@@ -91,8 +92,14 @@ void mscsound_vubar_process(mscsound_vubar_t **vubar) {
   if ((*vubar)->widget == NULL)
     return;
 
+  float rms = 0;
+
   for (int i = 0; i < (*vubar)->framesPerBuffer; i++) {
-    (*vubar)->value = (*((*vubar)->input0))[i];
-    gtk_widget_queue_draw((GtkWidget *)(*vubar)->widget);
+    rms += pow((*((*vubar)->input0))[i], 2);
   }
+
+  rms = sqrt(rms / (*vubar)->framesPerBuffer);
+
+  (*vubar)->value = (rms * 0.3) + ((*vubar)->previousValue * 0.7);
+  gtk_widget_queue_draw((GtkWidget *)(*vubar)->widget);
 }

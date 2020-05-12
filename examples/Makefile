@@ -11,7 +11,7 @@ TARGET := $(BIN)record_mic $(BIN)playback_mono $(BIN)playback_stereo \
 		  $(BIN)osc_math $(BIN)whitenoise $(BIN)devices $(BIN)allpass $(BIN)lowpass \
 		  $(BIN)highpass $(BIN)bandpass $(BIN)bandreject $(BIN)parametric_eq \
 		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter \
-			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr $(BIN)midi
+			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr $(BIN)midi $(BIN)volume
 
 
 all: $(TARGET)
@@ -184,5 +184,14 @@ $(BIN)midi:	$(BUILD)midi.o
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
 $(BUILD)midi.o: $(SRC)midi.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: VUBar
+$(BIN)volume:	$(BUILD)volume.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)volume.o: $(SRC)volume.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
