@@ -10,7 +10,7 @@
 
 mscsound_playback_t *pb;
 mscsound_vubar_t *vubar;
-mscsound_vubar_t *vubar2;
+mscsound_volume_t *volume;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
@@ -28,8 +28,8 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)out;
 
   pb->process(&pb);
+  volume->process(&volume);
   vubar->process(&vubar);
-  vubar2->process(&vubar2);
   speaker->process(&speaker, &out);
 
   return paContinue;
@@ -45,24 +45,24 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  mscsound_gui_t *gui = mscsound_create_gui("VUbar", 200, 400);
+  mscsound_gui_t *gui = mscsound_create_gui("Grid", 200, 300);
   mscsound_grid_t *grid = mscsound_create_grid();
-  grid->add_grid_in(&grid, &(gui->widget));
 
   pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
 
   vubar = mscsound_create_vubar(FRAMES_PER_BUFFER);
-  grid->add(&grid, &(vubar->widget), 0, 0, 1, 1);
-  vubar2 = mscsound_create_vubar(FRAMES_PER_BUFFER);
-  grid->add(&grid, &(vubar2->widget), 1, 0, 1, 1);
+  grid->add(&grid, &(vubar->widget), 1, 1, 1, 100);
+  volume = mscsound_create_volume("Volume: ", FRAMES_PER_BUFFER);
+  grid->add(&grid, &(volume->widget), 2, 100, 1, 1);
+
+  gui->add(&gui, &(grid->widget));
 
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
-
-  vubar->input0 = pb->output0;
-  vubar2->input0 = pb->output0;
-  speaker->input0 = pb->output0;
+  volume->input0 = pb->output0;
+  vubar->input0 = volume->output0;
+  speaker->input0 = volume->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

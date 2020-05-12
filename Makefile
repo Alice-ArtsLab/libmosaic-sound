@@ -1,6 +1,7 @@
 CC :=	gcc
 CFLAGS :=	-g -fPIC #-g -Wall -Werror -fPIC
-LIBS :=	-lportaudio -lm `pkg-config --libs sndfile --cflags gtk+-3.0`
+LIBS :=	-lportaudio -lm  -lasound -lpthread \
+				`pkg-config --libs sndfile --cflags gtk+-3.0`
 SRC :=	src
 LIBDIR :=	/usr/include/mosaic/mosaic-sound
 LIB_NAME :=	mosaic-sound
@@ -13,7 +14,8 @@ OBJS :=	$(BUILD)/list.o $(BUILD)/devices.o $(BUILD)/whitenoise.o \
     	$(BUILD)/mic.o $(BUILD)/biquad.o $(BUILD)/parametricequalizer.o \
     	$(BUILD)/lowshelving.o $(BUILD)/highshelving.o $(BUILD)/playback.o \
 			$(BUILD)/record.o $(BUILD)/speaker.o $(BUILD)/channelshootersplitter.o \
-			$(BUILD)/vubar.o $(BUILD)/adsr.o $(BUILD)/gui.o $(BUILD)/grid.o
+			$(BUILD)/vubar.o $(BUILD)/adsr.o $(BUILD)/gui.o $(BUILD)/midi.o \
+			$(BUILD)/volume.o $(BUILD)/grid.o
 
 TARGET := $(OBJS) static
 all: $(TARGET)
@@ -132,6 +134,14 @@ $(BUILD)/adsr.o: $(SRC)/modules/adsr.c $(SRC)/modules/include/adsr.h
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 $(BUILD)/gui.o: $(SRC)/GUI/gui.c $(SRC)/GUI/include/gui.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/midi.o: $(SRC)/modules/midi.c $(SRC)/modules/include/midi.h
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
+
+$(BUILD)/volume.o: $(SRC)/GUI/volume.c $(SRC)/GUI/include/volume.h
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 

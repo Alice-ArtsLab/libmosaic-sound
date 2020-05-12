@@ -10,6 +10,7 @@
 #include "/usr/include/mosaic/mosaic-sound/include/highshelving.h"
 #include "/usr/include/mosaic/mosaic-sound/include/lowshelving.h"
 #include "/usr/include/mosaic/mosaic-sound/include/mic.h"
+#include "/usr/include/mosaic/mosaic-sound/include/midi.h"
 #include "/usr/include/mosaic/mosaic-sound/include/oscillators.h"
 #include "/usr/include/mosaic/mosaic-sound/include/parametricequalizer.h"
 #include "/usr/include/mosaic/mosaic-sound/include/playback.h"
@@ -20,6 +21,7 @@
 /* GUI */
 #include "/usr/include/mosaic/mosaic-sound/include/grid.h"
 #include "/usr/include/mosaic/mosaic-sound/include/gui.h"
+#include "/usr/include/mosaic/mosaic-sound/include/volume.h"
 #include "/usr/include/mosaic/mosaic-sound/include/vubar.h"
 
 static int mscsound_callback();

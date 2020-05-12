@@ -7,6 +7,7 @@ mscsound_gui_t *mscsound_create_gui(char *title, int width, int height) {
   mscsound_gui_t *gui = malloc(sizeof(mscsound_gui_t));
   gui->start = mscsound_gui_start;
   gui->add = mscsound_gui_add;
+
   gtk_init(NULL, NULL);
 
   gui->mainwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -22,11 +23,10 @@ mscsound_gui_t *mscsound_create_gui(char *title, int width, int height) {
   return gui;
 }
 
-void mscsound_gui_add(mscsound_gui_t **self, void *child, gboolean expand,
-                      gboolean fill, guint padding) {
+void mscsound_gui_add(mscsound_gui_t **self, GtkWidget *widget) {
 
-  gtk_box_pack_start(GTK_BOX((GtkWidget *)((*self)->widget)),
-                     *(GtkWidget **)(child), expand, fill, padding);
+  gtk_container_add(GTK_CONTAINER((GtkWidget *)(*self)->widget),
+                    *(GtkWidget **)widget);
 }
 
 void mscsound_gui_start(mscsound_gui_t **gui) {
