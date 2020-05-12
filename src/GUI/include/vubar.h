@@ -5,6 +5,7 @@ typedef struct {
   float **input0;
   void *widget;
   float value;
+  float previousValue;
   void *color;
   float framesPerBuffer;
   void (*process)(void *self);

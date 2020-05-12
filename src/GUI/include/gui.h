@@ -5,7 +5,7 @@ typedef struct {
   void *widget;
   void *mainwindow;
   void (*start)(void *self);
-  void (*add)(void *self, void *child, int expand, int fill, int padding);
+  void (*add)(void *self, void *widget);
 } mscsound_gui_t;
 
 mscsound_gui_t *mscsound_create_gui(char *title, int width, int height);

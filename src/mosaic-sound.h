@@ -20,6 +20,7 @@
 
 /* GUI */
 #include "/usr/include/mosaic/mosaic-sound/include/gui.h"
+#include "/usr/include/mosaic/mosaic-sound/include/volume.h"
 #include "/usr/include/mosaic/mosaic-sound/include/vubar.h"
 
 static int mscsound_callback();
