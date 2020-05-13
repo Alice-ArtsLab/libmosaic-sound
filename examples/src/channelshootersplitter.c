@@ -39,7 +39,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  noise = mscsound_create_noise(FRAMES_PER_BUFFER);
+  noise = mscsound_create_whitenoise(FRAMES_PER_BUFFER);
   css = mscsound_create_channelshootersplitter(FRAMES_PER_BUFFER);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 

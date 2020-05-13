@@ -1,5 +1,5 @@
-#include "../util/include/list.h"
 #include "include/devices.h"
+#include "../util/include/list.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,16 +27,16 @@ mscsound_device_t *mscsound_create_device(int deviceID) {
 }
 
 mscsound_device_list_t *mscsound_create_devices() {
-  mscsound_device_list_t *newDevices =
-      malloc(sizeof(mscsound_device_list_t));
-  newDevices->output1 = calloc(1, sizeof(char*));
+  mscsound_device_list_t *newDevices = malloc(sizeof(mscsound_device_list_t));
+  newDevices->output1 = calloc(1, sizeof(char *));
   newDevices->process = mscsound_devices_process;
   newDevices->show = mscsound_show_devices;
-  newDevices->output0 = calloc(1, sizeof(void*));
+  newDevices->output0 = calloc(1, sizeof(void *));
   newDevices->output0[0] = NULL;
 
   newDevices->lenOutput1 = 2000;
   *(newDevices->output1) = calloc(newDevices->lenOutput1, sizeof(char));
+  strcpy(*(newDevices->output1), "");
   return newDevices;
 }
 
@@ -54,7 +54,7 @@ void mscsound_devices_process(mscsound_device_list_t **devices) {
     goto error;
   }
 
-  if  (*((*devices)->output0) != NULL) {
+  if (*((*devices)->output0) != NULL) {
     mscsound_list_free(*((*devices)->output0));
     *((*devices)->output0) = NULL;
   }
@@ -80,7 +80,7 @@ void mscsound_show_devices(mscsound_device_list_t **devices) {
 
   strcpy(*((*devices)->output1), "");
 
-  char * aux = calloc(200, sizeof(char));
+  char *aux = calloc(200, sizeof(char));
   strcpy(aux, "");
   mscsound_list_t *temp1 = *((*devices)->output0);
 
@@ -88,10 +88,11 @@ void mscsound_show_devices(mscsound_device_list_t **devices) {
     // <= 20% free
     if (strlen(*((*devices)->output1)) >= (*devices)->lenOutput1 * 0.8) {
       (*devices)->lenOutput1 *= 1.4;
-      *((*devices)->output1) = realloc(*((*devices)->output1),
-                                       (*devices)->lenOutput1);
+      *((*devices)->output1) =
+          realloc(*((*devices)->output1), (*devices)->lenOutput1);
     }
-    sprintf(aux, "--------------------------------------- device #%d ", deviceID);
+    sprintf(aux, "--------------------------------------- device #%d ",
+            deviceID);
     strcat(*((*devices)->output1), aux);
     mscsound_device_t *dev =
         (mscsound_device_t *)((mscsound_list_t *)temp1)->data;
@@ -109,7 +110,8 @@ void mscsound_show_devices(mscsound_device_list_t **devices) {
     sprintf(aux, "maxOutputChannels: %d\n", dev->deviceInfo->maxOutputChannels);
     strcat(*((*devices)->output1), aux);
 
-    sprintf(aux, "defaultSampleRate: %.2f\n", dev->deviceInfo->defaultSampleRate);
+    sprintf(aux, "defaultSampleRate: %.2f\n",
+            dev->deviceInfo->defaultSampleRate);
     strcat(*((*devices)->output1), aux);
 
     mscsound_list_t *temp2 = ((mscsound_list_t *)temp1)->next;

@@ -11,6 +11,7 @@ mscsound_playback_t *mscsound_create_playback(char *filename,
   playback->paused[0] = calloc(4, sizeof(char)); // strlen("yes") + 1
   strcpy(*(playback->paused), "no");
   playback->fileFrames = calloc(1, sizeof(int));
+  playback->readCount = calloc(1, sizeof(int));
   playback->loop = calloc(1, sizeof(char *));
   playback->loop[0] = calloc(4, sizeof(char)); // strlen("yes") + 1
   strcpy(*(playback->loop), "no");
