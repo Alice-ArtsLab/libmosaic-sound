@@ -79,9 +79,8 @@ void vubar_create(int radius, mscsound_vubar_t **vubar) {
 }
 
 /* --------------------------------------------------------- */
-mscsound_vubar_t *mscsound_create_vubar(int framesPerBuffer) {
+mscsound_vubar_t *mscsound_create_vubar() {
   mscsound_vubar_t *vubar = malloc(sizeof(mscsound_vubar_t));
-  vubar->framesPerBuffer = framesPerBuffer;
   vubar->process = mscsound_vubar_process;
   vubar_create(13, &vubar);
 

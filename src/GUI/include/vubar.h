@@ -5,7 +5,6 @@ typedef struct {
   float *input0;
   void *widget;
   void *color;
-  float framesPerBuffer;
   void (*process)(void *self);
 } mscsound_vubar_t;
 

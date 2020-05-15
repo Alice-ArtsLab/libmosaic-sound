@@ -10,6 +10,7 @@
 
 mscsound_playback_t *pb;
 mscsound_volume_t *volume;
+mscsound_audiofloatmath_t *mul;
 mscsound_rms_t *rms;
 mscsound_vubar_t *vubar;
 mscsound_speaker_t *speaker;
@@ -29,7 +30,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)out;
 
   pb->process(&pb);
-  volume->process(&volume);
+  mul->process(&mul);
   rms->process(&rms);
   vubar->process(&vubar);
   speaker->process(&speaker, &out);
@@ -55,19 +56,23 @@ int main(int argc, char *argv[]) {
   int readCount = 0;
   pb->readCount = &readCount;
 
-  vubar = mscsound_create_vubar(FRAMES_PER_BUFFER);
+  vubar = mscsound_create_vubar();
   gui->add(&gui, &(vubar->widget));
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
-  volume = mscsound_create_volume("Volume: ", FRAMES_PER_BUFFER);
+  volume = mscsound_create_volume("Volume: ");
   gui->add(&gui, &(volume->widget));
 
   rms = mscsound_create_rms(FRAMES_PER_BUFFER);
+  mul = mscsound_create_audiofloatmath(FRAMES_PER_BUFFER,
+                                       mscsound_mul_freq_float);
 
-  volume->input0 = pb->output0;
-  rms->input0 = volume->output0;
+  mul->input0 = pb->output0;
+  mul->input1 = volume->output0;
+
+  rms->input0 = mul->output0;
   vubar->input0 = rms->output0;
-  speaker->input0 = volume->output0;
+  speaker->input0 = mul->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 

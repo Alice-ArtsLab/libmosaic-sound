@@ -10,6 +10,7 @@
 
 mscsound_playback_t *pb;
 mscsound_volume_t *volume;
+mscsound_audiofloatmath_t *mul;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
@@ -26,7 +27,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)in;
 
   pb->process(&pb);
-  volume->process(&volume);
+  mul->process(&mul);
   speaker->process(&speaker, &out);
 
   return paContinue;
@@ -47,13 +48,16 @@ int main(int argc, char *argv[]) {
 
   mscsound_gui_t *gui = mscsound_create_gui("Volume", 200, 200);
 
-  volume = mscsound_create_volume("Volume: ", FRAMES_PER_BUFFER);
+  volume = mscsound_create_volume("Volume: ");
+  mul = mscsound_create_audiofloatmath(FRAMES_PER_BUFFER,
+                                       mscsound_mul_freq_float);
 
   gui->add(&gui, &(volume->widget));
-  volume->input0 = pb->output0;
+  mul->input0 = pb->output0;
+  mul->input1 = volume->output0;
 
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
-  speaker->input0 = volume->output0;
+  speaker->input0 = mul->output0;
 
   void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
   gui->start(&gui);
