@@ -11,7 +11,8 @@ TARGET := $(BIN)record_mic $(BIN)playback_mono $(BIN)playback_stereo \
 		  $(BIN)osc_math $(BIN)whitenoise $(BIN)devices $(BIN)allpass $(BIN)lowpass \
 		  $(BIN)highpass $(BIN)bandpass $(BIN)bandreject $(BIN)parametric_eq \
 		  $(BIN)lowshelving $(BIN)highshelving $(BIN)channelshootersplitter \
-			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr $(BIN)midi $(BIN)volume $(BIN)grid
+			$(BIN)audiofloatmath $(BIN)vubar $(BIN)adsr $(BIN)midi $(BIN)volume \
+			$(BIN)grid $(BIN)waveform
 
 
 all: $(TARGET)
@@ -202,5 +203,14 @@ $(BIN)grid:	$(BUILD)grid.o
 	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
 
 $(BUILD)grid.o: $(SRC)grid.c
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)
+
+# Example: Waveform
+$(BIN)waveform:	$(BUILD)waveform.o
+	mkdir -p "$(@D)"
+	$(CC) $(CFLAGS) $^ $(LIB_FLAGS) -o $@  $(LIBS)
+
+$(BUILD)waveform.o: $(SRC)waveform.c
 	mkdir -p "$(@D)"
 	$(CC) $(CFLAGS) -c $< $(LIB_FLAGS) -o $@  $(LIBS)

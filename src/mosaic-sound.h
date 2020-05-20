@@ -24,6 +24,7 @@
 #include "/usr/include/mosaic/mosaic-sound/include/gui.h"
 #include "/usr/include/mosaic/mosaic-sound/include/volume.h"
 #include "/usr/include/mosaic/mosaic-sound/include/vubar.h"
+#include "/usr/include/mosaic/mosaic-sound/include/waveform.h"
 
 static int mscsound_callback();
 static void mscsound_finished(void *data);
