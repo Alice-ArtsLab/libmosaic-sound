@@ -7,60 +7,71 @@ void vubar_free(mscsound_vubar_t **vubar) {
   // free();
 }
 
-static void vubar_destroy(GtkWidget *widget, mscsound_vubar_t **vubar) {
+static void vubar_destroy(GtkWidget *widget, gpointer data) {
+  mscsound_vubar_t **vubar = (mscsound_vubar_t **)data;
   vubar_free(vubar);
 }
 
 static gboolean vubar_draw(GtkWidget *widget, GdkEventConfigure *event,
-                           mscsound_vubar_t **vubar) {
-  GdkWindow *window;
-  cairo_t *cr;
+                           gpointer data) {
+
+  mscsound_vubar_t **vubar = (mscsound_vubar_t **)data;
 
   int value = 100 - *((*vubar)->input0) * 100;
 
-  gtk_widget_get_allocated_width((GtkWidget *)((*vubar)->widget));
-  gtk_widget_get_allocated_height((GtkWidget *)((*vubar)->widget));
+  GdkWindow *window = gtk_widget_get_window(widget);
 
-  window = gtk_widget_get_window((GtkWidget *)((*vubar)->widget));
-  cr = gdk_cairo_create(window);
+  cairo_region_t *cairoRegion = cairo_region_create();
 
-  cairo_set_line_width(cr, 1);
+  GdkDrawingContext *drawingContext;
+  drawingContext = gdk_window_begin_draw_frame(window, cairoRegion);
 
-  int i = 0;
-  for (; i < 100; i++) {
-    if (i < value) {
-      if (i < 20) // red
-        cairo_set_source_rgb(cr, 0.5, 0, 0);
-      else if (i < 40) // yellow
-        cairo_set_source_rgb(cr, 0.5, 0.5, 0);
-      else // green
-        cairo_set_source_rgb(cr, 0, 0.5, 0);
-    } else {
-      if (i < 20) // red
-        cairo_set_source_rgb(cr, 0.9, 0, 0);
-      else if (i < 40) // yellow
-        cairo_set_source_rgb(cr, 0.9, 0.9, 0);
-      else // green
-        cairo_set_source_rgb(cr, 0, 0.9, 0);
+  {
+    // Start drawing"
+    cairo_t *cr = gdk_drawing_context_get_cairo_context(drawingContext);
+    { // draw
+      cairo_set_line_width(cr, 1);
+
+      int i = 0;
+      for (; i < 100; i++) {
+        if (i < value) {
+          if (i < 20) // red
+            cairo_set_source_rgb(cr, 0.5, 0, 0);
+          else if (i < 40) // yellow
+            cairo_set_source_rgb(cr, 0.5, 0.5, 0);
+          else // green
+            cairo_set_source_rgb(cr, 0, 0.5, 0);
+        } else {
+          if (i < 20) // red
+            cairo_set_source_rgb(cr, 0.9, 0, 0);
+          else if (i < 40) // yellow
+            cairo_set_source_rgb(cr, 0.9, 0.9, 0);
+          else // green
+            cairo_set_source_rgb(cr, 0, 0.9, 0);
+        }
+
+        cairo_rectangle(cr, 0, 0 + (3 * i), 20, 1.7);
+        cairo_fill_preserve(cr);
+        cairo_stroke(cr);
+      }
+
+      cairo_set_source_rgb(cr, 0, 0, 0);
+      cairo_move_to(cr, 22, 20);
+      cairo_show_text(cr, "+8");
+      cairo_move_to(cr, 22, 120);
+      cairo_show_text(cr, " 0");
+      cairo_move_to(cr, 22, 250);
+      cairo_show_text(cr, "-20");
+      cairo_stroke(cr);
     }
 
-    cairo_rectangle(cr, 0, 0 + (3 * i), 20, 1.7);
-    cairo_fill_preserve(cr);
-    cairo_stroke(cr);
+    // Finished drawing
+    gdk_window_end_draw_frame(window, drawingContext);
   }
 
-  cairo_set_source_rgb(cr, 0, 0, 0);
-  cairo_move_to(cr, 22, 20);
-  cairo_show_text(cr, "+8");
-  cairo_move_to(cr, 22, 120);
-  cairo_show_text(cr, " 0");
-  cairo_move_to(cr, 22, 250);
-  cairo_show_text(cr, "-20");
-  cairo_stroke(cr);
-
-  /* Finish */
-  cairo_destroy(cr);
-  return TRUE;
+  // cleanup
+  cairo_region_destroy(cairoRegion);
+  return FALSE;
 }
 
 void vubar_create(int radius, mscsound_vubar_t **vubar) {

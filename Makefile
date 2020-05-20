@@ -1,5 +1,5 @@
 CC :=	gcc
-CFLAGS :=	-g -fPIC #-g -Wall -Werror -fPIC
+CFLAGS :=	-g -Wall -Werror -fPIC
 LIBS :=	-lportaudio -lm  -lasound -lpthread \
 				`pkg-config --libs sndfile --cflags gtk+-3.0`
 SRC :=	src
