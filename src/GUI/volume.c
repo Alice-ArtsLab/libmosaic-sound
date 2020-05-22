@@ -2,8 +2,8 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 mscsound_volume_t *volumeCopy;
-static gboolean mscsound_volume_event(GtkScaleButton *widget,
-                                      GdkEventConfigure *event, gpointer data) {
+static void mscsound_volume_event(GtkScaleButton *widget,
+                                  GdkEventConfigure *event, gpointer data) {
   *(volumeCopy->output0) = gtk_scale_button_get_value(widget);
 }
 mscsound_volume_t *mscsound_create_volume(char *labelValue) {
