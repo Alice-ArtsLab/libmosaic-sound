@@ -31,6 +31,7 @@ mscsound_midi_t *mscsound_create_midi(
 
   midi->send_note = mscsound_midi_send_note;
   midi->send_control = mscsound_midi_send_control;
+  midi->send_event = mscsound_midi_send_event;
 
   int portid;
   snd_seq_t *handle;
@@ -63,6 +64,11 @@ mscsound_midi_t *mscsound_create_midi(
   return midi;
 }
 
+void mscsound_midi_send_event(void *self, void *event) {
+  snd_seq_event_output(get_handle(self), (snd_seq_event_t *)event);
+  snd_seq_drain_output(get_handle(self));
+}
+
 void mscsound_midi_send_note(void *self, int type, int channel,
                              unsigned char vel, unsigned char note) {
   snd_seq_event_t ev;
@@ -72,12 +78,12 @@ void mscsound_midi_send_note(void *self, int type, int channel,
   snd_seq_ev_set_direct(&ev);
   snd_seq_ev_set_fixed(&ev);
 
-  ev.type = type; // SND_SEQ_EVENT_NOTEOFF;
+  ev.type = type;
   ev.data.note.channel = channel;
   ev.data.note.velocity = vel;
   ev.data.note.note = note;
-  snd_seq_event_output(get_handle(self), &ev);
-  snd_seq_drain_output(get_handle(self));
+
+  mscsound_midi_send_event(self, &ev);
 }
 
 void mscsound_midi_send_control(void *self, int channel, int control,
@@ -94,6 +100,5 @@ void mscsound_midi_send_control(void *self, int channel, int control,
   ev.data.control.param = control;
   ev.data.control.value = value;
 
-  snd_seq_event_output(get_handle(self), &ev);
-  snd_seq_drain_output(get_handle(self));
+  mscsound_midi_send_event(self, &ev);
 }
