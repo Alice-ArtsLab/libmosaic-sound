@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
   delay->input0 = adsr->output0;
   speaker->input0 = delay->output0;
 
-  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   while (1) {
     printf("Frequency value: %.2f Hz\n", *(osc->input1));

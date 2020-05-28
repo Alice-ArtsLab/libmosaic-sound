@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
   rec->input0 = mic->output0;
   speaker->input0 = mic->output0;
 
-  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
 
   printf("Recording... Wait 10 seconds!\n");

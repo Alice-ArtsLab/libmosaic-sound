@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   devices->process(&devices);
   devices->show(&devices);
 
-  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
   mscsound_terminate(stream);
 
   return 0;

@@ -1,8 +1,24 @@
 #include "include/midi.h"
 #include <alsa/asoundlib.h>
+#include <math.h>
 #include <pthread.h>
+
 snd_seq_t *handle_thread;
+static float *MSCSOUND_MIDI_MIDIVALUES;
 typedef void (*mscsound_midi_t_event_callback_function)(snd_seq_event_t *event);
+
+void mscsound_midi_initialize() {
+  if (MSCSOUND_MIDI_MIDIVALUES == NULL) {
+    float *midiValues = malloc(sizeof(float) * 128);
+    float proportionFactor = 1.0 / 12.0;
+
+    midiValues[0] = 8.18;
+    for (int i = 1; i < 128; i++) {
+      midiValues[i] = midiValues[i - 1] * pow(2, proportionFactor);
+    }
+    MSCSOUND_MIDI_MIDIVALUES = midiValues;
+  }
+}
 
 snd_seq_t *get_handle(mscsound_midi_t **self) {
   snd_seq_t *handle = (snd_seq_t *)((*self)->handle);
@@ -27,11 +43,13 @@ mscsound_midi_t *mscsound_create_midi(
     mscsound_midi_t_event_callback_function event_callback_function) {
 
   mscsound_midi_t *midi = malloc(sizeof(mscsound_midi_t));
-  midi->callback = event_callback_function;
 
+  midi->callback = event_callback_function;
   midi->send_note = mscsound_midi_send_note;
   midi->send_control = mscsound_midi_send_control;
   midi->send_event = mscsound_midi_send_event;
+  midi->midi_note_to_freq = mscsound_midi_midi_note_to_freq;
+  midi->freq_to_midi_note = mscsound_midi_freq_to_midi_note;
 
   int portid;
   snd_seq_t *handle;
@@ -101,4 +119,17 @@ void mscsound_midi_send_control(void *self, int channel, int control,
   ev.data.control.value = value;
 
   mscsound_midi_send_event(self, &ev);
+}
+
+float mscsound_midi_midi_note_to_freq(float midiNote) {
+  if (midiNote > 127) {
+    midiNote = 127.0;
+  } else if (midiNote < 0) {
+    midiNote = 0;
+  }
+  return MSCSOUND_MIDI_MIDIVALUES[(int)truncf(midiNote)];
+}
+
+float mscsound_midi_freq_to_midi_note(float frequency) {
+  return truncf(69 + 12 * log2(frequency / 440.0));
 }

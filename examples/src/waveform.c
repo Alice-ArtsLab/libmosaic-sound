@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
   waveform->input0 = mul->output0;
   speaker->input0 = mul->output0;
 
-  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   gui->start(&gui);
 

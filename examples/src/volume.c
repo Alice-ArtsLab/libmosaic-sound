@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
   speaker->input0 = mul->output0;
 
-  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
   gui->start(&gui);
 
   mscsound_terminate(stream);

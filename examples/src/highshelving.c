@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
   highshelving->gain = &gain;
   speaker->input0 = highshelving->output0;
 
-  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+  void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   printf("Playing until the Enter key is pressed.\n");
   getchar();

@@ -47,6 +47,13 @@ int main(int argc, char *argv[]) {
   mscsound_midi_t *midi =
       mscsound_create_midi("Test", SND_SEQ_OPEN_DUPLEX, midi_in);
 
+  void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
+
+  for (int i = 0; i < 128; i++)
+    printf("m: %f\tf: %f\n",
+           mscsound_midi_freq_to_midi_note(mscsound_midi_midi_note_to_freq(i)),
+           mscsound_midi_midi_note_to_freq(i));
+
   while (1) {
     midi->send_control(&midi, 0, 0, 127);
     midi->send_note(&midi, SND_SEQ_EVENT_NOTEON, 0, 127, 60);
@@ -55,8 +62,6 @@ int main(int argc, char *argv[]) {
     usleep(1000000); // 1 segundo
     printf("bip!\n");
   }
-
-  void *stream = mscsound_inicialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
   printf("Playing until the Enter key is pressed.\n");
   getchar();

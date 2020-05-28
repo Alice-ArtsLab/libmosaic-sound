@@ -34,10 +34,12 @@ static void mscsound_finished(void *data);
  */
 static void StreamFinished(void *data) { mscsound_finished(data); }
 
-static void *mscsound_inicialize(int sampleRate, int framesPerBuffer) {
+static void *mscsound_initialize(int sampleRate, int framesPerBuffer) {
   PaStreamParameters inputParameters, outputParameters;
   PaStream *stream;
   PaError err;
+
+  mscsound_midi_initialize();
 
   err = Pa_Initialize();
   if (err != paNoError)
