@@ -1,6 +1,6 @@
 CC :=	gcc
 CFLAGS :=	-g -Wall -Werror -fPIC
-LIBS :=	-lportaudio -lm  -lasound -lpthread \
+LIBS :=	-lportaudio -lm -lrt -lasound -ljack -lpthread \
 				`pkg-config --libs sndfile --cflags gtk+-3.0`
 SRC :=	src
 LIBDIR :=	/usr/include/mosaic/mosaic-sound
