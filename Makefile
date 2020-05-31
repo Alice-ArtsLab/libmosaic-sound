@@ -11,23 +11,23 @@ LIB_NAME :=	mosaic-sound
 LIB_FLAGS :=  -I/usr/include/mosaic/mosaic-sound -lmosaic-sound
 LIB_VERSION :=	1
 # <full_path>/<filename>.c
-SRCS :=	$(wildcard $(MODULES_DIR)/*/*.c)
-# $(BUILD)/<module_name>/<obj_name>.o
+SRCS :=	$(wildcard $(MODULES_DIR)/*/*/*.c)
+# $(BUILD)/<module_name>/<group>/<obj_name>.o
 OBJS :=	$(subst .c,.o,$(SRCS))
 OBJS :=	$(subst $(MODULES_DIR)/,$(BUILD)/,$(OBJS))
-# <module_name>/<obj_name>
-OBJ_MODULES :=	$(subst .c,,$(SRCS))
-OBJ_MODULES :=	$(subst $(MODULES_DIR)/,,$(OBJ_MODULES))
-OBJS_DIR := $(wildcard $(MODULES_DIR)/*)
-# <module_name>
+# <module_name>/<group>/<obj_name>
+MODULE_GROUP_OBJ :=	$(subst .c,,$(SRCS))
+MODULE_GROUP_OBJ :=	$(subst $(MODULES_DIR)/,,$(MODULE_GROUP_OBJ))
+OBJS_DIR := $(wildcard $(MODULES_DIR)/*/*)
+# <module_name>/<group>
 MODULES := $(subst $(MODULES_DIR)/,,$(OBJS_DIR))
-# $(BUILD)/<module_name>/
+# $(BUILD)/<module_name>/<group>
 OBJS_DIR := $(subst $(MODULES_DIR)/,$(BUILD)/,$(OBJS_DIR))
 
-TARGET := $(OBJ_MODULES) static
+TARGET := $(MODULE_GROUP_OBJ) static
 all: $(TARGET)
 
-$(OBJ_MODULES):
+$(MODULE_GROUP_OBJ):
 	mkdir -p $(OBJS_DIR)
 	$(CC) $(CFLAGS) -c $(MODULES_DIR)/$@.c -o $(BUILD)/$@.o $(LIBS)
 
