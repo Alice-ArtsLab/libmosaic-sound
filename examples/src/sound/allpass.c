@@ -1,6 +1,6 @@
-#include <gtk/gtk.h>
 #include <mosaic-sound.h>
 #include <portaudio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -9,10 +9,7 @@
 #define FRAMES_PER_BUFFER 256
 
 mscsound_playback_t *pb;
-mscsound_volume_t *volume;
-mscsound_audiofloatmath_t *mul;
-mscsound_rms_t *rms;
-mscsound_vubar_t *vubar;
+mscsound_biquad_t *allpass;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
@@ -30,9 +27,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)out;
 
   pb->process(&pb);
-  mul->process(&mul);
-  rms->process(&rms);
-  vubar->process(&vubar);
+  allpass->process(&allpass);
   speaker->process(&speaker, &out);
 
   return paContinue;
@@ -41,42 +36,32 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
 /*
  * This routine is called by mscsound when mscsound_callback is done.
  */
-
-void destroy(void) { gtk_main_quit(); }
-
 static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  mscsound_gui_t *gui = mscsound_create_gui("Grid", 200, 300);
-  mscsound_grid_t *grid = mscsound_create_grid();
-
-  pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
+  pb = mscsound_create_playback("../../../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
+  int readCount = 0;
+  pb->readCount = &readCount;
 
-  vubar = mscsound_create_vubar(FRAMES_PER_BUFFER);
-  grid->add(&grid, &(vubar->widget), 1, 1, 1, 100);
-  volume = mscsound_create_volume("Volume: ");
-  grid->add(&grid, &(volume->widget), 2, 100, 1, 1);
-
-  gui->add(&gui, &(grid->widget));
-
-  rms = mscsound_create_rms(FRAMES_PER_BUFFER);
-  mul = mscsound_create_audiofloatmath(FRAMES_PER_BUFFER,
-                                       mscsound_mul_freq_float);
-
+  /* Second-order allpass*/
+  allpass = mscsound_create_biquad("allpass", 2, FRAMES_PER_BUFFER);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
-  mul->input0 = pb->output0;
-  mul->input1 = volume->output0;
-  rms->input0 = mul->output0;
-  vubar->input0 = rms->output0;
-  speaker->input0 = mul->output0;
+  allpass->input0 = pb->output0;
+  allpass->sampleRate = SAMPLE_RATE;
+  float cutOff = 500;
+  allpass->cutOff = &cutOff;
+  float slope = 100;
+  allpass->slope = &slope;
+  speaker->input0 = allpass->output0;
 
   void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
-  gui->start(&gui);
+  printf("Playing until the Enter key is pressed.\n");
+  getchar();
 
   mscsound_terminate(stream);
 

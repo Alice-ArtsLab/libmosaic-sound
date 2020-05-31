@@ -9,7 +9,7 @@
 #define FRAMES_PER_BUFFER 256
 
 mscsound_playback_t *pb;
-mscsound_highshelving_t *highshelving;
+mscsound_biquad_t *lowpass;
 mscsound_speaker_t *speaker;
 
 static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
@@ -26,7 +26,7 @@ static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
   (void)in;
 
   pb->process(&pb);
-  highshelving->process(&highshelving);
+  lowpass->process(&lowpass);
   speaker->process(&speaker, &out);
 
   return paContinue;
@@ -39,22 +39,23 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 
 /*******************************************************************/
 int main(int argc, char *argv[]) {
-  pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
+  pb = mscsound_create_playback("../../../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
   int readCount = 0;
   pb->readCount = &readCount;
 
-  highshelving = mscsound_create_highshelving(FRAMES_PER_BUFFER);
+  /* Second-order lowpass*/
+  lowpass = mscsound_create_biquad("lowpass", 2, FRAMES_PER_BUFFER);
   speaker = mscsound_create_speaker(FRAMES_PER_BUFFER);
 
-  highshelving->input0 = pb->output0;
-  highshelving->sampleRate = SAMPLE_RATE;
-  float cutOff = 1200.0;
-  highshelving->cutOff = &cutOff;
-  float gain = 0.1;
-  highshelving->gain = &gain;
-  speaker->input0 = highshelving->output0;
+  lowpass->input0 = pb->output0;
+  lowpass->sampleRate = SAMPLE_RATE;
+  float cutOff = 500.0;
+  lowpass->cutOff = &cutOff;
+  float slope = 0.1;
+  lowpass->slope = &slope;
+  speaker->input0 = lowpass->output0;
 
   void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
