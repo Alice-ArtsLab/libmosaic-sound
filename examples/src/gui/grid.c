@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
   mscsound_gui_t *gui = mscsound_create_gui("Grid", 200, 300);
   mscsound_grid_t *grid = mscsound_create_grid();
 
-  pb = mscsound_create_playback("../samples/victor_wooten_solo.wav",
+  pb = mscsound_create_playback("../../../samples/victor_wooten_solo.wav",
                                 FRAMES_PER_BUFFER);
   strcpy(*(pb->loop), "yes");
 
