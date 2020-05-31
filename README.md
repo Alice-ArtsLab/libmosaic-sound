@@ -8,43 +8,95 @@ for working with Sound Design.**
 
 ## Implemented codes
 
-There are the following implementations:
+There are the following implementations organized by module and group name:
 
-* ###  Audio Filter
-    * All-pass
-    * Bandpass
-    * High-pass
-    * Low-pass
-    * High Shelving
-    * Low Shelving
-    * Parametric Equalizer
+```
+    src/modules/
+    ├── gui
+    │   ├── general
+    │   │   ├── grid.c
+    │   │   ├── gui.c
+    │   │   └── include
+    │   │       ├── grid.h
+    │   │       └── gui.h
+    │   ├── input
+    │   │   ├── include
+    │   │   │   └── volume.h
+    │   │   └── volume.c
+    │   └── output
+    │       ├── include
+    │       │   ├── vubar.h
+    │       │   └── waveform.h
+    │       ├── vubar.c
+    │       └── waveform.c
+    ├── midi
+    │   └── device
+    │       ├── include
+    │       │   └── midi.h
+    │       └── midi.c
+    ├── sound
+    │   ├── audiofloatmath
+    │   │   ├── audiofloatmath.c
+    │   │   └── include
+    │   │       └── audiofloatmath.h
+    │   ├── audiomath
+    │   │   ├── audiomath.c
+    │   │   └── include
+    │   │       └── audiomath.h
+    │   ├── audiosource
+    │   │   ├── include
+    │   │   │   ├── oscillators.h
+    │   │   │   └── whitenoise.h
+    │   │   ├── oscillators.c
+    │   │   └── whitenoise.c
+    │   ├── conversion
+    │   │   ├── include
+    │   │   │   └── rms.h
+    │   │   └── rms.c
+    │   ├── envelope
+    │   │   ├── adsr.c
+    │   │   └── include
+    │   │       └── adsr.h
+    │   ├── filter
+    │   │   ├── biquad.c
+    │   │   ├── highshelving.c
+    │   │   ├── include
+    │   │   │   ├── biquad.h
+    │   │   │   ├── highshelving.h
+    │   │   │   ├── lowshelving.h
+    │   │   │   └── parametricequalizer.h
+    │   │   ├── lowshelving.c
+    │   │   └── parametricequalizer.c
+    │   ├── fx
+    │   │   ├── delay.c
+    │   │   └── include
+    │   │       └── delay.h
+    │   ├── general
+    │   │   ├── channelshootersplitter.c
+    │   │   ├── devices.c
+    │   │   └── include
+    │   │       ├── channelshootersplitter.h
+    │   │       └── devices.h
+    │   ├── input
+    │   │   ├── include
+    │   │   │   ├── mic.h
+    │   │   │   └── playback.h
+    │   │   ├── mic.c
+    │   │   └── playback.c
+    │   └── output
+    │       ├── include
+    │       │   ├── record.h
+    │       │   └── speaker.h
+    │       ├── record.c
+    │       └── speaker.c
+    └── util
+        └── list
+            ├── include
+            │   └── list.h
+            └── list.c
 
-* ### Audio Math
-    * Plus
-    * Minus
-    * Times
-    * Divided by
-
-* ### Audio Float Math
-    * Plus
-    * Minus
-    * Times
-    * Divided by
-
-* ### General
-    * Channel shooter splitter
-    * List all audio devices
-
-* ### Output
-    * Buffer
-    * File
-    * Speaker
-
-* ### Sound Sources
-    * Oscillators
-    * White Noise
-    * Microphones
-    * Record
+    34 directories, 48 files
+```
 
 ## Solving Dependecies
 `sudo apt-get install libsndfile1-dev`
@@ -64,7 +116,7 @@ Compiling examples: `$ make examples`
 Running:
 
 ```
-$ cd examples/bin/
+$ cd examples/bin/<group_name>
 $ ./<filename>
 ```
 

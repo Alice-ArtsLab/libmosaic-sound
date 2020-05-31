@@ -1,5 +1,5 @@
 *.o
 dist/*
 build/*
-examples/src/*/bin/
-examples/src/*/build/
+examples/bin/
+examples/build/

@@ -1,5 +1,5 @@
 #include "include/devices.h"
-#include "../util/include/list.h"
+#include "../../util/list/include/list.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
