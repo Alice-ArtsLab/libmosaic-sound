@@ -10,17 +10,22 @@ LIB_DIR :=	/usr/include/mosaic/mosaic-sound
 LIB_NAME :=	mosaic-sound
 LIB_FLAGS :=  -I/usr/include/mosaic/mosaic-sound -lmosaic-sound
 LIB_VERSION :=	1
+
 # <full_path>/<filename>.c
 SRCS :=	$(wildcard $(MODULES_DIR)/*/*/*.c)
+
 # $(BUILD)/<module_name>/<group>/<obj_name>.o
 OBJS :=	$(subst .c,.o,$(SRCS))
 OBJS :=	$(subst $(MODULES_DIR)/,$(BUILD)/,$(OBJS))
+
 # <module_name>/<group>/<obj_name>
 MODULE_GROUP_OBJ :=	$(subst .c,,$(SRCS))
 MODULE_GROUP_OBJ :=	$(subst $(MODULES_DIR)/,,$(MODULE_GROUP_OBJ))
 OBJS_DIR := $(wildcard $(MODULES_DIR)/*/*)
+
 # <module_name>/<group>
 MODULES := $(subst $(MODULES_DIR)/,,$(OBJS_DIR))
+
 # $(BUILD)/<module_name>/<group>
 OBJS_DIR := $(subst $(MODULES_DIR)/,$(BUILD)/,$(OBJS_DIR))
 

@@ -9,6 +9,7 @@
 #include "/usr/include/mosaic/mosaic-sound/include/waveform.h"
 
 /* joystick */
+#include "/usr/include/mosaic/mosaic-sound/include/joystick.h"
 
 /* midi */
 #include "/usr/include/mosaic/mosaic-sound/include/midi.h"

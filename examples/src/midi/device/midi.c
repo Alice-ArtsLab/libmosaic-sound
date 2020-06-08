@@ -10,20 +10,25 @@
 #define SAMPLE_RATE 44100
 #define FRAMES_PER_BUFFER 256
 
-void midi_in(snd_seq_event_t *ev) {
-  printf("Note event: %d %d %d %d      \n", ev->type, ev->data.note.channel,
-         ev->data.note.velocity, ev->data.note.note);
+void midi_in(snd_seq_event_t *ev){
+    printf("Note event: %d %d %d %d\n",
+            ev->type, ev->data.note.channel,
+            ev->data.note.velocity,
+            ev->data.note.note);
 
-  printf("Control event: %d %d %d %d      \n", ev->type,
-         ev->data.control.channel, ev->data.control.param,
-         ev->data.control.value);
+  printf("Control event: %d %d %d %d\n",
+            ev->type,
+            ev->data.control.channel,
+            ev->data.control.param,
+            ev->data.control.value);
 }
 
-static int mscsound_callback(const void *inputBuffer, void *outputBuffer,
-                             unsigned long framesPerBuffer,
-                             const PaStreamCallbackTimeInfo *timeInfo,
-                             PaStreamCallbackFlags statusFlags,
-                             void *userData) {
+static int mscsound_callback(
+            const void *inputBuffer, void *outputBuffer,
+            unsigned long framesPerBuffer,
+            const PaStreamCallbackTimeInfo *timeInfo,
+            PaStreamCallbackFlags statusFlags,
+            void *userData) {
   float *in = (float *)inputBuffer;
   float *out = (float *)outputBuffer;
 
@@ -45,7 +50,7 @@ static void mscsound_finished(void *data) { printf("Stream Completed!\n"); }
 int main(int argc, char *argv[]) {
 
   mscsound_midi_t *midi =
-      mscsound_create_midi("Test", SND_SEQ_OPEN_DUPLEX, midi_in);
+            mscsound_create_midi("Test", SND_SEQ_OPEN_DUPLEX, midi_in);
 
   void *stream = mscsound_initialize(SAMPLE_RATE, FRAMES_PER_BUFFER);
 
